@@ -6,46 +6,50 @@ import {
   Button,
   StyleSheet,
 } from 'react-native';
-import TaskListItem from './TaskListItem';
+
 import { useState } from 'react';
 import { useRealm, useQuery, useUser } from '@realm/react';
 import { Task } from '../models/Task';
+import { League } from '../models/League';
 
 export default function TaskList() {
   const realm = useRealm();
-  const tasks = useQuery(Task);
+  // const tasks = useQuery(Task);
+  const leagues = useQuery(League);
   // const user = useUser();
 
-  const [newTask, setNewTask] = useState('');
+  const [newLeague, setNewLeague] = useState('');
 
-  const createTask = () => {
+  const addLeague = () => {
     realm.write(() => {
-      realm.create(Task, { description: newTask, user_id: '123' });
+      realm.create(League, {
+        leagueName: newLeague,
+        leagueCode: '123',
+        user_id: '123',
+      });
     });
-
-    setNewTask('');
+    setNewLeague('');
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Todo</Text>
-
       {/* The list of tasks */}
       <FlatList
-        data={tasks}
+        data={leagues}
         contentContainerStyle={{ gap: 5 }}
-        renderItem={({ item }) => <TaskListItem task={item} />}
+        renderItem={({ item }) => (
+          <Text style={{ color: 'white' }}>{item.leagueName}</Text>
+        )}
       />
-
-      {/* New task input */}
       <TextInput
-        value={newTask}
-        onChangeText={setNewTask}
+        value={newLeague}
+        onChangeText={setNewLeague}
         placeholder="New task"
         placeholderTextColor="gray"
         style={styles.input}
       />
-      <Button title="Add task" onPress={createTask} />
+      <Button title="Add task" onPress={addLeague} />
     </View>
   );
 }
