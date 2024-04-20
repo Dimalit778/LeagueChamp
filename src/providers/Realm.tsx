@@ -19,7 +19,7 @@ const APP_ID: string = 'league-rwomr';
 export default function RealmCustomProvider({ children }: PropsWithChildren) {
   return (
     <AppProvider id={APP_ID}>
-      <UserProvider fallback={Register}>
+      <UserProvider fallback={Welcome}>
         <RealmProvider
           schema={[League]}
           fallback={LoadingBall}

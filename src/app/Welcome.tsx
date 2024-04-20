@@ -1,18 +1,41 @@
-import { ImageBackground, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-// import { ThemeContext } from '../../themeProvider/themeContext';
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  Touchable,
+  TouchableOpacity,
+  View,
+  SafeAreaView,
+} from 'react-native';
+
 import { Button } from 'react-native-elements';
 
 import HomeAnimation from '../components/HomeAnimation';
-import { Stack, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useSharedValue } from 'react-native-reanimated';
+import AuthForm, { LOG_REG } from '../components/AuthForm';
 
 const image = {
   uri: 'https://w0.peakpx.com/wallpaper/355/120/HD-wallpaper-champions-league-icio-uefa-champions-league.jpg',
 };
 const Welcome = () => {
-  const router = useRouter();
-  const [authForm, setAuthForm] = useState(false);
+  const authForm = useSharedValue(LOG_REG.login);
+  function showLogin() {
+    console.log('log ' + LOG_REG.login);
+    authForm.value = LOG_REG.login;
+  }
+
+  function showRegister() {
+    console.log('reg ' + LOG_REG.register);
+    authForm.value = LOG_REG.register;
+  }
+  function handleFlipAuth() {
+    console.log(authForm.value);
+    if (authForm.value === LOG_REG.login) {
+      showRegister();
+    } else {
+      showLogin();
+    }
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {/* <Stack.Screen options={{ headerShown: false }} /> */}
@@ -23,37 +46,50 @@ const Welcome = () => {
             <Text style={styles.textHeader}> Champion</Text>
           </View>
           <View style={{ flex: 1 }}>
-            {/* {authForm ? (
-              <Reg />
-            ) : ( */}
-            <>
-              <HomeAnimation />
-              <View style={styles.boxSection}>
-                <Button
-                  title="Start "
-                  buttonStyle={{
-                    backgroundColor: 'black',
-                    borderWidth: 2,
-                    borderColor: 'white',
-                    borderRadius: 30,
-                  }}
-                  containerStyle={{
-                    width: 250,
-                    height: 150,
-                    marginVertical: 10,
-                  }}
-                  titleStyle={{ fontWeight: 'bold', fontSize: 23 }}
-                  onPress={() => setAuthForm(true)}
-                />
-              </View>
-            </>
-            {/* )} */}
+            <AuthForm authForm={authForm} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity
+              style={{ paddingTop: 100 }}
+              onPress={handleFlipAuth}
+            >
+              <Text style={{ fontSize: 24, fontFamily: 'bold' }}>Switch</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ImageBackground>
     </SafeAreaView>
   );
 };
+{
+  /* <View style={{ flex: 1 }}>
+{authForms ? (
+  <AuthForm authForm={authFrom} />
+) : (
+  <>
+    <HomeAnimation />
+    <View style={styles.boxSection}>
+      <Button
+        title="Start "
+        buttonStyle={{
+          backgroundColor: 'black',
+          borderWidth: 2,
+          borderColor: 'white',
+          borderRadius: 30,
+        }}
+        containerStyle={{
+          width: 250,
+          height: 150,
+          marginVertical: 10,
+        }}
+        titleStyle={{ fontWeight: 'bold', fontSize: 23 }}
+        onPress={() => setAuthForm(true)}
+      />
+    </View>
+  </>
+)}
+</View> */
+}
 {
   /* <Button
   title="SIGN UP"
@@ -84,7 +120,7 @@ const styles = StyleSheet.create({
   },
   boxHeader: {
     justifyContent: 'center',
-    height: '40%',
+    paddingTop: 50,
   },
   textHeader: {
     alignSelf: 'center',

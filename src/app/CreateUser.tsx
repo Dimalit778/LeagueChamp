@@ -1,20 +1,31 @@
-import { View, Text, ImageBackground, StyleSheet } from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  ImageBackground,
+  StyleSheet,
+  TextInput,
+} from 'react-native';
+import React, { useState } from 'react';
 import { useAuth, useUser } from '@realm/react';
 import { Button } from 'react-native-elements';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '../myAssets/colors/Colors';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const CreateUser = () => {
+  const [name, setName] = useState('');
   const user = useUser();
   const { logOut } = useAuth();
   console.log('Create User ', user.customData);
+  const performLogout = () => {
+    logOut();
+  };
 
   const image = {
     uri: 'https://w0.peakpx.com/wallpaper/355/120/HD-wallpaper-champions-league-icio-uefa-champions-league.jpg',
   };
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }}>
       <ImageBackground source={image} style={styles.image}>
         <View style={{ alignItems: 'center' }}>
           <Text style={styles.header1}>Welcome</Text>
@@ -26,20 +37,45 @@ const CreateUser = () => {
             <View style={styles.uploadImage}></View>
           </View>
         </View>
+        <View style={{ alignItems: 'center' }}>
+          <Text>Tot</Text>
+          <View style={styles.inputBox}>
+            <TextInput
+              style={styles.textInput}
+              value={name}
+              placeholder="Email"
+              placeholderTextColor="grey"
+              keyboardType={'email-address'}
+              onChangeText={(text) => setName(text)}
+            />
+          </View>
+          <Button title="LOG out" onPress={() => logOut()} />
+        </View>
       </ImageBackground>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 
 export default CreateUser;
 const styles = StyleSheet.create({
-  // textInput: {
-  //   alignContent: 'flex-start',
-  //   borderRadius: 100,
-  //   color: 'blue',
-  //   fontSize: 18,
-  //   paddingHorizontal: 15,
-  // },
+  textInput: {
+    alignContent: 'flex-start',
+    borderRadius: 100,
+    color: 'blue',
+    fontSize: 18,
+    paddingHorizontal: 15,
+  },
+  inputBox: {
+    // flexDirection: 'row',
+    backgroundColor: 'rgb(220,220, 220)',
+    // width: '90%',
+    // marginLeft: 50,
+    // marginVertical: 10,
+    // borderRadius: 15,
+    // padding: 15,
+    borderColor: Colors.dark,
+    borderWidth: 1,
+  },
   header1: {
     color: Colors.darkGreen,
     fontSize: 64,

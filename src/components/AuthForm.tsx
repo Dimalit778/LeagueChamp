@@ -23,15 +23,24 @@ import {
 } from '@realm/react';
 import Toast from 'react-native-toast-message';
 import Colors from '../myAssets/colors/Colors';
-
 import KeyBoardAvoidingContainer from '../components/KeyboardAvoidingContainer';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import Animated, {
+  SharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
-const Register = () => {
+type AuthFormProps = {
+  authForm: SharedValue<number>;
+};
+
+export enum LOG_REG {
+  login = 0,
+  register = 1,
+}
+const AuthForm = ({ authForm }: AuthFormProps) => {
   // hooks
   const { register, result, logIn } = useEmailPasswordAuth();
   const router = useRouter();
-
   const [email, setEmail] = useState('aa@gmail.com');
   const [password, setPassword] = useState('123456');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -62,40 +71,9 @@ const Register = () => {
     // }
     register({ email, password });
   };
-
-  // if (name == '' || email == '' || password == '' || confirmPassword == '') {
-  //   Toast.show({
-  //     type: 'error',
-  //     text1: 'Please enter All Fields',
-  //   });
-  //   return;
-  // }
-  // if (confirmPassword !== password) {
-  //   Toast.show({
-  //     type: 'error',
-  //     text1: 'Passwords do not match',
-  //   });
-  //   return;
-  // }
-  // const user = {
-  //   name: name,
-  //   email: email,
-  //   password: password,
-  // };
-  // dispatch(register(user)).then((action) => {
-  //   if (action.error) {
-  //     Toast.show({
-  //       type: 'error',
-  //       text1: action.payload,
-  //     });
-  //   } else {
-  //     Toast.show({
-  //       type: 'success',
-  //       text1: 'Login Successfully',
-  //     });
-  //     router.replace('Login');
-  //   }
-  // });
+  const frontAnimatedStyles = useAnimatedStyle(() => {
+    return {};
+  });
 
   return (
     <KeyBoardAvoidingContainer>
@@ -103,10 +81,7 @@ const Register = () => {
         <View
           style={{
             backgroundColor: Colors.gray,
-            // height: 700,
-            // width: 460,
-            // borderTopLeftRadius: 130,
-            // paddingTop: 50,
+
             alignItems: 'center',
           }}
         >
@@ -179,16 +154,11 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default AuthForm;
 const styles = StyleSheet.create({
   inputBox: {
     flexDirection: 'row',
     backgroundColor: 'rgb(220,220, 220)',
-    // width: '90%',
-    // marginLeft: 50,
-    // marginVertical: 10,
-    // borderRadius: 15,
-    // padding: 15,
     borderColor: Colors.dark,
     borderWidth: 1,
   },
