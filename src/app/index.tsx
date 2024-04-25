@@ -1,5 +1,4 @@
 import { Redirect } from 'expo-router';
-import LoadingBall from '../components/LoadingBall';
 import { useUser } from '@realm/react';
 
 export default function App() {

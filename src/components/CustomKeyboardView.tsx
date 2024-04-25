@@ -1,20 +1,20 @@
 import { View, Text, Platform } from 'react-native';
 import React, { PropsWithChildren } from 'react';
 import { KeyboardAvoidingView, ScrollView } from 'react-native';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
+const ios = Platform.OS === 'ios';
 export default function CustomKeyboardView({ children }: PropsWithChildren) {
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      style={{ flex: 1 }}
-    >
-      <ScrollView
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
         style={{ flex: 1 }}
-        bounces={false}
-        showsVerticalScrollIndicator={false}
+        keyboardVerticalOffset={ios ? 100 : 0}
+        behavior="padding"
       >
-        {children}
-      </ScrollView>
-    </KeyboardAvoidingView>
+        <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+          {children}
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }

@@ -1,18 +1,10 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  ImageBackground,
-} from 'react-native';
+import { View, StyleSheet, TextInput } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { AntDesign } from '@expo/vector-icons';
+
 import { Fontisto } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 // import Toast from 'react-native-toast-message';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from 'react-native-elements';
 import {
@@ -23,81 +15,98 @@ import {
 } from '@realm/react';
 import Toast from 'react-native-toast-message';
 import Colors from '../myAssets/colors/Colors';
-import KeyBoardAvoidingContainer from '../components/KeyboardAvoidingContainer';
 import Animated, {
   SharedValue,
+  interpolate,
   useAnimatedStyle,
+  withTiming,
 } from 'react-native-reanimated';
+import { ScaledSheet, s, vs, ms } from 'react-native-size-matters';
 
-type AuthFormProps = {
-  authForm: SharedValue<number>;
+type AuthCardProps = {
+  authCard: SharedValue<number>;
 };
 
 export enum LOG_REG {
   login = 0,
   register = 1,
 }
-const AuthForm = ({ authForm }: AuthFormProps) => {
+const AuthForm = ({ authCard }: AuthCardProps) => {
   // hooks
   const { register, result, logIn } = useEmailPasswordAuth();
   const router = useRouter();
-  const [email, setEmail] = useState('aa@gmail.com');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  //  Login Animation
+  const loginAnimatedStyles = useAnimatedStyle(() => {
+    const rotateValue = interpolate(
+      authCard.value,
+      [LOG_REG.login, LOG_REG.register],
+      [0, 180]
+    );
+    return {
+      transform: [
+        { rotateY: withTiming(`${rotateValue}deg`, { duration: 1000 }) },
+      ],
+    };
+  });
+  //  Register Animation
+  const registerAnimatedStyles = useAnimatedStyle(() => {
+    const rotateValue = interpolate(
+      authCard.value,
+      [LOG_REG.login, LOG_REG.register],
+      [180, 360]
+    );
+    return {
+      transform: [
+        { rotateY: withTiming(`${rotateValue}deg`, { duration: 1000 }) },
+      ],
+    };
+  });
+
   useEffect(() => {
-    console.log('------ start useEffect');
     if (result.success && result.operation === AuthOperationName.Register) {
       logIn({ email, password });
     }
-    console.log('error ' + result.error);
   }, [result, logIn]);
 
   const handleRegister = async () => {
-    // if (name == '' || email == '' || password == '' || confirmPassword == '') {
-    //   Toast.show({
-    //     type: 'error',
-    //     text1: 'Please enter All Fields',
-    //   });
-    //   console.log('error fileds');r
-    //   return;
-    // }
-    // if (confirmPassword !== password) {
-    //   Toast.show({
-    //     type: 'error',
-    //     text1: 'Passwords do not match',
-    //   });
-    //   return;
-    // }
-    register({ email, password });
+    console.log('register');
+    if (email == '' || password == '' || confirmPassword == '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter All Fields',
+      });
+
+      return;
+    }
+    if (confirmPassword !== password) {
+      Toast.show({
+        type: 'error',
+        text1: 'Passwords do not match',
+      });
+      return;
+    }
+    // register({ email, password });
   };
-  const frontAnimatedStyles = useAnimatedStyle(() => {
-    return {};
-  });
+  const handleLogin = async () => {
+    console.log('login');
+    console.log(email);
+    console.log(password);
+  };
 
   return (
-    <KeyBoardAvoidingContainer>
-      <Animated.View style={{ alignItems: 'center' }}>
-        <View
-          style={{
-            backgroundColor: Colors.gray,
-
-            alignItems: 'center',
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 40,
-              color: Colors.dark,
-              fontWeight: 'bold',
-            }}
-          >
-            Welcome
-          </Text>
-
+    <>
+      {/* --- > Register Card < --- */}
+      <Animated.View
+        style={[styles.card, styles.registerCard, registerAnimatedStyles]}
+      >
+        <View>
           {/* EMAIL  Input */}
           <View style={styles.inputBox}>
-            <Fontisto name="email" size={28} color="black" />
+            <Fontisto name="email" size={ms(26)} color="black" />
             <TextInput
               style={styles.textInput}
               value={email}
@@ -109,7 +118,7 @@ const AuthForm = ({ authForm }: AuthFormProps) => {
           </View>
           {/* PASSWORD Input */}
           <View style={styles.inputBox}>
-            <Feather name="lock" size={28} color="black" />
+            <Feather name="lock" size={ms(26)} color="black" />
             <TextInput
               style={styles.textInput}
               value={password}
@@ -121,7 +130,7 @@ const AuthForm = ({ authForm }: AuthFormProps) => {
           </View>
           {/* CONFIRM PASSWORD Input */}
           <View style={styles.inputBox}>
-            <Feather name="lock" size={28} color="black" />
+            <Feather name="lock" size={ms(26)} color="black" />
             <TextInput
               style={styles.textInput}
               value={confirmPassword}
@@ -138,40 +147,86 @@ const AuthForm = ({ authForm }: AuthFormProps) => {
               borderWidth: 2,
               borderColor: 'white',
               borderRadius: 30,
-              marginTop: 30,
             }}
-            containerStyle={{
-              width: 250,
-              height: 100,
-              marginVertical: 10,
-            }}
-            titleStyle={{ fontWeight: 'bold', fontSize: 23 }}
+            titleStyle={{ fontWeight: 'bold', fontSize: ms(20) }}
             onPress={() => handleRegister()}
           />
         </View>
       </Animated.View>
-    </KeyBoardAvoidingContainer>
+      {/* --- > Login Card < --- */}
+
+      <Animated.View
+        style={[styles.card, styles.loginCard, loginAnimatedStyles]}
+      >
+        <View>
+          {/* EMAIL  Input */}
+          <View style={styles.inputBox}>
+            <Fontisto name="email" size={ms(26)} color="black" />
+            <TextInput
+              style={styles.textInput}
+              value={email}
+              placeholder="Email"
+              placeholderTextColor="grey"
+              keyboardType={'email-address'}
+              onChangeText={(text) => setEmail(text)}
+            />
+          </View>
+          {/* PASSWORD Input */}
+          <View style={styles.inputBox}>
+            <Feather name="lock" size={ms(26)} color="black" />
+            <TextInput
+              style={styles.textInput}
+              value={password}
+              placeholder="Password"
+              placeholderTextColor="grey"
+              secureTextEntry={true}
+              onChangeText={(text) => setPassword(text)}
+            />
+          </View>
+          <Button
+            title="Log In"
+            buttonStyle={{
+              backgroundColor: Colors.darkGrey,
+              borderWidth: 2,
+              borderColor: 'white',
+              borderRadius: 30,
+            }}
+            titleStyle={{ fontWeight: 'bold', fontSize: ms(20) }}
+            onPress={() => handleLogin()}
+          />
+        </View>
+      </Animated.View>
+    </>
   );
 };
 
 export default AuthForm;
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
+  registerCard: {
+    backfaceVisibility: 'hidden',
+    // position: 'absolute',
+  },
+  loginCard: {
+    backfaceVisibility: 'hidden',
+  },
+
+  card: {
+    width: '250@s',
+    gap: '13@ms',
+    borderColor: 'black ',
+    borderWidth: 2,
+    borderRadius: 15,
+    padding: '18@ms',
+    justifyContent: 'space-between',
+  },
   inputBox: {
     flexDirection: 'row',
-    backgroundColor: 'rgb(220,220, 220)',
-    borderColor: Colors.dark,
-    borderWidth: 1,
+    backgroundColor: Colors.gray,
+    borderRadius: 10,
+    padding: '9@ms',
   },
   textInput: {
-    alignContent: 'flex-start',
-    borderRadius: 100,
-    color: 'blue',
-    fontSize: 18,
-    paddingHorizontal: 15,
-  },
-  image: {
-    flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center',
+    fontSize: '18@ms',
+    paddingLeft: '18@ms',
   },
 });
