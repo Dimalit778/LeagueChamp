@@ -5,69 +5,68 @@ import Colors from '../myAssets/colors/Colors';
 
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-import CustomBackgroundImage from '../components/CustomBackgroundImage';
-import CustomKeyboardView from '../components/CustomKeyboardView';
+import CustomBackgroundImage from '../components/custom/CustomBackgroundImage';
+import CustomKeyboardView from '../components/custom/CustomKeyboardView';
+import LoadingBall from '../components/LoadingBall';
+import LottieView from 'lottie-react-native';
 
 const Welcome = () => {
   const [showLogin, setShowLogin] = useState(true);
-
-  // function showLogin() {
-  //   authCard.value = LOG_REG.login;
-  // }
-  // function showRegister() {
-  //   authCard.value = LOG_REG.register;
-  // }
+  const [loading, setLoading] = useState(false);
   function handleFlipCard() {
     setShowLogin(!showLogin);
   }
 
   return (
-    <CustomBackgroundImage>
-      <CustomKeyboardView>
-        {/* Header */}
-        <View style={styles.container}>
-          <View style={styles.box_header}>
-            <Text style={styles.textHeader}>League </Text>
-            <Text style={styles.textHeader}> Champion</Text>
-          </View>
-          {/* switch Button */}
-          <View style={styles.box_switch}>
-            {/* Login BTN */}
-            <TouchableOpacity onPress={handleFlipCard}>
-              <Text
-                style={[
-                  styles.switchText,
-                  {
-                    backgroundColor: showLogin ? 'gold' : null,
-                    color: showLogin ? 'black' : 'lightgrey',
-                  },
-                ]}
-              >
-                Login
-              </Text>
-            </TouchableOpacity>
-            {/* Register BTN */}
-            <TouchableOpacity onPress={handleFlipCard}>
-              <Text
-                style={[
-                  styles.switchText,
-                  {
-                    backgroundColor: showLogin ? null : 'gold',
-                    color: showLogin ? 'lightgrey' : 'black',
-                  },
-                ]}
-              >
-                Sign Up
-              </Text>
-            </TouchableOpacity>
-          </View>
+    <>
+      <CustomBackgroundImage>
+        <CustomKeyboardView>
+          {/* Header */}
+          <View style={styles.container}>
+            <View style={styles.box_header}>
+              <Text style={styles.textHeader}>League </Text>
+              <Text style={styles.textHeader}> Champion</Text>
+            </View>
+            {/* switch Button */}
+            <View style={styles.box_switch}>
+              {/* Login BTN */}
+              <TouchableOpacity onPress={handleFlipCard}>
+                <Text
+                  style={[
+                    styles.switchText,
+                    {
+                      backgroundColor: showLogin ? 'gold' : null,
+                      color: showLogin ? 'black' : 'lightgrey',
+                    },
+                  ]}
+                >
+                  Login
+                </Text>
+              </TouchableOpacity>
+              {/* Register BTN */}
+              <TouchableOpacity onPress={handleFlipCard}>
+                <Text
+                  style={[
+                    styles.switchText,
+                    {
+                      backgroundColor: showLogin ? null : 'gold',
+                      color: showLogin ? 'lightgrey' : 'black',
+                    },
+                  ]}
+                >
+                  Sign Up
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-          <View style={styles.box_authForm}>
-            {showLogin ? <LoginForm /> : <RegisterForm />}
+            <View style={styles.box_authForm}>
+              {showLogin ? <LoginForm loading={loading} /> : <RegisterForm />}
+            </View>
           </View>
-        </View>
-      </CustomKeyboardView>
-    </CustomBackgroundImage>
+          {loading && <LoadingBall />}
+        </CustomKeyboardView>
+      </CustomBackgroundImage>
+    </>
   );
 };
 
@@ -86,7 +85,9 @@ const styles = ScaledSheet.create({
     justifyContent: 'center',
   },
   box_authForm: {
+    height: '300@s',
     marginHorizontal: 30,
+    position: 'relative',
   },
   switchText: {
     fontSize: '20@s',

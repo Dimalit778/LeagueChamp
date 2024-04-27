@@ -5,8 +5,10 @@ import { Fontisto } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Button } from 'react-native-elements';
 import { ScaledSheet, s, vs, ms } from 'react-native-size-matters';
-
-const LoginForm = () => {
+type loginProps = {
+  loading: boolean;
+};
+const LoginForm = ({ loading }: loginProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const handleLogin = async () => {

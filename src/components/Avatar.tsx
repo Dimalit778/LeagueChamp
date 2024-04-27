@@ -1,55 +1,33 @@
 import { useState } from 'react';
-import { Button, Image, View, StyleSheet } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import { Image, View, TouchableWithoutFeedback } from 'react-native';
+
 import { ScaledSheet, ms, s, vs } from 'react-native-size-matters';
-import avatarImage from '../myAssets/images/avatar.jpg';
+
 import Colors from '../myAssets/colors/Colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+const avatarImage = require('../myAssets/images/avatar.jpg');
+
 type avatarProps = {
+  openModal: () => void;
   uri: string;
-  onButtonPress(): void;
 };
-const Avatar = ({ uri, onButtonPress }: avatarProps) => {
-  const [image, setImage] = useState(null);
-  const onPress = () => {};
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
 
-    console.log(result);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
-  const clearImage = () => {
-    setImage(null);
-  };
+const Avatar = ({ uri, openModal }: avatarProps) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onPress}>
+      <TouchableWithoutFeedback onPress={() => openModal()}>
         <Image source={uri ? { uri } : avatarImage} style={[styles.image]} />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={onButtonPress} style={styles.editButton}>
+      </TouchableWithoutFeedback>
+      {/* Open modal Btn */}
+      <TouchableOpacity onPress={() => openModal()} style={styles.editButton}>
         <MaterialCommunityIcons
           name="camera-plus-outline"
-          size={ms(32)}
-          color="black"
+          size={ms(28)}
+          color="wheat"
         />
       </TouchableOpacity>
-      {image && (
-        <Image
-          source={{ uri: image }}
-          style={{ width: s(130), height: vs(130) }}
-        />
-      )}
     </View>
   );
 };
@@ -62,18 +40,18 @@ const styles = ScaledSheet.create({
     justifyContent: 'center',
   },
   image: {
-    height: 150,
-    width: 150,
+    height: '140@vs',
+    width: '140@s',
     borderColor: Colors.blueGrey,
-    borderWidth: 5,
-    borderRadius: 75,
-    // marginTop: 20,
+    borderWidth: '3@ms',
+    borderRadius: '60@ms',
   },
   editButton: {
     borderRadius: '24@ms',
     padding: '8@ms',
     position: 'absolute',
-    left: '25@ms',
-    bottom: '5@ms',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    left: '40@ms',
+    bottom: '3@ms',
   },
 });

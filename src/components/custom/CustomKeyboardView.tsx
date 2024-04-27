@@ -11,7 +11,11 @@ export default function CustomKeyboardView({ children }: PropsWithChildren) {
         keyboardVerticalOffset={ios ? 100 : 0}
         behavior="padding"
       >
-        <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+        <ScrollView
+          style={{ flex: 1 }}
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+        >
           {children}
         </ScrollView>
       </KeyboardAvoidingView>

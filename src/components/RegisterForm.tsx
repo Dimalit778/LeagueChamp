@@ -8,21 +8,26 @@ import { Button } from 'react-native-elements';
 import { ScaledSheet, s, vs, ms } from 'react-native-size-matters';
 import Toast from 'react-native-toast-message';
 import { AuthOperationName, useEmailPasswordAuth } from '@realm/react';
+import LoadingBall from './LoadingBall';
 
 const RegisterForm = () => {
   const { register, result, logIn } = useEmailPasswordAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const [confirmPassword, setConfirmPassword] = useState('');
 
   useEffect(() => {
     if (result.success && result.operation === AuthOperationName.Register) {
-      logIn({ email, password });
-    } else {
-      Toast.show({
-        type: 'error',
-        text1: 'User exists',
-      });
+      try {
+        logIn({ email, password });
+      } catch (err) {
+        Toast.show({
+          type: 'error',
+          text1: 'User exists',
+        });
+      }
+      // setLoading(false);
     }
   }, [result, logIn]);
 
@@ -42,6 +47,7 @@ const RegisterForm = () => {
       });
       return;
     }
+    // setLoading(true);
     register({ email, password });
   };
 

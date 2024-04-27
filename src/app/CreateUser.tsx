@@ -1,32 +1,37 @@
-import { View, Text, Pressable, TextInput, Alert, Modal } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 
-import React, { useState } from 'react';
-import { useAuth, useUser } from '@realm/react';
+import React, { useEffect, useState } from 'react';
+import { useApp, useAuth, useUser } from '@realm/react';
 import { Button } from 'react-native-elements';
 import Colors from '../myAssets/colors/Colors';
-import CustomBackgroundImage from '../components/CustomBackgroundImage';
-import CustomKeyboardView from '../components/CustomKeyboardView';
+import CustomBackgroundImage from '../components/custom/CustomBackgroundImage';
+import CustomKeyboardView from '../components/custom/CustomKeyboardView';
 import { ScaledSheet, s, vs, ms } from 'react-native-size-matters';
-import HomeAnimation from '../components/HomeAnimation';
-import * as ImagePicker from 'expo-image-picker';
 
+import * as ImagePicker from 'expo-image-picker';
+import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Avatar from '../components/Avatar';
+import ModalPicker from '../components/ModalPicker';
 
 const CreateUser = () => {
   const [name, setName] = useState('');
+  const [nickName, setNickName] = useState('');
   const [image, setImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  console.log(modalVisible);
+
   const user = useUser();
-  const { logOut } = useAuth();
-  console.log('Create User ', user.customData);
-  const performLogout = () => {
-    logOut();
-  };
+  const app = useApp();
+  useEffect(() => {
+    console.log('use effect');
+    console.log('Create User ', user.customData);
+  }, [user, name]);
+
   // const onButtonPress = () => {
   //   console.log('onButtonPress');
   // };
   const pickImage = async () => {
+    setModalVisible(false);
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -41,63 +46,114 @@ const CreateUser = () => {
       setImage(result.assets[0].uri);
     }
   };
+  const clearImage = () => {
+    setModalVisible(false);
+    setImage(null);
+  };
+  const saveUser = () => {
+    console.log('save');
+  };
+  const backToWelcome = async () => {
+    await app.deleteUser(user);
+  };
+
   return (
     <CustomBackgroundImage>
       <CustomKeyboardView>
         <View
-          style={{ height: vs(200), paddingTop: ms(40), alignItems: 'center' }}
+          style={{
+            alignItems: 'center',
+          }}
         >
           <Text style={styles.header1}>Welcome</Text>
           <Text style={styles.header2}>Create new User</Text>
         </View>
+
         {/*Profile  Image */}
         <View style={styles.box_image}>
-          <Avatar onButtonPress={() => setModalVisible(true)} uri={image} />
-        </View>
-        <View style={styles.centeredView}>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              Alert.alert('Modal has been closed.');
-              setModalVisible(!modalVisible);
+          <Avatar uri={image} openModal={() => setModalVisible(true)} />
+
+          {/* Modal upload image */}
+          <ModalPicker
+            modalVisible={modalVisible}
+            onBackPress={() => {
+              setModalVisible(false);
             }}
-          >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text style={styles.modalText}>Hello World!</Text>
-                <Pressable
-                  style={[styles.button, styles.buttonClose]}
-                  onPress={() => setModalVisible(!modalVisible)}
-                >
-                  <Text style={styles.textStyle}>Hide Modal</Text>
-                </Pressable>
-              </View>
-            </View>
-          </Modal>
-          <Pressable
-            style={[styles.button, styles.buttonOpen]}
-            onPress={() => setModalVisible(true)}
-          >
-            <Text style={styles.textStyle}>Show Modal</Text>
-          </Pressable>
+            removeImage={() => clearImage()}
+            addImage={() => pickImage()}
+          />
         </View>
 
         {/* Fields */}
-
-        <View style={styles.inputBox}>
-          <TextInput
-            style={styles.textInput}
-            value={name}
-            placeholder="Name"
-            placeholderTextColor="grey"
-            keyboardType={'email-address'}
-            onChangeText={(text) => setName(text)}
-          />
+        <View style={styles.box_fields}>
+          <View style={{ gap: 5 }}>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                color: Colors.gray,
+                fontSize: ms(16),
+              }}
+            >
+              Name
+            </Text>
+            <View style={styles.inputBox}>
+              <FontAwesome5 name="user" size={ms(24)} color="black" />
+              <TextInput
+                style={styles.textInput}
+                value={name}
+                placeholder="Name"
+                placeholderTextColor="grey"
+                keyboardType={'email-address'}
+                onChangeText={(text) => setName(text)}
+              />
+            </View>
+          </View>
+          <View style={{ gap: 5 }}>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                color: Colors.gray,
+                fontSize: ms(16),
+              }}
+            >
+              Nickname
+            </Text>
+            <View style={styles.inputBox}>
+              <FontAwesome name="user-circle-o" size={ms(24)} color="black" />
+              <TextInput
+                style={styles.textInput}
+                value={nickName}
+                placeholder="Nickname"
+                placeholderTextColor="grey"
+                keyboardType={'email-address'}
+                onChangeText={(text) => setNickName(text)}
+              />
+            </View>
+          </View>
         </View>
-        {/* <Button title="LOG out" onPress={() => logOut()} /> */}
-        <HomeAnimation />
+        <Button
+          title="Start"
+          buttonStyle={{
+            backgroundColor: Colors.darkGreen,
+            borderWidth: 2,
+            borderColor: 'white',
+            borderRadius: 30,
+          }}
+          containerStyle={styles.saveButton}
+          titleStyle={{ fontWeight: 'bold', fontSize: ms(22) }}
+          onPress={() => saveUser()}
+        />
+        <TouchableOpacity
+          onPress={() => backToWelcome()}
+          style={styles.backHome}
+        >
+          <MaterialCommunityIcons
+            name="backspace-outline"
+            size={ms(30)}
+            color="black"
+          />
+          <Text style={styles.backText}>Back</Text>
+        </TouchableOpacity>
       </CustomKeyboardView>
     </CustomBackgroundImage>
   );
@@ -105,12 +161,21 @@ const CreateUser = () => {
 
 export default CreateUser;
 const styles = ScaledSheet.create({
+  box_fields: {
+    marginHorizontal: '50@ms',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: '15@ms',
+    borderColor: Colors.gray,
+    borderWidth: '2@ms',
+    borderRadius: '10@ms',
+    gap: '10@ms',
+  },
   inputBox: {
-    // flexDirection: 'row',
-    marginHorizontal: '80@ms',
+    flexDirection: 'row',
     backgroundColor: Colors.gray,
-    borderRadius: 10,
+    borderRadius: '10@ms',
     padding: '10@ms',
+    // marginTop: '20@ms',
   },
   textInput: {
     fontSize: '16@ms',
@@ -121,57 +186,33 @@ const styles = ScaledSheet.create({
     color: Colors.darkGreen,
     fontSize: 64,
     fontWeight: 'bold',
-    paddingTop: 40,
+    paddingTop: '15@ms',
   },
   header2: {
     color: Colors.gray,
-    fontSize: 28,
+    fontSize: '28@ms',
     fontWeight: 'bold',
-    paddingTop: 25,
+    paddingTop: '10@ms',
   },
   box_image: {
+    height: '200@vs',
     alignItems: 'center',
     position: 'relative',
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
+  saveButton: {
+    padding: '20@ms',
   },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+  backHome: {
+    flexDirection: 'row',
+    backgroundColor: 'blue',
+    borderRadius: '8@ms',
+    width: '90@s',
+    padding: '3@ms',
+    gap: '10@ms',
+    marginLeft: '8@ms',
   },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
+  backText: {
+    fontSize: '20@ms',
+    color: 'black',
   },
 });
