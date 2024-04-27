@@ -71,5 +71,6 @@ const styles = ScaledSheet.create({
   textInput: {
     fontSize: '16@ms',
     paddingLeft: '10@ms',
+    width: '100%',
   },
 });

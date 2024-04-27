@@ -1,80 +1,121 @@
-import {
-  View,
-  Text,
-  ImageBackground,
-  StyleSheet,
-  TextInput,
-} from 'react-native';
+import { View, Text, Pressable, TextInput, Alert, Modal } from 'react-native';
+
 import React, { useState } from 'react';
 import { useAuth, useUser } from '@realm/react';
 import { Button } from 'react-native-elements';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '../myAssets/colors/Colors';
-import { ScrollView } from 'react-native-gesture-handler';
+import CustomBackgroundImage from '../components/CustomBackgroundImage';
+import CustomKeyboardView from '../components/CustomKeyboardView';
+import { ScaledSheet, s, vs, ms } from 'react-native-size-matters';
+import HomeAnimation from '../components/HomeAnimation';
+import * as ImagePicker from 'expo-image-picker';
+
+import Avatar from '../components/Avatar';
 
 const CreateUser = () => {
   const [name, setName] = useState('');
+  const [image, setImage] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  console.log(modalVisible);
   const user = useUser();
   const { logOut } = useAuth();
   console.log('Create User ', user.customData);
   const performLogout = () => {
     logOut();
   };
+  // const onButtonPress = () => {
+  //   console.log('onButtonPress');
+  // };
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-  const image = {
-    uri: 'https://w0.peakpx.com/wallpaper/355/120/HD-wallpaper-champions-league-icio-uefa-champions-league.jpg',
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
   };
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <ImageBackground source={image} style={styles.image}>
-        <View style={{ alignItems: 'center' }}>
+    <CustomBackgroundImage>
+      <CustomKeyboardView>
+        <View
+          style={{ height: vs(200), paddingTop: ms(40), alignItems: 'center' }}
+        >
           <Text style={styles.header1}>Welcome</Text>
           <Text style={styles.header2}>Create new User</Text>
         </View>
-        <View>
-          <View style={{ alignItems: 'center', marginTop: 25 }}>
-            <Text style={{ fontSize: 20 }}>Profile Image</Text>
-            <View style={styles.uploadImage}></View>
-          </View>
+        {/*Profile  Image */}
+        <View style={styles.box_image}>
+          <Avatar onButtonPress={() => setModalVisible(true)} uri={image} />
         </View>
-        <View style={{ alignItems: 'center' }}>
-          <Text>Tot</Text>
-          <View style={styles.inputBox}>
-            <TextInput
-              style={styles.textInput}
-              value={name}
-              placeholder="Email"
-              placeholderTextColor="grey"
-              keyboardType={'email-address'}
-              onChangeText={(text) => setName(text)}
-            />
-          </View>
-          <Button title="LOG out" onPress={() => logOut()} />
+        <View style={styles.centeredView}>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>Hello World!</Text>
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text style={styles.textStyle}>Hide Modal</Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+          <Pressable
+            style={[styles.button, styles.buttonOpen]}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={styles.textStyle}>Show Modal</Text>
+          </Pressable>
         </View>
-      </ImageBackground>
-    </ScrollView>
+
+        {/* Fields */}
+
+        <View style={styles.inputBox}>
+          <TextInput
+            style={styles.textInput}
+            value={name}
+            placeholder="Name"
+            placeholderTextColor="grey"
+            keyboardType={'email-address'}
+            onChangeText={(text) => setName(text)}
+          />
+        </View>
+        {/* <Button title="LOG out" onPress={() => logOut()} /> */}
+        <HomeAnimation />
+      </CustomKeyboardView>
+    </CustomBackgroundImage>
   );
 };
 
 export default CreateUser;
-const styles = StyleSheet.create({
-  textInput: {
-    alignContent: 'flex-start',
-    borderRadius: 100,
-    color: 'blue',
-    fontSize: 18,
-    paddingHorizontal: 15,
-  },
+const styles = ScaledSheet.create({
   inputBox: {
     // flexDirection: 'row',
-    backgroundColor: 'rgb(220,220, 220)',
-    // width: '90%',
-    // marginLeft: 50,
-    // marginVertical: 10,
-    // borderRadius: 15,
-    // padding: 15,
-    borderColor: Colors.dark,
-    borderWidth: 1,
+    marginHorizontal: '80@ms',
+    backgroundColor: Colors.gray,
+    borderRadius: 10,
+    padding: '10@ms',
+  },
+  textInput: {
+    fontSize: '16@ms',
+    paddingLeft: '10@ms',
+    width: '100%',
   },
   header1: {
     color: Colors.darkGreen,
@@ -88,17 +129,49 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: 25,
   },
-  uploadImage: {
-    height: 150,
-    width: 150,
-    borderColor: 'black',
-    borderWidth: 2,
-    borderRadius: 100,
-    marginTop: 20,
+  box_image: {
+    alignItems: 'center',
+    position: 'relative',
   },
-  image: {
+  centeredView: {
     flex: 1,
-    resizeMode: 'cover',
-    // alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });

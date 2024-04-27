@@ -1,18 +1,48 @@
 import { View, TextInput } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Colors from '../myAssets/colors/Colors';
 import { Fontisto } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 
 import { Button } from 'react-native-elements';
 import { ScaledSheet, s, vs, ms } from 'react-native-size-matters';
+import Toast from 'react-native-toast-message';
+import { AuthOperationName, useEmailPasswordAuth } from '@realm/react';
 
 const RegisterForm = () => {
+  const { register, result, logIn } = useEmailPasswordAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  useEffect(() => {
+    if (result.success && result.operation === AuthOperationName.Register) {
+      logIn({ email, password });
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: 'User exists',
+      });
+    }
+  }, [result, logIn]);
+
   const handleRegister = async () => {
-    console.log('register');
+    if (email == '' || password == '' || confirmPassword == '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter All Fields',
+      });
+
+      return;
+    }
+    if (confirmPassword !== password) {
+      Toast.show({
+        type: 'error',
+        text1: 'Passwords do not match',
+      });
+      return;
+    }
+    register({ email, password });
   };
 
   return (
@@ -44,7 +74,7 @@ const RegisterForm = () => {
         <Feather name="unlock" size={ms(26)} color="black" />
         <TextInput
           style={styles.textInput}
-          value={password}
+          value={confirmPassword}
           placeholder="Confirm Password"
           placeholderTextColor="grey"
           secureTextEntry={true}
@@ -84,5 +114,6 @@ const styles = ScaledSheet.create({
   textInput: {
     fontSize: '16@ms',
     paddingLeft: '10@ms',
+    width: '100%',
   },
 });

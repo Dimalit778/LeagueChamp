@@ -1,7 +1,5 @@
 import { Text, TouchableOpacity, View } from 'react-native';
-
 import { ScaledSheet } from 'react-native-size-matters';
-
 import { useEffect, useState } from 'react';
 import Colors from '../myAssets/colors/Colors';
 
