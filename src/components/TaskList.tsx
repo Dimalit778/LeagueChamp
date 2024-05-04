@@ -16,6 +16,7 @@ export default function TaskList() {
   const realm = useRealm();
   // const tasks = useQuery(Task);
   const leagues = useQuery(League);
+
   // const user = useUser();
 
   const [newLeague, setNewLeague] = useState('');

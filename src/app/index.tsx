@@ -1,9 +1,7 @@
+import { I18nManager } from 'react-native';
 import { Redirect } from 'expo-router';
-import { useUser } from '@realm/react';
+I18nManager.allowRTL(false);
 
 export default function App() {
-  const user = useUser();
-  const { name } = user.customData;
-  if (!name) return <Redirect href="CreateUser" />;
-  return <Redirect href="Home" />;
+  return <Redirect href="(drawer)" />;
 }

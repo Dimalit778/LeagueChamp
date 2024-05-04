@@ -5,20 +5,23 @@ interface Theme {
   background: string;
   primary: string;
   border: string;
+  navbar: string;
 }
 
 const lightTheme: Theme = {
-  text: '#616161',
+  text: '#0D2117',
   border: '#9F9F9F',
   primary: '#333333',
-  background: '#ffffff',
+  background: '#F7EAEB',
+  navbar: '#F2F8F4',
 };
 
 const darkTheme: Theme = {
-  text: '#dadada',
-  border: '#444859',
-  primary: '#f9f9f9',
-  background: '#121212',
+  text: '#DEF2E8',
+  border: '#908d96',
+  primary: '#D9B993',
+  background: '#2F4F4F',
+  navbar: '#000000',
 };
 
 interface ThemeContextProps {

@@ -1,7 +1,7 @@
 // Define your object model
 import { BSON, ObjectSchema, Realm } from 'realm';
 
-export class Match extends Realm.Object<Match> {
+export class Standing extends Realm.Object<Standing> {
   _id: BSON.ObjectId = new BSON.ObjectId();
   leagueName: string;
   leagueCode: string;

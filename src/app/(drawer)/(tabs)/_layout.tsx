@@ -1,41 +1,113 @@
-import { View, Text } from 'react-native';
-import React from 'react';
-import { Tabs, router } from 'expo-router';
+// ICONS
+import { FontAwesome } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+import { Tabs } from 'expo-router';
+
+import React, { useContext, useEffect } from 'react';
+
 import { DrawerToggleButton } from '@react-navigation/drawer';
-import { Feather, AntDesign } from '@expo/vector-icons';
-import { Button } from 'react-native-elements';
-const _layout = () => {
+import SwitchTheme from '../../../themeProvider/SwitchBtn';
+import { ThemeContext } from '../../../themeProvider/themeContext';
+import { useUser } from '@realm/react';
+
+const TabsLayout = () => {
+  const { theme } = useContext(ThemeContext);
+  // const user = useUser();
+  // const { leagues } = user.customData;
+  // console.log(user.customData);
+  // console.log(leagues);
   return (
     <Tabs
       screenOptions={{
-        headerLeft: () => <DrawerToggleButton tintColor="#000" />,
+        headerShown: true,
+        headerLeft: () => <DrawerToggleButton tintColor={theme.text} />,
+        headerRight: () => <SwitchTheme onPress={() => 'onPress'} />,
+        headerStyle: {
+          backgroundColor: theme.navbar,
+        },
+        headerTintColor: theme.text,
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+        // -- > BOTTOM TABS
+        tabBarStyle: {
+          backgroundColor: theme.navbar,
+        },
+
+        tabBarLabelStyle: {
+          color: 'grey',
+          fontSize: 12,
+          fontWeight: 'bold',
+        },
       }}
     >
+      {/*//@ --> MATCHES SCREEN <-- */}
       <Tabs.Screen
-        name="feed"
+        name="matches"
         options={{
-          tabBarIcon: ({ color }) => (
-            <Feather name="list" size={24} color={color} />
-          ),
-          tabBarLabel: 'Feed',
-          headerTitle: 'Feed',
-          headerRight: () => (
-            <Button onPress={() => router.push('feed/new')} title="Add Post" />
-          ),
+          title: 'Matches',
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <Ionicons name="football-outline" size={32} color="gold" />
+            ) : (
+              <Ionicons name="football-outline" size={28} color="gray" />
+            ),
         }}
       />
+
+      {/*//@ --> STANDING SCREEN <-- */}
       <Tabs.Screen
-        name="profile"
+        name="standing"
         options={{
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="user" size={24} color={color} />
-          ),
-          tabBarLabel: 'Profile',
-          headerTitle: 'Profile',
+          title: 'Standing',
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <SimpleLineIcons name="chart" size={30} color="gold" />
+            ) : (
+              <SimpleLineIcons name="chart" size={28} color="gray" />
+            ),
+        }}
+      />
+      {/*//@ --> MY GAMES SCREEN <-- */}
+      <Tabs.Screen
+        name="myGames"
+        options={{
+          title: 'My Games',
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <MaterialCommunityIcons
+                name="target-account"
+                size={32}
+                color="gold"
+              />
+            ) : (
+              <MaterialCommunityIcons
+                name="target-account"
+                size={28}
+                color="gray"
+              />
+            ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Home',
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <FontAwesome name="home" size={32} color="gold" />
+            ) : (
+              <FontAwesome name="home" size={28} color="gray" />
+            ),
         }}
       />
     </Tabs>
   );
 };
 
-export default _layout;
+export default TabsLayout;

@@ -1,16 +1,11 @@
-import Realm from 'realm';
 import { PropsWithChildren } from 'react';
-import { RealmProvider } from '@realm/react';
-
-import { AppProvider, UserProvider } from '@realm/react';
+import { AppProvider, RealmProvider, UserProvider } from '@realm/react';
 import 'react-native-get-random-values';
-import LoadingBall from '../components/LoadingBall';
-import 'react-native-gesture-handler';
-import { League } from '../models/League';
 
 import Welcome from '../app/Welcome';
 import Toast from 'react-native-toast-message';
 import toastAlert from '../myAssets/toastAlert';
+import { schemas } from './RealmContext';
 
 const APP_ID: string = 'league-rwomr';
 
@@ -19,17 +14,14 @@ export default function RealmCustomProvider({ children }: PropsWithChildren) {
     <AppProvider id={APP_ID}>
       <UserProvider fallback={Welcome}>
         <RealmProvider
-          schema={[League]}
-          fallback={LoadingBall}
-          // sync={{
-          //   flexible: true,
-          //   initialSubscriptions: {
-          //     update(subs, realm) {
-          //       subs.add(realm.objects('League'));
-          //     },
-          //     rerunOnOpen: true,
-          //   },
-          // }}
+          schema={schemas}
+          sync={{
+            flexible: true,
+            onError: (_, error) => {
+              console.error(error);
+            },
+          }}
+          // fallback={<LoadingBall />}
         >
           {children}
         </RealmProvider>
@@ -38,3 +30,12 @@ export default function RealmCustomProvider({ children }: PropsWithChildren) {
     </AppProvider>
   );
 }
+
+// sync={{
+//   flexible: true,
+//   initialSubscriptions: {
+//     update(subs, realm) {
+//       subs.add(realm.objects('League'));
+//     },
+//     rerunOnOpen: true,
+//   },

@@ -3,16 +3,17 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useApp, useAuth, useUser } from '@realm/react';
 import { Button } from 'react-native-elements';
-import Colors from '../myAssets/colors/Colors';
-import CustomBackgroundImage from '../components/custom/CustomBackgroundImage';
-import CustomKeyboardView from '../components/custom/CustomKeyboardView';
+
 import { ScaledSheet, s, vs, ms } from 'react-native-size-matters';
 
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Avatar from '../components/Avatar';
-import ModalPicker from '../components/ModalPicker';
+import CustomKeyboardView from '../../components/custom/CustomKeyboardView';
+import CustomBackgroundImage from '../../components/custom/CustomBackgroundImage';
+import Avatar from '../../components/Avatar';
+import ModalPicker from '../../components/ModalPicker';
+import Colors from '../../myAssets/colors/Colors';
 
 const CreateUser = () => {
   const [name, setName] = useState('');

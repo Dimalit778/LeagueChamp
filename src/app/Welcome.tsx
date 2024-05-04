@@ -1,20 +1,19 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import { ScaledSheet } from 'react-native-size-matters';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Colors from '../myAssets/colors/Colors';
 
-import LoginForm from '../components/LoginForm';
-import RegisterForm from '../components/RegisterForm';
+// import LoginForm from '../components/LoginForm';
+// import RegisterForm from '../components/RegisterForm';
 import CustomBackgroundImage from '../components/custom/CustomBackgroundImage';
 import CustomKeyboardView from '../components/custom/CustomKeyboardView';
-import LoadingBall from '../components/LoadingBall';
-import LottieView from 'lottie-react-native';
+import AuthForm from '../components/AuthForm';
 
 const Welcome = () => {
-  const [showLogin, setShowLogin] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [login, setLogin] = useState(true);
+
   function handleFlipCard() {
-    setShowLogin(!showLogin);
+    setLogin(!login);
   }
 
   return (
@@ -35,8 +34,8 @@ const Welcome = () => {
                   style={[
                     styles.switchText,
                     {
-                      backgroundColor: showLogin ? 'gold' : null,
-                      color: showLogin ? 'black' : 'lightgrey',
+                      backgroundColor: login ? 'gold' : null,
+                      color: setLogin ? 'black' : 'lightgrey',
                     },
                   ]}
                 >
@@ -49,8 +48,8 @@ const Welcome = () => {
                   style={[
                     styles.switchText,
                     {
-                      backgroundColor: showLogin ? null : 'gold',
-                      color: showLogin ? 'lightgrey' : 'black',
+                      backgroundColor: login ? null : 'gold',
+                      color: setLogin ? 'lightgrey' : 'black',
                     },
                   ]}
                 >
@@ -60,10 +59,9 @@ const Welcome = () => {
             </View>
 
             <View style={styles.box_authForm}>
-              {showLogin ? <LoginForm loading={loading} /> : <RegisterForm />}
+              <AuthForm login={login} />
             </View>
           </View>
-          {loading && <LoadingBall />}
         </CustomKeyboardView>
       </CustomBackgroundImage>
     </>
@@ -74,7 +72,6 @@ export default Welcome;
 const styles = ScaledSheet.create({
   container: {
     flex: 1,
-    marginTop: '40@ms',
   },
   box_header: {
     height: '220@s',
@@ -108,5 +105,15 @@ const styles = ScaledSheet.create({
     textShadowColor: 'white',
     textShadowOffset: { width: 2, height: 5 },
     textShadowRadius: 5,
+  },
+  linkText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'gold',
+  },
+  linkBox: {
+    backgroundColor: 'blue',
+    padding: 15,
+    borderRadius: 5,
   },
 });

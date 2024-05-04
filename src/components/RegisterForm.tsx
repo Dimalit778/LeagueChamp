@@ -1,38 +1,26 @@
-import { View, TextInput } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { View, TextInput, Text } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
 import Colors from '../myAssets/colors/Colors';
 import { Fontisto } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-
+import Checkbox from 'expo-checkbox';
 import { Button } from 'react-native-elements';
 import { ScaledSheet, s, vs, ms } from 'react-native-size-matters';
 import Toast from 'react-native-toast-message';
-import { AuthOperationName, useEmailPasswordAuth } from '@realm/react';
-import LoadingBall from './LoadingBall';
+import { useApp, Realm, useRealm, useUser } from '@realm/react';
+import { LoadingBall } from './LoadingBall';
 
 const RegisterForm = () => {
-  const { register, result, logIn } = useEmailPasswordAuth();
-  const [email, setEmail] = useState('');
+  const app = useApp();
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    if (result.success && result.operation === AuthOperationName.Register) {
-      try {
-        logIn({ email, password });
-      } catch (err) {
-        Toast.show({
-          type: 'error',
-          text1: 'User exists',
-        });
-      }
-      // setLoading(false);
-    }
-  }, [result, logIn]);
-
-  const handleRegister = async () => {
-    if (email == '' || password == '' || confirmPassword == '') {
+  const checkValidInputs = () => {
+    if (userName == '' || userEmail == '' || password == '') {
       Toast.show({
         type: 'error',
         text1: 'Please enter All Fields',
@@ -40,53 +28,92 @@ const RegisterForm = () => {
 
       return;
     }
-    if (confirmPassword !== password) {
+
+    setLoading(true);
+
+    handleRegister();
+  };
+  const handleRegister = useCallback(async () => {
+    let email = userEmail.toLowerCase();
+    try {
+      await app.emailPasswordAuth.registerUser({ email, password });
+      await signIn();
+    } catch (error: any) {
+      setLoading(false);
       Toast.show({
         type: 'error',
-        text1: 'Passwords do not match',
+        text1: `Failed Sign Up : ${error?.message}`,
       });
-      return;
     }
-    // setLoading(true);
-    register({ email, password });
-  };
+  }, [app, userEmail, password]);
+
+  const signIn = useCallback(async () => {
+    let email = userEmail.toLowerCase();
+    const credentials = Realm.Credentials.emailPassword(email, password);
+    //Update User in MongoDB with his name
+    await app.logIn(credentials);
+    // const usersCollection = userRes
+    //   .mongoClient('mongodb-atlas')
+    //   .db('League')
+    //   .collection('Users');
+    // await usersCollection.updateOne(
+    //   { userId: userRes.id },
+    //   { $set: { name: userName } },
+    //   { upsert: true }
+    // );
+    // await userRes.refreshCustomData();
+  }, [app, userEmail, password]);
 
   return (
     <View style={styles.container}>
+      {loading && <LoadingBall />}
+      <View style={styles.inputBox}>
+        <Feather name="user" size={ms(26)} color="black" />
+        <TextInput
+          style={styles.textInput}
+          value={userName}
+          placeholder="Name"
+          placeholderTextColor="grey"
+          onChangeText={(text) => setUserName(text)}
+        />
+      </View>
       <View style={styles.inputBox}>
         <Fontisto name="email" size={ms(26)} color="black" />
         <TextInput
           style={styles.textInput}
-          value={email}
+          value={userEmail}
           placeholder="Email"
           placeholderTextColor="grey"
           keyboardType={'email-address'}
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={(text) => setUserEmail(text)}
         />
       </View>
       {/* PASSWORD Input */}
       <View style={styles.inputBox}>
-        <Feather name="lock" size={ms(26)} color="black" />
+        {!showPassword ? (
+          <Feather name="lock" size={ms(26)} color="black" />
+        ) : (
+          <Feather name="unlock" size={ms(26)} color="black" />
+        )}
+
         <TextInput
           style={styles.textInput}
           value={password}
           placeholder="Password"
           placeholderTextColor="grey"
-          secureTextEntry={true}
+          secureTextEntry={!showPassword}
           onChangeText={(text) => setPassword(text)}
         />
       </View>
-      <View style={styles.inputBox}>
-        <Feather name="unlock" size={ms(26)} color="black" />
-        <TextInput
-          style={styles.textInput}
-          value={confirmPassword}
-          placeholder="Confirm Password"
-          placeholderTextColor="grey"
-          secureTextEntry={true}
-          onChangeText={(text) => setConfirmPassword(text)}
+      <View style={styles.section}>
+        <Checkbox
+          style={styles.checkbox}
+          value={showPassword}
+          onValueChange={setShowPassword}
         />
+        <Text style={{ fontSize: ms(14) }}>Show Password </Text>
       </View>
+
       <Button
         title="Sign Up"
         buttonStyle={{
@@ -96,7 +123,7 @@ const RegisterForm = () => {
           borderRadius: 30,
         }}
         titleStyle={{ fontWeight: 'bold', fontSize: ms(22) }}
-        onPress={() => handleRegister()}
+        onPress={() => checkValidInputs()}
       />
     </View>
   );
@@ -115,11 +142,19 @@ const styles = ScaledSheet.create({
     flexDirection: 'row',
     backgroundColor: Colors.gray,
     borderRadius: 10,
-    padding: '10@ms',
+    padding: '8@ms',
   },
   textInput: {
     fontSize: '16@ms',
-    paddingLeft: '10@ms',
-    width: '100%',
+    marginHorizontal: '5@ms',
+    width: '85%',
+  },
+  section: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  checkbox: {
+    margin: '5@ms',
   },
 });

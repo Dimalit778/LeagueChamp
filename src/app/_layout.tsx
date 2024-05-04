@@ -1,10 +1,11 @@
 import 'react-native-get-random-values';
 import React from 'react';
-import { Slot, Stack } from 'expo-router';
-import RealmCustomProvider from '../providers/Realm';
+import { Stack } from 'expo-router';
+
 import { ThemeProvider } from '../themeProvider/themeContext';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
+import RealmCustomProvider from '../providers/Realm';
 
 const RootLayout = () => {
   return (
@@ -18,5 +19,4 @@ const RootLayout = () => {
     </GestureHandlerRootView>
   );
 };
-
 export default RootLayout;

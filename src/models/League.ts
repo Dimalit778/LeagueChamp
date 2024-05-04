@@ -1,5 +1,5 @@
 // Define your object model
-import { BSON, ObjectSchema, Realm } from 'realm';
+import { BSON, Realm } from 'realm';
 
 export class League extends Realm.Object<League> {
   _id: BSON.ObjectId = new BSON.ObjectId();

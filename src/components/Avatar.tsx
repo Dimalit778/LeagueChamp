@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Image, View, TouchableWithoutFeedback } from 'react-native';
 
 import { ScaledSheet, ms, s, vs } from 'react-native-size-matters';

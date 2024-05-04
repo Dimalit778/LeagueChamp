@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native';
 import React from 'react';
 
-const Settings = () => {
+const Matches = () => {
   return (
     <View>
-      <Text>Settings</Text>
+      <Text>matches</Text>
     </View>
   );
 };
 
-export default Settings;
+export default Matches;

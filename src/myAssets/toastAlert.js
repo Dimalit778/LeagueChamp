@@ -1,3 +1,4 @@
+import { vs, ms } from 'react-native-size-matters';
 import { BaseToast, ErrorToast } from 'react-native-toast-message';
 
 const toastAlert = {
@@ -6,17 +7,17 @@ const toastAlert = {
       {...props}
       style={{
         borderColor: 'green',
-        borderLeftWidth: 10,
-        borderRightWidth: 10,
+        borderLeftWidth: ms(7),
+        borderRightWidth: ms(7),
       }}
-      contentContainerStyle={{ paddingHorizontal: 15 }}
+      contentContainerStyle={{ paddingHorizontal: ms(15) }}
       text1Style={{
         color: 'green',
-        fontSize: 20,
+        fontSize: ms(16),
         fontWeight: '700',
       }}
       text2Style={{
-        fontSize: 14,
+        fontSize: ms(14),
       }}
     />
   ),
@@ -26,17 +27,17 @@ const toastAlert = {
       {...props}
       style={{
         borderColor: 'red',
-        borderLeftWidth: 10,
-        borderRightWidth: 10,
-        height: 40,
+        borderLeftWidth: ms(7),
+        borderRightWidth: ms(7),
+        height: vs(40),
       }}
       text1Style={{
         textAlign: 'center',
         color: 'black',
-        fontSize: 20,
+        fontSize: ms(16),
       }}
       text2Style={{
-        fontSize: 20,
+        fontSize: ms(14),
         color: 'red',
         fontWeight: '500',
       }}
