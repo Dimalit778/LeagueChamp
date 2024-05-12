@@ -93,7 +93,7 @@ const TabsLayout = () => {
             ),
         }}
       />
-
+      {/*//@ --> INDEX SCREEN <-- */}
       <Tabs.Screen
         name="index"
         options={{

@@ -39,8 +39,6 @@ function LoadingSplash() {
           StyleSheet.absoluteFillObject,
           {
             justifyContent: 'center',
-            backgroundColor: 'rgba(0,0,0,0.2)',
-            zIndex: 1,
           },
         ]}
       >

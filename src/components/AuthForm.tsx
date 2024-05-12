@@ -1,4 +1,4 @@
-import { View, TextInput, Text } from 'react-native';
+import { View, TextInput, Text, Pressable } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import Colors from '../myAssets/colors/Colors';
 import { Fontisto } from '@expo/vector-icons';
@@ -9,7 +9,7 @@ import { LoadingBall } from './LoadingBall';
 import { useApp, Realm } from '@realm/react';
 import Toast from 'react-native-toast-message';
 import Checkbox from 'expo-checkbox';
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 
 type props = {
   login: boolean;
@@ -22,16 +22,19 @@ const AuthForm = ({ login }: props) => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
   const signIn = useCallback(async () => {
     let email = userEmail.toLowerCase();
     const creds = Realm.Credentials.emailPassword(email, password);
 
     await app.logIn(creds);
-    router.replace('(newUser)');
+    setLoading(false);
   }, [app, userEmail, password]);
 
   const handleLogin = useCallback(async () => {
+    setLoading(true);
     if (userEmail == '' || password == '') {
       Toast.show({
         type: 'error',
@@ -53,6 +56,7 @@ const AuthForm = ({ login }: props) => {
   }, [signIn, app, userEmail, password]);
 
   const handleRegister = useCallback(async () => {
+    setLoading(true);
     let email = userEmail.toLowerCase();
     try {
       await app.emailPasswordAuth.registerUser({ email, password });
@@ -82,9 +86,13 @@ const AuthForm = ({ login }: props) => {
       {/* PASSWORD Input */}
       <View style={styles.inputBox}>
         {!showPassword ? (
-          <Feather name="lock" size={ms(26)} color="black" />
+          <Pressable onPress={() => handleShowPassword()}>
+            <Feather name="eye-off" size={ms(26)} color="black" />
+          </Pressable>
         ) : (
-          <Feather name="unlock" size={ms(26)} color="black" />
+          <Pressable onPress={() => handleShowPassword()}>
+            <Feather name="eye" size={ms(26)} color="black" />
+          </Pressable>
         )}
         <TextInput
           style={styles.textInput}
@@ -95,14 +103,7 @@ const AuthForm = ({ login }: props) => {
           onChangeText={(text) => setPassword(text)}
         />
       </View>
-      <View style={styles.section}>
-        <Checkbox
-          style={styles.checkbox}
-          value={showPassword}
-          onValueChange={setShowPassword}
-        />
-        <Text style={{ fontSize: ms(14) }}>Show Password </Text>
-      </View>
+
       {login ? (
         <Button
           title="Log In"
@@ -149,7 +150,7 @@ const styles = ScaledSheet.create({
   },
   textInput: {
     fontSize: '16@ms',
-    marginHorizontal: '5@ms',
+    marginHorizontal: '8@ms',
     width: '85%',
   },
   section: {

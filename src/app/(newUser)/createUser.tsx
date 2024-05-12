@@ -1,36 +1,35 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput } from 'react-native';
 
-import React, { useEffect, useState } from 'react';
-import { useApp, useAuth, useUser } from '@realm/react';
+import React, { useState } from 'react';
+import { useQuery, useRealm, useUser } from '@realm/react';
 import { Button } from 'react-native-elements';
 
 import { ScaledSheet, s, vs, ms } from 'react-native-size-matters';
 
 import * as ImagePicker from 'expo-image-picker';
-import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+
 import CustomKeyboardView from '../../components/custom/CustomKeyboardView';
 import CustomBackgroundImage from '../../components/custom/CustomBackgroundImage';
 import Avatar from '../../components/Avatar';
 import ModalPicker from '../../components/ModalPicker';
 import Colors from '../../myAssets/colors/Colors';
+import { Link, useRouter } from 'expo-router';
+
+import { User } from '../../models/User';
+import { BSON } from 'realm';
 
 const CreateUser = () => {
-  const [name, setName] = useState('');
-  const [nickName, setNickName] = useState('');
-  const [image, setImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const router = useRouter();
 
+  const realm = useRealm();
   const user = useUser();
-  const app = useApp();
-  useEffect(() => {
-    console.log('use effect');
-    console.log('Create User ', user.customData);
-  }, [user, name]);
+  const userInfo = useQuery(User);
 
-  // const onButtonPress = () => {
-  //   console.log('onButtonPress');
-  // };
+  const [userName, setUserName] = useState('');
+  const [userImage, setUserImage] = useState('');
+
   const pickImage = async () => {
     setModalVisible(false);
     // No permissions request is necessary for launching the image library
@@ -44,35 +43,41 @@ const CreateUser = () => {
     console.log(result);
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setUserImage(result.assets[0].uri);
     }
   };
   const clearImage = () => {
     setModalVisible(false);
-    setImage(null);
-  };
-  const saveUser = () => {
-    console.log('save');
-  };
-  const backToWelcome = async () => {
-    await app.deleteUser(user);
+    setUserImage(null);
   };
 
+  const saveUser = async () => {
+    const newUser = {
+      _id: new BSON.ObjectId(),
+      name: userName,
+      image: userImage,
+      leagues: [],
+      user_id: user.id,
+    };
+    await realm.write(() => {
+      realm.create('User', newUser);
+    });
+
+    router.replace('(drawer)');
+  };
+  // const toUpdate = realm.objects(User).filtered('userId == $0', user.id);
+
+  // realm.write(() => {
+  //   toUpdate[0].name = userName;
+  //   toUpdate[0].image = userImage;
+  // });
   return (
     <CustomBackgroundImage>
       <CustomKeyboardView>
-        <View
-          style={{
-            alignItems: 'center',
-          }}
-        >
-          <Text style={styles.header1}>Welcome</Text>
-          <Text style={styles.header2}>Create new User</Text>
-        </View>
-
+        <Text style={styles.header2}>Create new User</Text>
         {/*Profile  Image */}
         <View style={styles.box_image}>
-          <Avatar uri={image} openModal={() => setModalVisible(true)} />
+          <Avatar uri={userImage} openModal={() => setModalVisible(true)} />
 
           {/* Modal upload image */}
           <ModalPicker
@@ -84,7 +89,6 @@ const CreateUser = () => {
             addImage={() => pickImage()}
           />
         </View>
-
         {/* Fields */}
         <View style={styles.box_fields}>
           <View style={{ gap: 5 }}>
@@ -101,37 +105,16 @@ const CreateUser = () => {
               <FontAwesome5 name="user" size={ms(24)} color="black" />
               <TextInput
                 style={styles.textInput}
-                value={name}
+                value={userName}
                 placeholder="Name"
                 placeholderTextColor="grey"
                 keyboardType={'email-address'}
-                onChangeText={(text) => setName(text)}
-              />
-            </View>
-          </View>
-          <View style={{ gap: 5 }}>
-            <Text
-              style={{
-                fontWeight: 'bold',
-                color: Colors.gray,
-                fontSize: ms(16),
-              }}
-            >
-              Nickname
-            </Text>
-            <View style={styles.inputBox}>
-              <FontAwesome name="user-circle-o" size={ms(24)} color="black" />
-              <TextInput
-                style={styles.textInput}
-                value={nickName}
-                placeholder="Nickname"
-                placeholderTextColor="grey"
-                keyboardType={'email-address'}
-                onChangeText={(text) => setNickName(text)}
+                onChangeText={(text) => setUserName(text)}
               />
             </View>
           </View>
         </View>
+
         <Button
           title="Start"
           buttonStyle={{
@@ -144,17 +127,6 @@ const CreateUser = () => {
           titleStyle={{ fontWeight: 'bold', fontSize: ms(22) }}
           onPress={() => saveUser()}
         />
-        <TouchableOpacity
-          onPress={() => backToWelcome()}
-          style={styles.backHome}
-        >
-          <MaterialCommunityIcons
-            name="backspace-outline"
-            size={ms(30)}
-            color="black"
-          />
-          <Text style={styles.backText}>Back</Text>
-        </TouchableOpacity>
       </CustomKeyboardView>
     </CustomBackgroundImage>
   );
@@ -190,10 +162,12 @@ const styles = ScaledSheet.create({
     paddingTop: '15@ms',
   },
   header2: {
+    textAlign: 'center',
     color: Colors.gray,
+    marginTop: '50@ms',
     fontSize: '28@ms',
     fontWeight: 'bold',
-    paddingTop: '10@ms',
+    // paddingTop: '10@ms',
   },
   box_image: {
     height: '200@vs',

@@ -3,8 +3,6 @@ import { ScaledSheet } from 'react-native-size-matters';
 import { useState } from 'react';
 import Colors from '../myAssets/colors/Colors';
 
-// import LoginForm from '../components/LoginForm';
-// import RegisterForm from '../components/RegisterForm';
 import CustomBackgroundImage from '../components/custom/CustomBackgroundImage';
 import CustomKeyboardView from '../components/custom/CustomKeyboardView';
 import AuthForm from '../components/AuthForm';
@@ -35,7 +33,6 @@ const Welcome = () => {
                     styles.switchText,
                     {
                       backgroundColor: login ? 'gold' : null,
-                      color: setLogin ? 'black' : 'lightgrey',
                     },
                   ]}
                 >
@@ -49,7 +46,6 @@ const Welcome = () => {
                     styles.switchText,
                     {
                       backgroundColor: login ? null : 'gold',
-                      color: setLogin ? 'lightgrey' : 'black',
                     },
                   ]}
                 >

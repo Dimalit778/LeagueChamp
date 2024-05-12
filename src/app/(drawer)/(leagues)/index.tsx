@@ -7,30 +7,33 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { Link, Stack } from 'expo-router';
 import { useQuery, useRealm } from '@realm/react';
 
 import { League } from '../../../models/League';
+import { ShowLeagues } from '../../../components/ShowLeagues';
+import { ThemeContext } from '../../../themeProvider/themeContext';
 
 //@ ---> Leagues Page
 const index = () => {
+  const { theme } = useContext(ThemeContext);
   // const realm = useRealm();
   // const users = useQuery(User);
   const leagues = useQuery(League);
-  console.log(leagues);
+  console.log('leagues page ', leagues);
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
       <View style={{}}>
         <Text style={{ fontSize: 32, textAlign: 'center' }}>My Leagues</Text>
       </View>
       {/* LEAGUES LIST */}
       <View style={{ height: '40%' }}>
-        {/* <FlatList
-            data={leagues}
-            renderItem={({ item }) => <ShowLeauges league={item} />}
-          /> */}
+        <FlatList
+          data={leagues}
+          renderItem={({ item }) => <ShowLeagues league={item} />}
+        />
       </View>
       {/* BUTTONS */}
       <View

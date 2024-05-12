@@ -31,8 +31,8 @@ interface ThemeContextProps {
 }
 
 export const ThemeContext = createContext<ThemeContextProps>({
-  theme: lightTheme, // Default theme
-  isDarkMode: false, // Default dark mode setting
+  theme: darkTheme, // Default theme
+  isDarkMode: true, // Default dark mode setting
   setIsDarkMode: () => {}, // Default setter function
 });
 
@@ -41,7 +41,7 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const theme = isDarkMode ? darkTheme : lightTheme;
 
   return (

@@ -7,7 +7,14 @@ import Toast from 'react-native-toast-message';
 import toastAlert from '../myAssets/toastAlert';
 import { schemas } from './RealmContext';
 
-const APP_ID: string = 'league-rwomr';
+import { LoadingSplash } from '../components/LoadingBall';
+import { OpenRealmBehaviorType } from 'realm';
+import { User } from '../models/User';
+import { League } from '../models/League';
+import { Match } from '../models/Match';
+import { Round } from '../models/Round';
+
+const APP_ID: string = 'leaguechamp-xqhhequ';
 
 export default function RealmCustomProvider({ children }: PropsWithChildren) {
   return (
@@ -17,11 +24,20 @@ export default function RealmCustomProvider({ children }: PropsWithChildren) {
           schema={schemas}
           sync={{
             flexible: true,
+            initialSubscriptions: {
+              update(subs, realm) {
+                subs.add(realm.objects(User));
+                subs.add(realm.objects(League));
+                subs.add(realm.objects(Round));
+                subs.add(realm.objects(Match));
+              },
+              rerunOnOpen: true,
+            },
             onError: (_, error) => {
               console.error(error);
             },
           }}
-          // fallback={<LoadingBall />}
+          fallback={<LoadingSplash />}
         >
           {children}
         </RealmProvider>

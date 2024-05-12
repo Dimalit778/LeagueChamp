@@ -3,34 +3,39 @@ import React, { useContext, useEffect } from 'react';
 import { Drawer } from 'expo-router/drawer';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { Feather, AntDesign, Ionicons } from '@expo/vector-icons';
-import { router, usePathname } from 'expo-router';
+import { Redirect, router, usePathname } from 'expo-router';
 
 import { ThemeContext } from '../../themeProvider/themeContext';
-import { useAuth, useUser } from '@realm/react';
+import { useApp, useAuth, useUser } from '@realm/react';
 import { FontAwesome } from '@expo/vector-icons';
 import { ScaledSheet, ms, s, vs } from 'react-native-size-matters';
 import { Button } from 'react-native-elements';
 
 export default function Layout() {
-  const { user } = useUser();
-
+  const user = useUser();
+  const { name, image, leagues } = user.customData;
+  console.log('Drawer leagues --> ', leagues);
+  // if (leagues[0] === undefined) router.replace('(leagues)');
   return (
     <Drawer drawerContent={(props) => <CustomDrawer {...props} />}>
       <Drawer.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Drawer.Screen name="createUser" options={{ headerShown: false }} />
+      <Drawer.Screen name="(leagues)" options={{ headerShown: false }} />
+      <Drawer.Screen name="Profile" options={{ headerShown: true }} />
+      <Drawer.Screen name="Settings" options={{ headerShown: true }} />
     </Drawer>
   );
 }
 
 const CustomDrawer = (props: any) => {
   const user = useUser();
+  const { name, image } = user.customData;
   const { logOut } = useAuth();
-  const image = null;
+
   const pathname = usePathname();
   const { theme } = useContext(ThemeContext);
   useEffect(() => {
     console.log(pathname);
-  }, [pathname]);
+  }, [pathname, name]);
   const performLogout = () => {
     logOut();
   };
@@ -51,13 +56,10 @@ const CustomDrawer = (props: any) => {
           <FontAwesome name="user-circle-o" size={ms(90)} color={theme.text} />
         )}
         <View style={styles.userDetailsWrapper}>
-          <Text style={[styles.userName, { color: theme.text }]}>John Doe</Text>
-          <Text style={[styles.userEmail, { color: theme.text }]}>
-            john@email.com
-          </Text>
+          <Text style={[styles.userName, { color: theme.text }]}>{name}</Text>
         </View>
       </View>
-      {/* ___ Home Screen ___ */}
+      {/*//@ --> Tabs Screen <-- */}
       <DrawerItem
         icon={({ color, size }) => (
           <Feather
@@ -76,7 +78,26 @@ const CustomDrawer = (props: any) => {
           router.push('(tabs)');
         }}
       />
-      {/* ___ Profile Screen ___ */}
+      {/*//@ --> My Leagues Screen <-- */}
+      <DrawerItem
+        icon={({ color, size }) => (
+          <Feather
+            name="list"
+            size={size}
+            color={pathname == '/feed' ? '#fff' : '#000'}
+          />
+        )}
+        label={'My Leagues'}
+        labelStyle={[
+          styles.navItemLabel,
+          { color: pathname == '/feed' ? '#fff' : '#000' },
+        ]}
+        style={{ backgroundColor: pathname == '/feed' ? '#333' : '#fff' }}
+        onPress={() => {
+          router.push('/(leagues)');
+        }}
+      />
+      {/*//@ --> Profile Screen <-- */}
       <DrawerItem
         icon={({ color, size }) => (
           <AntDesign
@@ -95,7 +116,8 @@ const CustomDrawer = (props: any) => {
           router.push('/Profile');
         }}
       />
-      {/* ___ Settings Screen ___ */}
+
+      {/*//@ --> Settings Screen <-- */}
       <DrawerItem
         icon={({ color, size }) => (
           <Ionicons

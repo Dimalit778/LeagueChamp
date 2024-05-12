@@ -1,27 +1,42 @@
+const germany = require('../myAssets/flags/germany_flag.png');
+const spain = require('../myAssets/flags/spain_flag.png');
+const france = require('../myAssets/flags/france_flag.png');
+const italy = require('../myAssets/flags/italy_flag.png');
+const england = require('../myAssets/flags/england_flag.png');
 export const countryFlags = [
   {
-    code: 'BL1',
-    name: 'Bundesliga',
-    flag: 'https://crests.football-data.org/759.svg',
-  },
-  {
-    code: 'PD',
-    name: 'La Liga',
-    flag: 'https://crests.football-data.org/760.svg',
-  },
-  {
-    code: 'FL1',
-    name: 'Ligue 1',
-    flag: 'https://crests.football-data.org/773.svg',
-  },
-  {
-    code: 'SA',
-    name: 'Serie A',
-    flag: 'https://crests.football-data.org/784.svg',
-  },
-  {
+    id: 1,
     code: 'PL ',
     name: 'Premier League',
-    flag: 'https://crests.football-data.org/770.svg',
+    flagImage: england,
+    country: 'England',
+  },
+  {
+    id: 2,
+    code: 'PD',
+    name: 'La Liga',
+    flagImage: spain,
+    country: 'Spain',
+  },
+  {
+    id: 3,
+    code: 'FL1',
+    name: 'Ligue 1',
+    flagImage: france,
+    country: 'France',
+  },
+  {
+    id: 4,
+    code: 'SA',
+    name: 'Serie A',
+    flagImage: italy,
+    country: 'Italy',
+  },
+  {
+    id: 5,
+    code: 'BL1',
+    name: 'Bundesliga',
+    flagImage: germany,
+    country: 'Germany',
   },
 ];
