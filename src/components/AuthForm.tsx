@@ -1,15 +1,15 @@
-import { View, TextInput, Text, Pressable } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import { View, TextInput, Pressable } from 'react-native';
+import React, { useCallback, useState } from 'react';
 import Colors from '../myAssets/colors/Colors';
 import { Fontisto } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Button } from 'react-native-elements';
 import { ScaledSheet, s, vs, ms } from 'react-native-size-matters';
 import { LoadingBall } from './LoadingBall';
-import { useApp, Realm } from '@realm/react';
+import { useApp, Realm, useRealm } from '@realm/react';
 import Toast from 'react-native-toast-message';
-import Checkbox from 'expo-checkbox';
-import { Redirect, useRouter } from 'expo-router';
+
+import { writeCustomUserData } from '../api/customUser';
 
 type props = {
   login: boolean;
@@ -17,14 +17,17 @@ type props = {
 
 const AuthForm = ({ login }: props) => {
   const app = useApp();
+
+  const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
+
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
   const signIn = useCallback(async () => {
     let email = userEmail.toLowerCase();
     const creds = Realm.Credentials.emailPassword(email, password);
@@ -61,6 +64,7 @@ const AuthForm = ({ login }: props) => {
     try {
       await app.emailPasswordAuth.registerUser({ email, password });
       await signIn();
+      await writeCustomUserData(app.currentUser, userName);
     } catch (error: any) {
       setLoading(false);
       Toast.show({
@@ -72,6 +76,19 @@ const AuthForm = ({ login }: props) => {
   return (
     <View style={styles.container}>
       {loading && <LoadingBall />}
+      {!login && (
+        <View style={styles.inputBox}>
+          <Fontisto name="email" size={ms(26)} color="black" />
+          <TextInput
+            style={styles.textInput}
+            value={userName}
+            placeholder="Name"
+            placeholderTextColor="grey"
+            keyboardType={'email-address'}
+            onChangeText={(text) => setUserName(text)}
+          />
+        </View>
+      )}
       <View style={styles.inputBox}>
         <Fontisto name="email" size={ms(26)} color="black" />
         <TextInput

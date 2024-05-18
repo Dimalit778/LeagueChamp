@@ -10,10 +10,11 @@ import { ScaledSheet } from 'react-native-size-matters';
 import Colors from '../../../myAssets/colors/Colors';
 import { Button } from 'react-native-elements';
 import CustomKeyboardView from '../../../components/custom/CustomKeyboardView';
-import { useObject, useQuery, useRealm, useUser } from '@realm/react';
+import { useApp, useObject, useQuery, useRealm, useUser } from '@realm/react';
 import { League } from '../../../models/League';
 import { User } from '../../../models/User';
 import { BSON } from 'realm';
+import { addLeagueCustomUser } from '../../../api/customUser';
 type ItemProps = {
   id: number;
   name: string;
@@ -29,35 +30,53 @@ const AddLeague = () => {
   const [leagueName, setLeagueName] = useState(null);
   const [selectedItem, setSelectedItem] = useState(firstItem);
   const realm = useRealm();
+
   const user = useUser();
 
-  useEffect(() => {
-    realm.subscriptions.update((mutableSubs) => {
-      mutableSubs.add(realm.objects(User));
-    });
-  }, []);
-  const saveLeague = async () => {
-    const newLeague = {
-      _id: new BSON.ObjectId(),
-      leagueName: leagueName,
-      leagueCode: '0000',
-      users: [{ _id: user._id, name: user.name, image: user.image, points: 0 }],
-      rounds: [],
-      owner_id: user.id,
-    };
-    await realm.write(() => {
-      realm.create('League', newLeague);
+  const { _id, name, league, image } = user.customData;
 
-      user.leagues.push(newLeague);
+  let owner = useObject(User, new BSON.ObjectId(_id));
+
+  const saveNewLeague = (leagueName: string, ownerId: string) => {
+    realm.write(() => {
+      // Create a new League object
+      const newLeague = realm.create<League>('League', {
+        _id: new BSON.ObjectId(), // Assuming you have a function to generate unique IDs like ObjectId
+        leagueName,
+        leagueCode: generateCode(),
+        owner_id: ownerId,
+        users: [], // Initialize with an empty array of users
+        rounds: [], // Initialize with an empty array of rounds
+      });
+
+      // Save the new league to the database
+      // realm.create('League', newLeague);
+
+      // Update the owner's leagues array with the new league ID and name
+
+      addLeagueCustomUser(user, owner, newLeague);
     });
   };
-  // const saveLeague = useCallback(() => {
+  // const saveNewLeague = async () => {
+  //   const newLeague = {
+  //     _id: new BSON.ObjectId(),
+  //     leagueName: leagueName,
+  //     leagueCode: generateCode(),
+  //     members: [],
+  //     owner_id: user.id,
+  //   };
 
-  //   // connect avatar with new diary
-  //   // realm.write(() => {
-  //   //   user.leagues.push({ newLeague });
-  //   // });
-  // }, [user]);
+  //   realm.write(() => {
+  //     const res = realm.create('League', newLeague);
+  //     res.members.push({
+  //       _id: new BSON.ObjectId(user.id),
+  //       name: name,
+  //       image: image,
+  //       points: 0,
+  //     });
+  //   });
+  // };
+
   // Item Card
   const CountryItem = ({ item }: { item: ItemProps }) => (
     <TouchableOpacity
@@ -77,6 +96,19 @@ const AddLeague = () => {
       </Text>
     </TouchableOpacity>
   );
+
+  const generateCode = () => {
+    const length: number = 5;
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result: string = ' ';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+  };
 
   return (
     <CustomKeyboardView>
@@ -154,7 +186,7 @@ const AddLeague = () => {
           }}
           iconRight
           iconContainerStyle={{ marginLeft: 10, marginRight: -10 }}
-          onPress={() => saveLeague()}
+          onPress={() => saveNewLeague(leagueName, user.id)}
         />
       </View>
     </CustomKeyboardView>

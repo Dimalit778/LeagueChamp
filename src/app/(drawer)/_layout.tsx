@@ -12,25 +12,31 @@ import { ScaledSheet, ms, s, vs } from 'react-native-size-matters';
 import { Button } from 'react-native-elements';
 
 export default function Layout() {
-  const user = useUser();
-  const { name, image, leagues } = user.customData;
-  console.log('Drawer leagues --> ', leagues);
-  // if (leagues[0] === undefined) router.replace('(leagues)');
+  const { theme } = useContext(ThemeContext);
   return (
-    <Drawer drawerContent={(props) => <CustomDrawer {...props} />}>
-      <Drawer.Screen name="(tabs)" options={{ headerShown: false }} />
+    <Drawer
+      drawerContent={(props) => <CustomDrawer {...props} />}
+      screenOptions={{
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: theme.navbar,
+        },
+        headerTintColor: theme.text,
+      }}
+    >
       <Drawer.Screen name="(leagues)" options={{ headerShown: false }} />
       <Drawer.Screen name="Profile" options={{ headerShown: true }} />
       <Drawer.Screen name="Settings" options={{ headerShown: true }} />
+      <Drawer.Screen name="(tabs)" options={{ headerShown: false }} />
     </Drawer>
   );
 }
 
 const CustomDrawer = (props: any) => {
   const user = useUser();
-  const { name, image } = user.customData;
+  const image = null;
+  const name = 'test';
   const { logOut } = useAuth();
-
   const pathname = usePathname();
   const { theme } = useContext(ThemeContext);
   useEffect(() => {
@@ -60,24 +66,26 @@ const CustomDrawer = (props: any) => {
         </View>
       </View>
       {/*//@ --> Tabs Screen <-- */}
-      <DrawerItem
-        icon={({ color, size }) => (
-          <Feather
-            name="list"
-            size={size}
-            color={pathname == '/feed' ? '#fff' : '#000'}
-          />
-        )}
-        label={'Home'}
-        labelStyle={[
-          styles.navItemLabel,
-          { color: pathname == '/feed' ? '#fff' : '#000' },
-        ]}
-        style={{ backgroundColor: pathname == '/feed' ? '#333' : '#fff' }}
-        onPress={() => {
-          router.push('(tabs)');
-        }}
-      />
+      {/* {leagues && (
+        <DrawerItem
+          icon={({ color, size }) => (
+            <Feather
+              name="list"
+              size={size}
+              color={pathname == '/feed' ? '#fff' : '#000'}
+            />
+          )}
+          label={'Home'}
+          labelStyle={[
+            styles.navItemLabel,
+            { color: pathname == '/feed' ? '#fff' : '#000' },
+          ]}
+          style={{ backgroundColor: pathname == '/feed' ? '#333' : '#fff' }}
+          onPress={() => {
+            router.push('(tabs)');
+          }}
+        />
+      )} */}
       {/*//@ --> My Leagues Screen <-- */}
       <DrawerItem
         icon={({ color, size }) => (

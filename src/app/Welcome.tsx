@@ -53,7 +53,6 @@ const Welcome = () => {
                 </Text>
               </TouchableOpacity>
             </View>
-
             <View style={styles.box_authForm}>
               <AuthForm login={login} />
             </View>

@@ -2,11 +2,12 @@
 import { BSON, Realm } from 'realm';
 import { League } from './League';
 
-export class User extends Realm.Object {
-  _id!: BSON.ObjectId;
+export class User extends Realm.Object<User> {
+  _id: BSON.ObjectId = new BSON.ObjectId();
   name!: string;
-  image?: string;
-  leagues!: Realm.List<League>;
+  image!: string;
+  userId!: string;
+  leagues!: League[];
 
   static schema: Realm.ObjectSchema = {
     name: 'User',
@@ -14,15 +15,13 @@ export class User extends Realm.Object {
       _id: 'objectId',
       name: 'string',
       image: 'string',
-      leagues: 'League[]',
+      userId: 'string',
+      leagues: {
+        type: 'linkingObjects',
+        objectType: 'League',
+        property: 'users',
+      },
     },
+    primaryKey: '_id',
   };
 }
-// export class User extends Realm.Object<User> {
-//   _id: BSON.ObjectId = new BSON.ObjectId();
-//   name!: string;
-//   leagues: League[] = [];
-//   user_id!: string;
-
-//   static primaryKey = '_id';
-// }
