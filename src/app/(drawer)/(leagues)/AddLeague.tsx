@@ -15,6 +15,7 @@ import { League } from '../../../models/League';
 import { User } from '../../../models/User';
 import { BSON } from 'realm';
 import { addLeagueCustomUser } from '../../../api/customUser';
+import { getLeague } from '../../../store/leagueActions';
 type ItemProps = {
   id: number;
   name: string;
@@ -33,50 +34,44 @@ const AddLeague = () => {
 
   const user = useUser();
 
-  const { _id, name, league, image } = user.customData;
+  const { _id } = user.customData;
 
   let owner = useObject(User, new BSON.ObjectId(_id));
 
-  const saveNewLeague = (leagueName: string, ownerId: string) => {
-    realm.write(() => {
-      // Create a new League object
-      const newLeague = realm.create<League>('League', {
-        _id: new BSON.ObjectId(), // Assuming you have a function to generate unique IDs like ObjectId
-        leagueName,
-        leagueCode: generateCode(),
-        owner_id: ownerId,
-        users: [], // Initialize with an empty array of users
-        rounds: [], // Initialize with an empty array of rounds
-      });
+  useEffect(() => {}, []);
+  // Generate Code League
+  const generateCode = () => {
+    const length: number = 5;
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result: string = ' ';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
 
-      // Save the new league to the database
-      // realm.create('League', newLeague);
-
-      // Update the owner's leagues array with the new league ID and name
-
-      addLeagueCustomUser(user, owner, newLeague);
-    });
+    return result;
   };
-  // const saveNewLeague = async () => {
-  //   const newLeague = {
-  //     _id: new BSON.ObjectId(),
-  //     leagueName: leagueName,
-  //     leagueCode: generateCode(),
-  //     members: [],
-  //     owner_id: user.id,
-  //   };
 
-  //   realm.write(() => {
-  //     const res = realm.create('League', newLeague);
-  //     res.members.push({
-  //       _id: new BSON.ObjectId(user.id),
-  //       name: name,
-  //       image: image,
-  //       points: 0,
-  //     });
-  //   });
-  // };
-
+  const saveNewLeague = async (leagueName: string, ownerId: string) => {
+    let newLeague = null;
+    realm.write(() => {
+      newLeague = realm.create('League', {
+        _id: new BSON.ObjectId(),
+        leagueName,
+        code: selectedItem.code,
+        joinCode: generateCode(),
+        owner_id: ownerId,
+        users: [],
+        rounds: [],
+      });
+    });
+    realm.write(() => {
+      newLeague.users.push(owner);
+    });
+    addLeagueCustomUser(user, newLeague);
+    router.replace('/(tabs)');
+  };
   // Item Card
   const CountryItem = ({ item }: { item: ItemProps }) => (
     <TouchableOpacity
@@ -96,19 +91,6 @@ const AddLeague = () => {
       </Text>
     </TouchableOpacity>
   );
-
-  const generateCode = () => {
-    const length: number = 5;
-    const characters =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result: string = ' ';
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-
-    return result;
-  };
 
   return (
     <CustomKeyboardView>

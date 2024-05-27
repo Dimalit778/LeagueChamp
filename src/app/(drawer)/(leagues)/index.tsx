@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { Link, Stack } from 'expo-router';
 import { useQuery, useRealm, useUser } from '@realm/react';
@@ -15,15 +15,21 @@ import { useQuery, useRealm, useUser } from '@realm/react';
 import { League } from '../../../models/League';
 import { ShowLeagues } from '../../../components/ShowLeagues';
 import { ThemeContext } from '../../../themeProvider/themeContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../store/store';
+import { getLeague } from '../../../store/leagueActions';
 
 //@ ---> Leagues Page
 const index = () => {
   const { theme } = useContext(ThemeContext);
+  // const { league } = useSelector((state: RootState) => state.league);
   const user = useUser();
-  // const realm = useRealm();
-  // const users = useQuery(User);
+
   const leagues = useQuery(League).filtered(`owner_id == '${user.id}'`);
-  // const league = leagues.findOne('userId ':userId);
+  useEffect(() => {
+    let t = getLeague();
+    console.log('TTT ', t);
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>

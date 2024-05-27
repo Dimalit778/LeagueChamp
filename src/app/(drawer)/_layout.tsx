@@ -34,8 +34,9 @@ export default function Layout() {
 
 const CustomDrawer = (props: any) => {
   const user = useUser();
-  const image = null;
-  const name = 'test';
+  const { name, image } = user.customData;
+  // const image = null;
+  // const name = 'test';
   const { logOut } = useAuth();
   const pathname = usePathname();
   const { theme } = useContext(ThemeContext);

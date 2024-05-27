@@ -1,4 +1,4 @@
-import { useObject } from '@realm/react';
+import { BSON } from 'realm';
 
 const writeCustomUserData = async (user: any, name: string) => {
   const customUserDataCollection = user
@@ -20,30 +20,35 @@ const writeCustomUserData = async (user: any, name: string) => {
   const options = { upsert: true };
   await customUserDataCollection.updateOne(filter, updateDoc, options);
   // Refresh custom user data once it's been updated on the server
-  const customUserData = await user.refreshCustomData();
-  console.log(customUserData);
+  await user.refreshCustomData();
 };
-const addLeagueCustomUser = async (user: any, owner: any, newLeague: any) => {
+const addLeagueCustomUser = async (user: any, newLeague: any) => {
   const userCollection = user
     .mongoClient('mongodb-atlas')
     .db('LeagueChamp')
     .collection('User');
+  const res = await userCollection.findOne({
+    userId: user.id,
+  });
+
   const filter = {
     userId: user.id,
   };
   const updateDoc = {
     $set: {
       leagues: [
-        ...owner.leagues,
-        { _id: newLeague._id, name: newLeague.leagueName },
+        ...res.leagues,
+        {
+          _id: newLeague._id,
+          name: newLeague.leagueName,
+          code: newLeague.code,
+        },
       ],
     },
   };
   const options = { upsert: false };
   await userCollection.updateOne(filter, updateDoc, options);
-  // Refresh custom user data once it's been updated on the server
-  const customUserData = await user.refreshCustomData();
-  console.log(customUserData);
+  await user.refreshCustomData();
 };
 // ...
 export { writeCustomUserData, addLeagueCustomUser };
