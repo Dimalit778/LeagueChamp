@@ -11,11 +11,11 @@ import Colors from '../../../myAssets/colors/Colors';
 import { Button } from 'react-native-elements';
 import CustomKeyboardView from '../../../components/custom/CustomKeyboardView';
 import { useApp, useObject, useQuery, useRealm, useUser } from '@realm/react';
-import { League } from '../../../models/League';
+
 import { User } from '../../../models/User';
 import { BSON } from 'realm';
 import { addLeagueCustomUser } from '../../../api/customUser';
-import { getLeague } from '../../../store/leagueActions';
+
 type ItemProps = {
   id: number;
   name: string;
@@ -70,7 +70,6 @@ const AddLeague = () => {
       newLeague.users.push(owner);
     });
     addLeagueCustomUser(user, newLeague);
-    router.replace('/(tabs)');
   };
   // Item Card
   const CountryItem = ({ item }: { item: ItemProps }) => (

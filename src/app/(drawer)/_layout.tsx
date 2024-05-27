@@ -10,7 +10,7 @@ import { useApp, useAuth, useUser } from '@realm/react';
 import { FontAwesome } from '@expo/vector-icons';
 import { ScaledSheet, ms, s, vs } from 'react-native-size-matters';
 import { Button } from 'react-native-elements';
-
+import 'react-native-get-random-values';
 export default function Layout() {
   const { theme } = useContext(ThemeContext);
   return (

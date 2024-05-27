@@ -1,8 +1,12 @@
 import { View, Text, SafeAreaView, StyleSheet } from 'react-native';
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/store';
 
 //@ ---> Leagues Page
 const index = () => {
+  const league = useSelector((state: RootState) => state.league.name);
+  console.log('Home ', league);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{}}>

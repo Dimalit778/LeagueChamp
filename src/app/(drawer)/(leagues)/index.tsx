@@ -7,29 +7,20 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 
-import { Link, Stack } from 'expo-router';
-import { useQuery, useRealm, useUser } from '@realm/react';
+import { Link } from 'expo-router';
+import { useQuery, useUser } from '@realm/react';
 
 import { League } from '../../../models/League';
 import { ShowLeagues } from '../../../components/ShowLeagues';
 import { ThemeContext } from '../../../themeProvider/themeContext';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
-import { getLeague } from '../../../store/leagueActions';
 
 //@ ---> Leagues Page
 const index = () => {
   const { theme } = useContext(ThemeContext);
-  // const { league } = useSelector((state: RootState) => state.league);
   const user = useUser();
-
   const leagues = useQuery(League).filtered(`owner_id == '${user.id}'`);
-  useEffect(() => {
-    let t = getLeague();
-    console.log('TTT ', t);
-  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
@@ -51,7 +42,7 @@ const index = () => {
         }}
       >
         {/* -- Link to Join League  -- */}
-        <Link href="leagues/Join" asChild>
+        <Link href="JoinLeague" asChild>
           <TouchableOpacity style={styles.linkBox}>
             <Text style={styles.linkText}>Join League</Text>
           </TouchableOpacity>

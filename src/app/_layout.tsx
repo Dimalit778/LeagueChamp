@@ -6,8 +6,9 @@ import { ThemeProvider } from '../themeProvider/themeContext';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import RealmCustomProvider from '../providers/Realm';
-import { store } from '../store/store';
+
 import { Provider } from 'react-redux';
+import { store } from '../redux/store/store';
 
 const RootLayout = () => {
   return (

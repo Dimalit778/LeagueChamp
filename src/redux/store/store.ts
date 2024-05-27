@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import leagueReducer from './leagueReducer';
+import leagueReducer from '../reducers/leagueReducer';
 
 // ...
 

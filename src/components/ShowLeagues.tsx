@@ -1,18 +1,26 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import { useEffect } from 'react';
+
 import { Text, StyleSheet, View, Touchable, Pressable } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { getLeague } from '../store/leagueActions';
+
+import { saveLeagueState } from '../redux/reducers/leagueReducer';
+import { useAppDispatch } from '../redux/constans/hooks';
 
 export const ShowLeagues = ({ league }) => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  console.log('Data ', league);
-
+  const clickOnLeague = () => {
+    let toSave = {
+      ownerId: league.owner_id,
+      leagueId: league._id.toString(),
+      name: league.leagueName,
+      code: league.code,
+    };
+    dispatch(saveLeagueState(toSave));
+    router.push('/(drawer)/(tabs)');
+  };
   return (
-    <Pressable onPress={() => dispatch(getLeague())}>
+    <Pressable onPress={() => clickOnLeague()}>
       <View
         style={{
           flex: 1,
