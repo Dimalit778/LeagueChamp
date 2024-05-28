@@ -1,15 +1,16 @@
 import { View, TextInput, Pressable } from 'react-native';
 import React, { useCallback, useState } from 'react';
-import Colors from '../myAssets/colors/Colors';
+
 import { Fontisto } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Button } from 'react-native-elements';
 import { ScaledSheet, s, vs, ms } from 'react-native-size-matters';
-import { LoadingBall } from './LoadingBall';
+
 import { useApp, Realm, useRealm } from '@realm/react';
 import Toast from 'react-native-toast-message';
-
-import { writeCustomUserData } from '../api/customUser';
+import { writeCustomUserData } from '../../api/customUser';
+import { LoadingBall } from '../LoadingBall';
+import Colors from '../../myAssets/colors/Colors';
 
 type props = {
   login: boolean;

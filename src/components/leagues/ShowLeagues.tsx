@@ -1,9 +1,8 @@
 import { useRouter } from 'expo-router';
 
-import { Text, StyleSheet, View, Touchable, Pressable } from 'react-native';
-
-import { saveLeagueState } from '../redux/reducers/leagueReducer';
-import { useAppDispatch } from '../redux/constans/hooks';
+import { Text, StyleSheet, View, Pressable } from 'react-native';
+import { useAppDispatch } from '../../redux/constans/hooks';
+import { saveLeagueState } from '../../redux/reducers/leagueReducer';
 
 export const ShowLeagues = ({ league }) => {
   const router = useRouter();

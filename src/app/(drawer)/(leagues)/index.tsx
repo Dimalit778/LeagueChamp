@@ -13,8 +13,9 @@ import { Link } from 'expo-router';
 import { useQuery, useUser } from '@realm/react';
 
 import { League } from '../../../models/League';
-import { ShowLeagues } from '../../../components/ShowLeagues';
+
 import { ThemeContext } from '../../../themeProvider/themeContext';
+import { ShowLeagues } from '../../../components/leagues/ShowLeagues';
 
 //@ ---> Leagues Page
 const index = () => {

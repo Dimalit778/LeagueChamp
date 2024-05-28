@@ -15,6 +15,7 @@ import { useApp, useObject, useQuery, useRealm, useUser } from '@realm/react';
 import { User } from '../../../models/User';
 import { BSON } from 'realm';
 import { addLeagueCustomUser } from '../../../api/customUser';
+import generateCode from '../../../hooks/generateLeagueCode';
 
 type ItemProps = {
   id: number;
@@ -37,21 +38,6 @@ const AddLeague = () => {
   const { _id } = user.customData;
 
   let owner = useObject(User, new BSON.ObjectId(_id));
-
-  useEffect(() => {}, []);
-  // Generate Code League
-  const generateCode = () => {
-    const length: number = 5;
-    const characters =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result: string = ' ';
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-
-    return result;
-  };
 
   const saveNewLeague = async (leagueName: string, ownerId: string) => {
     let newLeague = null;

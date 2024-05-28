@@ -36,67 +36,76 @@ const JoinLeague = () => {
   const { _id } = user.customData;
 
   let owner = useObject(User, new BSON.ObjectId(_id));
-  const leagues = useQuery(League);
-  const currentLeague = leagues.filtered('assignee == $0', 'Ali');
+
+  // console.log(leagues);
+
   useEffect(() => {}, []);
   // Generate Code League
 
   const joinLeague = async (code: string, ownerId: string) => {
-    let newLeague = null;
-    realm.write(() => {
-      newLeague = realm.create('League', {
-        _id: new BSON.ObjectId(),
-        leagueName,
-        users: [],
-        rounds: [],
-      });
-    });
-    realm.write(() => {
-      newLeague.users.push(owner);
-    });
-    addLeagueCustomUser(user, newLeague);
+    try {
+      const currentLeague = useQuery(League).filtered(`owner_id == '${code}'`);
+      console.log('L ', currentLeague);
+      let newLeague = null;
+      // realm.write(() => {
+      //   newLeague = realm.create('League', {
+      //     _id: new BSON.ObjectId(),
+      //   });
+      // });
+      // realm.write(() => {
+      //   newLeague.users.push(owner);
+      // });
+      // addLeagueCustomUser(user, newLeague);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
     <CustomKeyboardView>
-      <View
-        style={{
-          height: ms(400),
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: mvs(20),
-        }}
-      >
-        <Text
-          style={{ marginTop: vs(20), color: theme.primary, fontSize: ms(30) }}
+      <View style={{ flex: 1 }}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: mvs(20),
+          }}
         >
-          Join League
-        </Text>
-        <View style={styles.inputBox}>
-          <TextInput
-            style={styles.textInput}
-            value={code}
-            placeholder="Enter Code"
-            placeholderTextColor="grey"
-            keyboardType={'email-address'}
-            onChangeText={(text) => setCode(text)}
+          <Text
+            style={{
+              marginTop: vs(20),
+              color: theme.primary,
+              fontSize: ms(30),
+            }}
+          >
+            Join League
+          </Text>
+          <View style={styles.inputBox}>
+            <TextInput
+              style={styles.textInput}
+              value={code}
+              placeholder="Enter Code..."
+              placeholderTextColor="grey"
+              keyboardType={'email-address'}
+              onChangeText={(text) => setCode(text)}
+            />
+          </View>
+
+          <Button
+            title="Join "
+            titleStyle={{ fontWeight: 'bold', fontSize: ms(24) }}
+            buttonStyle={{
+              borderWidth: 2,
+              borderColor: theme.navbar,
+              backgroundColor: 'grey',
+              borderRadius: 20,
+            }}
+            containerStyle={{
+              width: s(150),
+            }}
+            onPress={() => joinLeague(code, user.id)}
           />
         </View>
-
-        <Button
-          title="Join "
-          titleStyle={{ fontWeight: 'bold', fontSize: ms(24) }}
-          buttonStyle={{
-            borderWidth: 2,
-            borderColor: theme.navbar,
-            backgroundColor: 'grey',
-            borderRadius: 20,
-          }}
-          containerStyle={{
-            width: s(150),
-          }}
-          onPress={() => joinLeague(code, user.id)}
-        />
       </View>
     </CustomKeyboardView>
   );
@@ -105,7 +114,7 @@ const JoinLeague = () => {
 export default JoinLeague;
 const styles = ScaledSheet.create({
   inputBox: {
-    width: '130@vs',
+    width: '170@vs',
     backgroundColor: Colors.gray,
     borderRadius: '10@ms',
     padding: '10@ms',

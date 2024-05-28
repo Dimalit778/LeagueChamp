@@ -1,4 +1,5 @@
 {
   "java.compile.nullAnalysis.mode": "disabled",
-  "cSpell.words": ["tamagui"]
+  "cSpell.words": ["tamagui"],
+  "cSpell.ignoreWords": ["Pressable", "constans"]
 }
