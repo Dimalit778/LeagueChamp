@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { Link } from 'expo-router';
 import { useQuery, useUser } from '@realm/react';
@@ -16,6 +16,7 @@ import { League } from '../../../models/League';
 
 import { ThemeContext } from '../../../themeProvider/themeContext';
 import { ShowLeagues } from '../../../components/leagues/ShowLeagues';
+import { vs } from 'react-native-size-matters';
 
 //@ ---> Leagues Page
 const index = () => {
@@ -25,11 +26,8 @@ const index = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
-      <View style={{}}>
-        <Text style={{ fontSize: 32, textAlign: 'center' }}>My Leagues</Text>
-      </View>
       {/* LEAGUES LIST */}
-      <View style={{ height: '40%' }}>
+      <View style={{ paddingTop: vs(20), height: vs(250) }}>
         <FlatList
           data={leagues}
           renderItem={({ item }) => <ShowLeagues league={item} />}
@@ -40,6 +38,7 @@ const index = () => {
         style={{
           flexDirection: 'row',
           justifyContent: 'space-evenly',
+          paddingTop: vs(20),
         }}
       >
         {/* -- Link to Join League  -- */}

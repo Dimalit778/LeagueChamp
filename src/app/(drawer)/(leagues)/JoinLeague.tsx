@@ -13,52 +13,32 @@ import { useObject, useQuery, useRealm, useUser } from '@realm/react';
 
 import { User } from '../../../models/User';
 import { BSON } from 'realm';
-import { addLeagueCustomUser } from '../../../api/customUser';
 import { League } from '../../../models/League';
+import joinLeague from '../../../api/joinLeague';
 
-type ItemProps = {
-  id: number;
-  name: string;
-  code: string;
-  flagImage: any;
-  country: string;
-};
 const JoinLeague = () => {
+  const realm = useRealm();
+  const user = useUser();
   const router = useRouter();
   const { theme } = useContext(ThemeContext);
-
   const [code, setCode] = useState(null);
-
-  const realm = useRealm();
-
-  const user = useUser();
 
   const { _id } = user.customData;
 
   let owner = useObject(User, new BSON.ObjectId(_id));
-
-  // console.log(leagues);
+  const allLeagues = useQuery(League);
 
   useEffect(() => {}, []);
-  // Generate Code League
 
-  const joinLeague = async (code: string, ownerId: string) => {
-    try {
-      const currentLeague = useQuery(League).filtered(`owner_id == '${code}'`);
-      console.log('L ', currentLeague);
-      let newLeague = null;
-      // realm.write(() => {
-      //   newLeague = realm.create('League', {
-      //     _id: new BSON.ObjectId(),
-      //   });
-      // });
-      // realm.write(() => {
-      //   newLeague.users.push(owner);
-      // });
-      // addLeagueCustomUser(user, newLeague);
-    } catch (err) {
-      console.log(err);
-    }
+  const findLeagueByCode = (code: string) => {
+    let league = allLeagues.filtered('joinCode == $0', code);
+    if (league.length == 0) return console.log('no league found');
+
+    // realm.write(()=>{
+    //   league[0].users.push()
+    // }
+
+    // }
   };
 
   return (
@@ -103,7 +83,7 @@ const JoinLeague = () => {
             containerStyle={{
               width: s(150),
             }}
-            onPress={() => joinLeague(code, user.id)}
+            onPress={() => findLeagueByCode(code)}
           />
         </View>
       </View>

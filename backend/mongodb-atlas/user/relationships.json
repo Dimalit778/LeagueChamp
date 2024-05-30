@@ -1,0 +1,8 @@
+{
+  "myList": {
+    "ref": "#/relationship/mongodb-atlas/LeagueChamp/user",
+    "source_key": "myList",
+    "foreign_key": "_id",
+    "is_list": true
+  }
+}

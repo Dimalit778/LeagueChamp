@@ -28,11 +28,11 @@ const addLeagueCustomUser = async (user: any, newLeague: any) => {
     .db('LeagueChamp')
     .collection('User');
   const res = await userCollection.findOne({
-    userId: user.id,
+    userId: user._id,
   });
 
   const filter = {
-    userId: user.id,
+    userId: user._id,
   };
   const updateDoc = {
     $set: {

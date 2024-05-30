@@ -5,7 +5,6 @@ import 'react-native-get-random-values';
 import Welcome from '../app/Welcome';
 import Toast from 'react-native-toast-message';
 import toastAlert from '../myAssets/toastAlert';
-import { schemas } from './RealmContext';
 
 import { LoadingSplash } from '../components/LoadingBall';
 
@@ -14,6 +13,7 @@ import { League } from '../models/League';
 
 import { Round } from '../models/Round';
 import { Match } from '../models/Match';
+import { schemas } from './RealmContext';
 
 const APP_ID: string = 'leaguechamp-xqhhequ';
 

@@ -1,0 +1,19 @@
+{
+  "title": "User",
+  "type": "object",
+  "required": ["_id", "image", "name", "userId"],
+  "properties": {
+    "_id": {
+      "bsonType": "objectId"
+    },
+    "image": {
+      "bsonType": "string"
+    },
+    "name": {
+      "bsonType": "string"
+    },
+    "userId": {
+      "bsonType": "string"
+    }
+  }
+}

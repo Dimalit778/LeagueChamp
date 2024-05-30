@@ -11,32 +11,42 @@ import { FontAwesome } from '@expo/vector-icons';
 import { ScaledSheet, ms, s, vs } from 'react-native-size-matters';
 import { Button } from 'react-native-elements';
 import 'react-native-get-random-values';
+import { useAppDispatch, useAppSelector } from '../../redux/constans/hooks';
+import { saveLeagueState } from '../../redux/reducers/leagueReducer';
+
 export default function Layout() {
   const { theme } = useContext(ThemeContext);
+  const dispatch = useAppDispatch();
+  const leagueData = useAppSelector((state) => state.league.leagueData);
+
+  useEffect(() => {
+    // Check if leagueData is null or undefined
+    if (!leagueData) {
+      // Redirect to (leagues)
+      dispatch(saveLeagueState(null));
+    }
+  }, [dispatch, leagueData]);
   return (
-    <Drawer
-      drawerContent={(props) => <CustomDrawer {...props} />}
-      screenOptions={{
-        headerTitleAlign: 'center',
-        headerStyle: {
-          backgroundColor: theme.navbar,
-        },
-        headerTintColor: theme.text,
-      }}
-    >
-      <Drawer.Screen name="(leagues)" options={{ headerShown: false }} />
-      <Drawer.Screen name="Profile" options={{ headerShown: true }} />
-      <Drawer.Screen name="Settings" options={{ headerShown: true }} />
-      <Drawer.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Drawer>
+    <>
+      {/* <Drawer.Screen name="(drawer)/(tabs)" options={{ headerShown: false }} /> */}
+
+      <Drawer
+        drawerContent={(props) => <CustomDrawer {...props} />}
+        screenOptions={{
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: theme.navbar,
+          },
+          headerTintColor: theme.text,
+        }}
+      ></Drawer>
+    </>
   );
 }
 
 const CustomDrawer = (props: any) => {
   const user = useUser();
   const { name, image } = user.customData;
-  // const image = null;
-  // const name = 'test';
   const { logOut } = useAuth();
   const pathname = usePathname();
   const { theme } = useContext(ThemeContext);

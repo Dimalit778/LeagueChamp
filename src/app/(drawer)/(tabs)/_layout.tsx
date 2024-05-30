@@ -12,14 +12,10 @@ import React, { useContext, useEffect } from 'react';
 import { DrawerToggleButton } from '@react-navigation/drawer';
 import SwitchTheme from '../../../themeProvider/SwitchBtn';
 import { ThemeContext } from '../../../themeProvider/themeContext';
-import { useUser } from '@realm/react';
 
 const TabsLayout = () => {
   const { theme } = useContext(ThemeContext);
-  // const user = useUser();
-  // const { leagues } = user.customData;
-  // console.log(user.customData);
-  // console.log(leagues);
+
   return (
     <Tabs
       screenOptions={{

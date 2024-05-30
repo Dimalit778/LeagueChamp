@@ -10,12 +10,14 @@ import { ScaledSheet } from 'react-native-size-matters';
 import Colors from '../../../myAssets/colors/Colors';
 import { Button } from 'react-native-elements';
 import CustomKeyboardView from '../../../components/custom/CustomKeyboardView';
-import { useApp, useObject, useQuery, useRealm, useUser } from '@realm/react';
+import { useObject, useRealm, useUser } from '@realm/react';
 
 import { User } from '../../../models/User';
 import { BSON } from 'realm';
 import { addLeagueCustomUser } from '../../../api/customUser';
 import generateCode from '../../../hooks/generateLeagueCode';
+import { useAppDispatch } from '../../../redux/constans/hooks';
+import { saveLeagueState } from '../../../redux/reducers/leagueReducer';
 
 type ItemProps = {
   id: number;
@@ -25,20 +27,21 @@ type ItemProps = {
   country: string;
 };
 const AddLeague = () => {
-  const firstItem = countryFlags[0];
+  const user = useUser();
+  const realm = useRealm();
+
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { theme } = useContext(ThemeContext);
 
   const [leagueName, setLeagueName] = useState(null);
+  const firstItem = countryFlags[0];
   const [selectedItem, setSelectedItem] = useState(firstItem);
-  const realm = useRealm();
-
-  const user = useUser();
 
   const { _id } = user.customData;
-
   let owner = useObject(User, new BSON.ObjectId(_id));
 
+  // Save new league Function
   const saveNewLeague = async (leagueName: string, ownerId: string) => {
     let newLeague = null;
     realm.write(() => {
@@ -55,7 +58,15 @@ const AddLeague = () => {
     realm.write(() => {
       newLeague.users.push(owner);
     });
-    addLeagueCustomUser(user, newLeague);
+    await addLeagueCustomUser(user, newLeague);
+    let toSave = {
+      ownerId: newLeague.owner_id,
+      leagueId: newLeague._id.toString(),
+      name: newLeague.leagueName,
+      code: newLeague.code,
+    };
+    dispatch(saveLeagueState(toSave));
+    router.push('/(tabs)');
   };
   // Item Card
   const CountryItem = ({ item }: { item: ItemProps }) => (

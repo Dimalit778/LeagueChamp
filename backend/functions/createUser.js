@@ -1,4 +1,4 @@
-exports = async function createPrivateContent({ user }) {
+exports = async function createUser({ user }) {
   const serviceName = 'mongodb-atlas';
   const databaseName = 'LeagueChamp';
   const collectionName = 'User';
@@ -8,7 +8,7 @@ exports = async function createPrivateContent({ user }) {
     .db(databaseName)
     .collection(collectionName);
 
-  const newPrivateContentDoc = {
+  const newUser = {
     _id: new BSON.ObjectId(user.id),
     userId: user.id,
     myList: [],
@@ -17,9 +17,6 @@ exports = async function createPrivateContent({ user }) {
   try {
     return await collection.insertOne(newUser);
   } catch (err) {
-    console.error(
-      'Error while executing `createPrivateContent()`:',
-      err.message
-    );
+    console.error('Error while executing `createUser()`:', err.message);
   }
 };

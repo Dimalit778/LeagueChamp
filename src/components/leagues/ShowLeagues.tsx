@@ -3,10 +3,13 @@ import { useRouter } from 'expo-router';
 import { Text, StyleSheet, View, Pressable } from 'react-native';
 import { useAppDispatch } from '../../redux/constans/hooks';
 import { saveLeagueState } from '../../redux/reducers/leagueReducer';
-
+import { MaterialIcons } from '@expo/vector-icons';
+import { ScaledSheet } from 'react-native-size-matters';
+import { useRealm } from '@realm/react';
 export const ShowLeagues = ({ league }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const realm = useRealm();
 
   const clickOnLeague = () => {
     let toSave = {
@@ -16,25 +19,36 @@ export const ShowLeagues = ({ league }) => {
       code: league.code,
     };
     dispatch(saveLeagueState(toSave));
-    router.push('/(drawer)/(tabs)');
+    router.push('/(tabs)');
+  };
+  // delete the league
+  const deleteLeague = (league: any) => {
+    realm.write(() => {
+      realm.delete(league);
+    });
   };
   return (
-    <Pressable onPress={() => clickOnLeague()}>
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          paddingTop: 20,
-          gap: 20,
-        }}
-      >
+    <View style={styles.box}>
+      <Pressable onPress={() => deleteLeague(league)}>
+        <MaterialIcons name="delete-forever" size={48} color="red" />
+      </Pressable>
+      <Pressable style={{}} onPress={() => clickOnLeague()}>
         <Text style={styles.listText}>{league.leagueName}</Text>
-      </View>
-    </Pressable>
+      </Pressable>
+    </View>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
+  box: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '15@ms',
+    marginRight: '20@ms',
+    marginTop: '20@ms',
+  },
   listText: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -46,6 +60,6 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderRadius: 15,
     color: 'white',
-    width: '60%',
+    width: '180@s',
   },
 });
