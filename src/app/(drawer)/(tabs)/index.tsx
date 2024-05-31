@@ -6,82 +6,106 @@ import {
   ScrollView,
   ActivityIndicator,
   FlatList,
+  Image,
 } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import LeagueTable from '../../../components/tables/LeagueTable';
 
 import { useAppSelector } from '../../../redux/constans/hooks';
 import { getLeagueStanding } from '../../../api/footballApi';
-import { LeagueCard } from '../../../components/tables/LeagueCard';
-import { Image } from 'expo-image';
 
+import { s, vs } from 'react-native-size-matters';
+import { Button } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+interface LeagueData {
+  name: string;
+  emblem: string;
+}
 const index = () => {
-  const leagueData = useAppSelector((state) => state.league.leagueData);
+  // const currentLeague = useAppSelector((state) => state.league.data);
+  // console.log('Tabs index');
   const [refreshing, setRefresh] = useState(false);
-  const [league, setLeague] = useState([]);
+  const [leagueStandings, setLeagueStandings] = useState([]);
+  const [leagueData, setLeagueData] = useState<LeagueData>({} as LeagueData);
+  const [leagueCode, setLeagueCode] = useState('');
   const [loading, setLoading] = useState(true);
 
+  const getKey = async (callback) => {
+    let key = await AsyncStorage.getItem('LeagueCode');
+    setLeagueCode(key);
+    callback(key);
+  };
   useEffect(() => {
     const fetchLeagueStanding = async () => {
       try {
-        const data = await getLeagueStanding(leagueData.code);
-        setLeague(data.standings);
+        await getKey(async (key) => {
+          if (key) {
+            const data = await getLeagueStanding(key);
+            setLeagueData(data.competition);
+            setLeagueStandings(data.standings[0].table);
+            setLoading(false);
+          }
+        });
       } catch (error) {
         console.error(error);
       }
-      setLoading(false);
     };
-
     fetchLeagueStanding();
-  }, [leagueData.code]);
-  // console.log('data.standing ', league);
+  }, [loading]);
+
+  const renderListHeader = () => (
+    <View style={styles.listItem}>
+      <Image source={{ uri: leagueData.emblem }} style={styles.emblem} />
+      <View style={{}}>
+        <Text style={styles.headerText}>{leagueData.name}</Text>
+      </View>
+    </View>
+  );
+  const LeagueCard = ({ league }) => {
+    return (
+      <View style={styles.row}>
+        <Text style={styles.column}>{league.position}</Text>
+        <Text style={styles.column}>{league.team.shortName}</Text>
+        <Image
+          source={{ uri: league.team.crest }}
+          style={{ height: 25, width: 25 }}
+        />
+
+        <Text style={styles.column}>{league.points}</Text>
+      </View>
+    );
+  };
+
+  if (loading) {
+    return <ActivityIndicator style={styles.activityIndicator} />;
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1 }}>
-        <Text style={{ fontSize: 32, textAlign: 'center' }}>Home</Text>
-        {/* <FlatList
-          data={league}
-          keyExtractor={(item, index) => index.toString()}
+      <View style={styles.list}>
+        <FlatList
+          data={leagueStandings}
           renderItem={({ item }) => <LeagueCard league={item} />}
-        /> */}
-        <ScrollView
-          style={{ flex: 1 }}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.horizontalScroll}
-        >
-          <FlatList
-            data={league}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => <LeagueCard league={item} />}
-          />
-        </ScrollView>
-        {loading && (
-          <ActivityIndicator
-            size="large"
-            color="#3353dd"
-            style={styles.activityIndicator}
-          />
-        )}
+          ListHeaderComponent={renderListHeader}
+        />
       </View>
     </SafeAreaView>
   );
 };
-
 export default index;
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+  headerText: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 20,
   },
-  column: {
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: 10,
+  emblem: {
+    width: 50,
+    height: 50,
+    borderRadius: 5,
+  },
+  list: {
+    borderWidth: 2,
+    borderColor: 'black',
   },
   activityIndicator: {
     alignSelf: 'center',
@@ -92,5 +116,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 30,
     height: 260,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#F7F7F7',
+    marginTop: 60,
+  },
+  listItem: {
+    margin: 10,
+    padding: 10,
+    backgroundColor: '#FFF',
+    width: '80%',
+    flex: 1,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    borderRadius: 5,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  column: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: 10,
   },
 });

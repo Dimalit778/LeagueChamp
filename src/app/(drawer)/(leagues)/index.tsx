@@ -13,7 +13,6 @@ import { Link } from 'expo-router';
 import { useQuery, useUser } from '@realm/react';
 
 import { League } from '../../../models/League';
-
 import { ThemeContext } from '../../../themeProvider/themeContext';
 import { ShowLeagues } from '../../../components/leagues/ShowLeagues';
 import { vs } from 'react-native-size-matters';
@@ -23,10 +22,9 @@ const index = () => {
   const { theme } = useContext(ThemeContext);
   const user = useUser();
   const leagues = useQuery(League).filtered(`owner_id == '${user.id}'`);
-
+  console.log('League index  ');
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
-      {/* LEAGUES LIST */}
       <View style={{ paddingTop: vs(20), height: vs(250) }}>
         <FlatList
           data={leagues}

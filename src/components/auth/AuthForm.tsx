@@ -6,7 +6,7 @@ import { Feather } from '@expo/vector-icons';
 import { Button } from 'react-native-elements';
 import { ScaledSheet, s, vs, ms } from 'react-native-size-matters';
 
-import { useApp, Realm, useRealm } from '@realm/react';
+import { useApp, Realm } from '@realm/react';
 import Toast from 'react-native-toast-message';
 import { writeCustomUserData } from '../../api/customUser';
 import { LoadingBall } from '../LoadingBall';

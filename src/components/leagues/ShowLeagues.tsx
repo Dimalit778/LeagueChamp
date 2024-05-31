@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Text, StyleSheet, View, Pressable } from 'react-native';
 import { useAppDispatch } from '../../redux/constans/hooks';
 import { saveLeagueState } from '../../redux/reducers/leagueReducer';
@@ -11,14 +11,19 @@ export const ShowLeagues = ({ league }) => {
   const dispatch = useAppDispatch();
   const realm = useRealm();
 
-  const clickOnLeague = () => {
-    let toSave = {
+  const clickOnLeague = async () => {
+    let state = {
       ownerId: league.owner_id,
       leagueId: league._id.toString(),
       name: league.leagueName,
-      code: league.code,
     };
-    dispatch(saveLeagueState(toSave));
+    try {
+      await AsyncStorage.setItem('LeagueCode', league.code);
+      dispatch(saveLeagueState(state));
+    } catch (error) {
+      console.log('AsyncStorage error', error);
+    }
+
     router.push('/(tabs)');
   };
   // delete the league

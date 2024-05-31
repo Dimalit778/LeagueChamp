@@ -5,5 +5,5 @@ import 'react-native-get-random-values';
 I18nManager.allowRTL(false);
 
 export default function App() {
-  return <Redirect href="(drawer)" />;
+  return <Redirect href="(tabs)" />;
 }

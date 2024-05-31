@@ -5,14 +5,10 @@ import 'react-native-get-random-values';
 import Welcome from '../app/Welcome';
 import Toast from 'react-native-toast-message';
 import toastAlert from '../myAssets/toastAlert';
-
 import { LoadingSplash } from '../components/LoadingBall';
 
-import { User } from '../models/User';
-import { League } from '../models/League';
+import { User, League, Round, Match } from '../models/index';
 
-import { Round } from '../models/Round';
-import { Match } from '../models/Match';
 import { schemas } from './RealmContext';
 
 const APP_ID: string = 'leaguechamp-xqhhequ';
@@ -32,7 +28,7 @@ export default function RealmCustomProvider({ children }: PropsWithChildren) {
                 subs.add(realm.objects(Match));
                 subs.add(realm.objects(Round));
               },
-              rerunOnOpen: true,
+              // rerunOnOpen: true,
             },
             onError: (_, error) => {
               console.error(error);
@@ -47,12 +43,3 @@ export default function RealmCustomProvider({ children }: PropsWithChildren) {
     </AppProvider>
   );
 }
-
-// sync={{
-//   flexible: true,
-//   initialSubscriptions: {
-//     update(subs, realm) {
-//       subs.add(realm.objects('League'));
-//     },
-//     rerunOnOpen: true,
-//   },

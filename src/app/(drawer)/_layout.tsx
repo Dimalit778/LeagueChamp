@@ -3,44 +3,48 @@ import React, { useContext, useEffect } from 'react';
 import { Drawer } from 'expo-router/drawer';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { Feather, AntDesign, Ionicons } from '@expo/vector-icons';
-import { Redirect, router, usePathname } from 'expo-router';
+import { router, usePathname } from 'expo-router';
 
 import { ThemeContext } from '../../themeProvider/themeContext';
-import { useApp, useAuth, useUser } from '@realm/react';
+import { useAuth, useUser } from '@realm/react';
 import { FontAwesome } from '@expo/vector-icons';
 import { ScaledSheet, ms, s, vs } from 'react-native-size-matters';
 import { Button } from 'react-native-elements';
 import 'react-native-get-random-values';
-import { useAppDispatch, useAppSelector } from '../../redux/constans/hooks';
-import { saveLeagueState } from '../../redux/reducers/leagueReducer';
 
 export default function Layout() {
   const { theme } = useContext(ThemeContext);
-  const dispatch = useAppDispatch();
-  const leagueData = useAppSelector((state) => state.league.leagueData);
-
-  useEffect(() => {
-    // Check if leagueData is null or undefined
-    if (!leagueData) {
-      // Redirect to (leagues)
-      dispatch(saveLeagueState(null));
-    }
-  }, [dispatch, leagueData]);
+  console.log('Drawer Layout ');
   return (
-    <>
-      {/* <Drawer.Screen name="(drawer)/(tabs)" options={{ headerShown: false }} /> */}
-
-      <Drawer
-        drawerContent={(props) => <CustomDrawer {...props} />}
-        screenOptions={{
+    <Drawer
+      drawerContent={(props) => <CustomDrawer {...props} />}
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Drawer.Screen
+        name="Profile"
+        options={{
+          headerShown: true,
           headerTitleAlign: 'center',
           headerStyle: {
             backgroundColor: theme.navbar,
           },
           headerTintColor: theme.text,
         }}
-      ></Drawer>
-    </>
+      />
+      <Drawer.Screen
+        name="Settings"
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: theme.navbar,
+          },
+          headerTintColor: theme.text,
+        }}
+      />
+    </Drawer>
   );
 }
 
@@ -50,9 +54,11 @@ const CustomDrawer = (props: any) => {
   const { logOut } = useAuth();
   const pathname = usePathname();
   const { theme } = useContext(ThemeContext);
-  useEffect(() => {
-    console.log(pathname);
-  }, [pathname, name]);
+
+  // useEffect(() => {
+  //   console.log(pathname);
+  // }, [pathname, name]);
+
   const performLogout = () => {
     logOut();
   };
@@ -76,27 +82,7 @@ const CustomDrawer = (props: any) => {
           <Text style={[styles.userName, { color: theme.text }]}>{name}</Text>
         </View>
       </View>
-      {/*//@ --> Tabs Screen <-- */}
-      {/* {leagues && (
-        <DrawerItem
-          icon={({ color, size }) => (
-            <Feather
-              name="list"
-              size={size}
-              color={pathname == '/feed' ? '#fff' : '#000'}
-            />
-          )}
-          label={'Home'}
-          labelStyle={[
-            styles.navItemLabel,
-            { color: pathname == '/feed' ? '#fff' : '#000' },
-          ]}
-          style={{ backgroundColor: pathname == '/feed' ? '#333' : '#fff' }}
-          onPress={() => {
-            router.push('(tabs)');
-          }}
-        />
-      )} */}
+
       {/*//@ --> My Leagues Screen <-- */}
       <DrawerItem
         icon={({ color, size }) => (

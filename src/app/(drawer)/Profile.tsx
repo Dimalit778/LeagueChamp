@@ -14,7 +14,7 @@ import CustomKeyboardView from '../../components/custom/CustomKeyboardView';
 import Avatar from '../../components/Avatar';
 import ModalPicker from '../../components/ModalPicker';
 import Colors from '../../myAssets/colors/Colors';
-import { Link, useRouter } from 'expo-router';
+import { Link, Stack, useRouter } from 'expo-router';
 
 import { User } from '../../models/User';
 

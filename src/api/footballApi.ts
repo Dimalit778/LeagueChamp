@@ -30,6 +30,7 @@ export const getLeagueStanding = async (leagueCode: string): Promise<any> => {
       }
     );
     const data = response.data;
+
     return data;
   } catch (error) {
     console.log(' error ', error.response);

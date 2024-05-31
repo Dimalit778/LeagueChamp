@@ -5,6 +5,7 @@ import { DrawerToggleButton } from '@react-navigation/drawer';
 
 const Layout = () => {
   const { theme } = useContext(ThemeContext);
+  console.log('League Layout  ');
   return (
     <Stack
       screenOptions={{

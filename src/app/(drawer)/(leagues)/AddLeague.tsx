@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { ms, mvs, s, vs } from 'react-native-size-matters';
@@ -63,9 +63,10 @@ const AddLeague = () => {
       ownerId: newLeague.owner_id,
       leagueId: newLeague._id.toString(),
       name: newLeague.leagueName,
-      code: newLeague.code,
+      code: selectedItem.code,
     };
     dispatch(saveLeagueState(toSave));
+
     router.push('/(tabs)');
   };
   // Item Card

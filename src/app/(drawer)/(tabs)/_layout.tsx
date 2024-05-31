@@ -5,16 +5,25 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import { Tabs } from 'expo-router';
+import { Tabs, useRouter } from 'expo-router';
 
 import React, { useContext, useEffect } from 'react';
 
 import { DrawerToggleButton } from '@react-navigation/drawer';
 import SwitchTheme from '../../../themeProvider/SwitchBtn';
 import { ThemeContext } from '../../../themeProvider/themeContext';
+import { useUser } from '@realm/react';
 
 const TabsLayout = () => {
+  const router = useRouter();
   const { theme } = useContext(ThemeContext);
+  const user = useUser();
+
+  const leagues = user.customData.leagues[0];
+  useEffect(() => {
+    console.log(leagues);
+    if (!leagues) router.push('(leagues)');
+  }, [leagues]);
 
   return (
     <Tabs
