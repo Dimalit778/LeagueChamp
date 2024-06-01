@@ -5,7 +5,7 @@ import Colors from '../myAssets/colors/Colors';
 
 import CustomBackgroundImage from '../components/custom/CustomBackgroundImage';
 import CustomKeyboardView from '../components/custom/CustomKeyboardView';
-import AuthForm from '../components/auth/AuthForm';
+import AuthForm from './(auth)/AuthForm';
 
 const Welcome = () => {
   const [login, setLogin] = useState(true);

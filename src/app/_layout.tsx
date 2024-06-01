@@ -1,14 +1,13 @@
-import 'react-native-get-random-values';
-import React from 'react';
-import { Stack } from 'expo-router';
-
-import { ThemeProvider } from '../themeProvider/themeContext';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
-
 import { Provider } from 'react-redux';
 import { store } from '../redux/store/store';
+import { ThemeProvider } from '../themeProvider/themeContext';
 import RealmCustomProvider from '../realm/Realm';
+
+import { Stack } from 'expo-router';
+import { StatusBar } from 'react-native';
+
+const APP_ID: string = 'leaguechamp-xqhhequ';
 
 const RootLayout = () => {
   return (
@@ -16,7 +15,6 @@ const RootLayout = () => {
       <Provider store={store}>
         <ThemeProvider>
           <RealmCustomProvider>
-            <StatusBar style="light" />
             <Stack screenOptions={{ headerShown: false }} />
           </RealmCustomProvider>
         </ThemeProvider>

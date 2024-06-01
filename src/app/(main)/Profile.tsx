@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native';
 import React from 'react';
 
-const Matches = () => {
+const Profile = () => {
   return (
     <View>
-      <Text>matches</Text>
+      <Text>Profile</Text>
     </View>
   );
 };
 
-export default Matches;
+export default Profile;
