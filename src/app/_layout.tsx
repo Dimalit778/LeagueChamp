@@ -15,6 +15,7 @@ const RootLayout = () => {
       <Provider store={store}>
         <ThemeProvider>
           <RealmCustomProvider>
+            <StatusBar barStyle="light-content" />
             <Stack screenOptions={{ headerShown: false }} />
           </RealmCustomProvider>
         </ThemeProvider>

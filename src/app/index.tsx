@@ -22,20 +22,6 @@ export default function App() {
   //     );
   //   });
   // }, [realm, userApp]);
-  console.log('1 ', userApp);
-  console.log('2 ', userLeague);
 
-  {
-    !userLeague[0] ? (
-      <Redirect href="(main)" />
-    ) : (
-      <Redirect href="(main)/Profile" />
-    );
-  }
-
-  return (
-    <View>
-      <Text>App</Text>
-    </View>
-  );
+  return <Redirect href="(main)/MainPage" />;
 }
