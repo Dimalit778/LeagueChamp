@@ -22,7 +22,7 @@ const index = () => {
   const { theme } = useContext(ThemeContext);
   const user = useUser();
   const leagues = useQuery(League).filtered(`owner_id == '${user.id}'`);
-  console.log('League index  ');
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
       <View style={{ paddingTop: vs(20), height: vs(250) }}>

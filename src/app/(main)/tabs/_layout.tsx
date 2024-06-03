@@ -5,26 +5,30 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import { Tabs, useRouter } from 'expo-router';
+import { Tabs, usePathname, useRouter } from 'expo-router';
 
 import React, { useContext, useEffect } from 'react';
 
 import { DrawerToggleButton } from '@react-navigation/drawer';
 import SwitchTheme from '../../../themeProvider/SwitchBtn';
 import { ThemeContext } from '../../../themeProvider/themeContext';
-import { useUser } from '@realm/react';
+import { useQuery, useUser } from '@realm/react';
+import { User } from '../../../models';
 
 const TabsLayout = () => {
   const router = useRouter();
   const { theme } = useContext(ThemeContext);
   const user = useUser();
-
+  const userApp = useQuery(User).filtered(`userId == '${user.id}'`);
+  console.log('tabs home ', userApp);
+  /// CHANGE THIS ______
   const leagues = user.customData.leagues[0];
-  useEffect(() => {
-    console.log(leagues);
-    if (!leagues) router.push('(leagues)');
-  }, [leagues]);
 
+  const pathname = usePathname();
+
+  useEffect(() => {
+    console.log(pathname);
+  }, [pathname]);
   return (
     <Tabs
       screenOptions={{
@@ -98,9 +102,9 @@ const TabsLayout = () => {
             ),
         }}
       />
-      {/*//@ --> INDEX SCREEN <-- */}
+      {/*//@ --> Home SCREEN <-- */}
       <Tabs.Screen
-        name="index"
+        name="Home"
         options={{
           title: 'Home',
           tabBarIcon: ({ focused }) =>

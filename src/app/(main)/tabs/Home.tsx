@@ -20,8 +20,9 @@ interface LeagueData {
   name: string;
   emblem: string;
 }
-const index = () => {
-  // const currentLeague = useAppSelector((state) => state.league.data);
+const Home = () => {
+  const value = useAppSelector((state) => state.league);
+
   // console.log('Tabs index');
   const [refreshing, setRefresh] = useState(false);
   const [leagueStandings, setLeagueStandings] = useState([]);
@@ -29,22 +30,15 @@ const index = () => {
   const [leagueCode, setLeagueCode] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const getKey = async (callback) => {
-    let key = await AsyncStorage.getItem('LeagueCode');
-    setLeagueCode(key);
-    callback(key);
-  };
   useEffect(() => {
     const fetchLeagueStanding = async () => {
       try {
-        await getKey(async (key) => {
-          if (key) {
-            const data = await getLeagueStanding(key);
-            setLeagueData(data.competition);
-            setLeagueStandings(data.standings[0].table);
-            setLoading(false);
-          }
-        });
+        if (value) {
+          const data = await getLeagueStanding(value.code);
+          setLeagueData(data.competition);
+          setLeagueStandings(data.standings[0].table);
+          setLoading(false);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -91,7 +85,7 @@ const index = () => {
     </SafeAreaView>
   );
 };
-export default index;
+export default Home;
 
 const styles = StyleSheet.create({
   headerText: {

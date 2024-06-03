@@ -10,7 +10,6 @@ export class League extends Realm.Object<League> {
   code!: string;
   joinCode!: string;
   users!: User[];
-  rounds!: Round[];
   owner_id!: string;
 
   static schema: Realm.ObjectSchema = {
@@ -22,7 +21,6 @@ export class League extends Realm.Object<League> {
       joinCode: 'string',
       owner_id: 'string',
       users: { type: 'list', objectType: 'User' },
-      rounds: { type: 'list', objectType: 'Round' },
     },
     primaryKey: '_id',
   };

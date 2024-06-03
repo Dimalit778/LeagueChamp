@@ -19,9 +19,15 @@ export default function Layout() {
     <Drawer
       drawerContent={(props) => <CustomDrawer {...props} />}
       screenOptions={{
-        headerShown: false,
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: theme.navbar,
+        },
+        headerTintColor: theme.text,
       }}
     >
+      <Drawer.Screen name="tabs" options={{ headerShown: false }} />
+      <Drawer.Screen name="leagues" options={{ headerShown: false }} />
       <Drawer.Screen name="MainPage" />
     </Drawer>
   );
@@ -78,7 +84,7 @@ const CustomDrawer = (props: any) => {
         ]}
         style={{ backgroundColor: pathname == '/feed' ? '#333' : '#fff' }}
         onPress={() => {
-          router.push('Leagues');
+          router.push('leagues');
         }}
       />
       {/*//@ --> Profile Screen <-- */}

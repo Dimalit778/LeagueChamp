@@ -17,8 +17,8 @@ export class Round extends Realm.Object<Round> {
   _id: BSON.ObjectId = new BSON.ObjectId();
   roundNumber!: number;
   isFinished: boolean = false;
-  matches!: Match[];
-  league!: League;
+  // matches!: Match[];
+  leagueId!: League;
 
   static schema: Realm.ObjectSchema = {
     name: 'Round',
@@ -26,8 +26,8 @@ export class Round extends Realm.Object<Round> {
       _id: 'objectId',
       roundNumber: 'int',
       isFinished: 'bool',
-      matches: { type: 'list', objectType: 'Match' },
-      league: 'League',
+      // matches: { type: 'list', objectType: 'Match' },
+      leagueId: 'League',
     },
     primaryKey: '_id',
   };

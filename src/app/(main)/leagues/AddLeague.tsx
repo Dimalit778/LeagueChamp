@@ -14,10 +14,10 @@ import { useObject, useRealm, useUser } from '@realm/react';
 
 import { User } from '../../../models/User';
 import { BSON } from 'realm';
-import { addLeagueCustomUser } from '../../../api/customUser';
+
 import generateCode from '../../../hooks/generateLeagueCode';
 import { useAppDispatch } from '../../../redux/constans/hooks';
-import { saveLeagueState } from '../../../redux/reducers/leagueReducer';
+import { setLeague } from '../../../redux/reducers/leagueReducer';
 
 type ItemProps = {
   id: number;
@@ -29,7 +29,6 @@ type ItemProps = {
 const AddLeague = () => {
   const user = useUser();
   const realm = useRealm();
-
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { theme } = useContext(ThemeContext);
@@ -38,8 +37,7 @@ const AddLeague = () => {
   const firstItem = countryFlags[0];
   const [selectedItem, setSelectedItem] = useState(firstItem);
 
-  const { _id } = user.customData;
-  let owner = useObject(User, new BSON.ObjectId(_id));
+  let owner = useObject(User, new BSON.ObjectId(user.customData._id));
 
   // Save new league Function
   const saveNewLeague = async (leagueName: string, ownerId: string) => {
@@ -52,22 +50,19 @@ const AddLeague = () => {
         joinCode: generateCode(),
         owner_id: ownerId,
         users: [],
-        rounds: [],
       });
     });
     realm.write(() => {
       newLeague.users.push(owner);
+      owner.leagues.push(newLeague);
     });
-    await addLeagueCustomUser(user, newLeague);
-    let toSave = {
-      ownerId: newLeague.owner_id,
-      leagueId: newLeague._id.toString(),
-      name: newLeague.leagueName,
-      code: selectedItem.code,
+    const leagueState = {
+      _id: newLeague._id.toString(),
+      code: newLeague.code,
     };
-    dispatch(saveLeagueState(toSave));
+    dispatch(setLeague(leagueState));
 
-    router.push('/(tabs)');
+    router.push('tabs');
   };
   // Item Card
   const CountryItem = ({ item }: { item: ItemProps }) => (

@@ -15,30 +15,37 @@ import { User } from '../../../models/User';
 import { BSON } from 'realm';
 import { League } from '../../../models/League';
 import joinLeague from '../../../api/joinLeague';
+import { addLeagueCustomUser } from '../../../api/customUser';
 
 const JoinLeague = () => {
   const realm = useRealm();
   const user = useUser();
-  const router = useRouter();
+  const userApp = useQuery(User).filtered(`userId == '${user.id}'`);
   const { theme } = useContext(ThemeContext);
   const [code, setCode] = useState(null);
-
+  const router = useRouter();
   const { _id } = user.customData;
 
   let owner = useObject(User, new BSON.ObjectId(_id));
+
+  useEffect(() => {
+    realm.subscriptions.update((mutableSubs) => {
+      mutableSubs.add(realm.objects(League));
+    });
+  }, [realm, user]);
+
   const allLeagues = useQuery(League);
+  // console.log('join ', allLeagues);
+  const findLeagueByCode = async (code: string) => {
+    let league = allLeagues.filtered(`joinCode == '${code}'`);
 
-  useEffect(() => {}, []);
-
-  const findLeagueByCode = (code: string) => {
-    let league = allLeagues.filtered('joinCode == $0', code);
     if (league.length == 0) return console.log('no league found');
 
-    // realm.write(()=>{
-    //   league[0].users.push()
-    // }
-
-    // }
+    realm.write(() => {
+      league[0].users.push(userApp[0]);
+    });
+    // await addLeagueCustomUser(user, league[0]);
+    router.push('tabs');
   };
 
   return (

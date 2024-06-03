@@ -1,12 +1,24 @@
 import { useRealm } from '@realm/react';
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { ObjectId } from 'bson';
 
-export interface UserState {
-  currentUser: any;
+export interface League {
+  _id: any;
+}
+interface User {
+  _id: string;
+  image: string;
+  leagues: League[];
+  name: string;
+  userId: string;
 }
 
-const initialState: UserState = {
-  currentUser: [null],
+const initialState: User = {
+  _id: '',
+  image: '',
+  leagues: [],
+  name: '',
+  userId: '',
 };
 
 export const fetchUser = () => {};
@@ -15,11 +27,15 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    getUser: (state, action) => {
-      state.currentUser = action.payload;
+    setUser: (state, action: PayloadAction<any>) => {
+      state._id = action.payload._id;
+      state.image = action.payload.image;
+      state.leagues = action.payload.leagues;
+      state.name = action.payload.name;
+      state.userId = action.payload.userId;
     },
   },
 });
-export const { getUser } = userSlice.actions;
+export const { setUser } = userSlice.actions;
 
 export default userSlice.reducer;

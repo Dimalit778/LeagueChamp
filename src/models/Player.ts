@@ -2,21 +2,23 @@
 import { BSON, Realm } from 'realm';
 import { League } from './League';
 
-export class User extends Realm.Object<User> {
+export class Player extends Realm.Object<Player> {
   _id: BSON.ObjectId = new BSON.ObjectId();
   name!: string;
   image!: string;
   userId!: string;
-  leagues!: League[];
+  leagues!: string;
+  points!: number;
 
   static schema: Realm.ObjectSchema = {
-    name: 'User',
+    name: 'Player',
     properties: {
       _id: 'objectId',
       name: 'string',
       image: 'string',
       userId: 'string',
-      leagues: { type: 'list', objectType: 'League' },
+      leagueId: 'string',
+      points: 'int',
     },
     primaryKey: '_id',
   };
