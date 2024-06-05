@@ -3,51 +3,60 @@ import {
   Text,
   SafeAreaView,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { Link } from 'expo-router';
-import { useQuery, useUser } from '@realm/react';
 
 import { vs } from 'react-native-size-matters';
-import { ThemeContext } from '../../../themeProvider/themeContext';
-import { League } from '../../../models';
-import { ShowLeagues } from '../../../components/leagues/ShowLeagues';
+import { ThemeContext } from '../../themeProvider/themeContext';
+import MyLeaguesList from '../../components/myLeagues/MyLeaguesList';
+import { useObject, useQuery, useRealm, useUser } from '@realm/react';
+import { League, User } from '../../models';
+import { BSON } from 'realm';
 
 //@ ---> Leagues Page
-const index = () => {
+const MyLeagues = () => {
   const { theme } = useContext(ThemeContext);
   const user = useUser();
-  const leagues = useQuery(League).filtered(`owner_id == '${user.id}'`);
+  const realm = useRealm();
+  const [myLeagues, setMyLeagues] = useState([]);
+
+  const currentUser = useObject(User, new BSON.ObjectId(user.customData._id));
+  useEffect(() => {
+    realm.subscriptions.update((mutableSubs) => {
+      mutableSubs.add(realm.objects(League));
+    });
+    currentUser.leagues.map((league) => {
+      setMyLeagues((myLeagues) => [...myLeagues, league]);
+    });
+  }, [realm, currentUser]);
+  const leagues = useQuery(League);
+  console.log('leagues =m--->', myLeagues);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
-      <View style={{ paddingTop: vs(20), height: vs(250) }}>
-        <FlatList
-          data={leagues}
-          renderItem={({ item }) => <ShowLeagues league={item} />}
-        />
-      </View>
+      {/* MyLeagues */}
+      <MyLeaguesList />
       {/* BUTTONS */}
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-evenly',
-          paddingTop: vs(20),
+          paddingTop: vs(40),
         }}
       >
         {/* -- Link to Join League  -- */}
-        <Link href="leagues/JoinLeague" asChild>
+        <Link href="league/JoinLeague" asChild>
           <TouchableOpacity style={styles.linkBox}>
             <Text style={styles.linkText}>Join League</Text>
           </TouchableOpacity>
         </Link>
 
         {/* -- Link to Create League  -- */}
-        <Link href="leagues/AddLeague" asChild>
+        <Link href="league/AddLeague" asChild>
           <Pressable style={styles.linkBox}>
             <Text style={styles.linkText}>Create League</Text>
           </Pressable>
@@ -57,7 +66,7 @@ const index = () => {
   );
 };
 
-export default index;
+export default MyLeagues;
 
 const styles = StyleSheet.create({
   linkText: {

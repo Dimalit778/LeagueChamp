@@ -1,21 +1,14 @@
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { ms, mvs, s, vs } from 'react-native-size-matters';
-
-import { ThemeContext } from '../../../themeProvider/themeContext';
-
-import { ScaledSheet } from 'react-native-size-matters';
-import Colors from '../../../myAssets/colors/Colors';
+import { ScaledSheet, ms, mvs, s, vs } from 'react-native-size-matters';
 import { Button } from 'react-native-elements';
-import CustomKeyboardView from '../../../components/custom/CustomKeyboardView';
 import { useObject, useQuery, useRealm, useUser } from '@realm/react';
-
-import { User } from '../../../models/User';
 import { BSON } from 'realm';
-import { League } from '../../../models/League';
-import joinLeague from '../../../api/joinLeague';
-import { addLeagueCustomUser } from '../../../api/customUser';
+import { League, User } from '../../../models';
+import { ThemeContext } from '../../../themeProvider/themeContext';
+import CustomKeyboardView from '../../../components/custom/CustomKeyboardView';
+import Colors from '../../../myAssets/colors/Colors';
 
 const JoinLeague = () => {
   const realm = useRealm();
@@ -27,12 +20,6 @@ const JoinLeague = () => {
   const { _id } = user.customData;
 
   let owner = useObject(User, new BSON.ObjectId(_id));
-
-  useEffect(() => {
-    realm.subscriptions.update((mutableSubs) => {
-      mutableSubs.add(realm.objects(League));
-    });
-  }, [realm, user]);
 
   const allLeagues = useQuery(League);
   // console.log('join ', allLeagues);

@@ -1,5 +1,5 @@
 {
   "java.compile.nullAnalysis.mode": "disabled",
   "cSpell.words": ["tamagui"],
-  "cSpell.ignoreWords": ["BSON", "Pressable", "constans"]
+  "cSpell.ignoreWords": ["BSON", "Ionicons", "Pressable", "constans"]
 }

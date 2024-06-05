@@ -8,10 +8,10 @@ import { ScaledSheet, s, vs, ms } from 'react-native-size-matters';
 
 import { useApp, Realm } from '@realm/react';
 import Toast from 'react-native-toast-message';
-import { writeCustomUserData } from '../../api/customUser';
+import { writeCustomUserData } from '../api/customUser';
 
-import Colors from '../../myAssets/colors/Colors';
-import { LoadingBall } from '../../components/LoadingBall';
+import Colors from '../myAssets/colors/Colors';
+import { LoadingBall } from './LoadingBall';
 
 type props = {
   login: boolean;

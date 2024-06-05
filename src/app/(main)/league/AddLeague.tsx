@@ -2,21 +2,20 @@ import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import React, { useContext, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
-import { ms, mvs, s, vs } from 'react-native-size-matters';
-import { countryFlags } from '../../../utils/countryFlags';
-import { ThemeContext } from '../../../themeProvider/themeContext';
-import { FlatList } from 'react-native-gesture-handler';
-import { ScaledSheet } from 'react-native-size-matters';
-import Colors from '../../../myAssets/colors/Colors';
-import { Button } from 'react-native-elements';
-import CustomKeyboardView from '../../../components/custom/CustomKeyboardView';
+import { ScaledSheet, ms, mvs, s, vs } from 'react-native-size-matters';
+
 import { useObject, useRealm, useUser } from '@realm/react';
 
-import { User } from '../../../models/User';
 import { BSON } from 'realm';
-
-import generateCode from '../../../hooks/generateLeagueCode';
 import { useAppDispatch } from '../../../redux/constans/hooks';
+import { ThemeContext } from '../../../themeProvider/themeContext';
+import { countryFlags } from '../../../utils/countryFlags';
+import { User } from '../../../models';
+import CustomKeyboardView from '../../../components/custom/CustomKeyboardView';
+import { FlatList } from 'react-native-gesture-handler';
+import { Button } from 'react-native-elements';
+import Colors from '../../../myAssets/colors/Colors';
+import generateCode from '../../../hooks/generateLeagueCode';
 import { setLeague } from '../../../redux/reducers/leagueReducer';
 
 type ItemProps = {
@@ -49,6 +48,7 @@ const AddLeague = () => {
         code: selectedItem.code,
         joinCode: generateCode(),
         owner_id: ownerId,
+        isSelected: true,
         users: [],
       });
     });
@@ -62,7 +62,7 @@ const AddLeague = () => {
     };
     dispatch(setLeague(leagueState));
 
-    router.push('tabs');
+    router.push('tabs/Home');
   };
   // Item Card
   const CountryItem = ({ item }: { item: ItemProps }) => (

@@ -9,8 +9,9 @@ export class League extends Realm.Object<League> {
   leagueName!: string;
   code!: string;
   joinCode!: string;
-  users!: User[];
+  isSelected: boolean = false;
   owner_id!: string;
+  users!: User[];
 
   static schema: Realm.ObjectSchema = {
     name: 'League',
@@ -19,6 +20,7 @@ export class League extends Realm.Object<League> {
       leagueName: 'string',
       code: 'string',
       joinCode: 'string',
+      isSelected: 'bool',
       owner_id: 'string',
       users: { type: 'list', objectType: 'User' },
     },

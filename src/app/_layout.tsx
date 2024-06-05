@@ -4,11 +4,10 @@ import { store } from '../redux/store/store';
 import { ThemeProvider } from '../themeProvider/themeContext';
 import RealmCustomProvider from '../realm/Realm';
 
-import { Stack } from 'expo-router';
+import { Slot, Stack } from 'expo-router';
 import { StatusBar } from 'react-native';
 
-const APP_ID: string = 'leaguechamp-xqhhequ';
-
+import 'react-native-get-random-values';
 const RootLayout = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

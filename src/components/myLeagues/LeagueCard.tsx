@@ -1,12 +1,13 @@
 import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, StyleSheet, View, Pressable } from 'react-native';
-import { useAppDispatch } from '../../redux/constans/hooks';
-import { setLeague } from '../../redux/reducers/leagueReducer';
+
+import { Text, View, Pressable } from 'react-native';
+
 import { MaterialIcons } from '@expo/vector-icons';
 import { ScaledSheet } from 'react-native-size-matters';
 import { useRealm } from '@realm/react';
-export const ShowLeagues = ({ league }) => {
+import { useAppDispatch } from '../../redux/constans/hooks';
+import { setLeague } from '../../redux/reducers/leagueReducer';
+export const LeagueCard = ({ league }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const realm = useRealm();
@@ -16,10 +17,8 @@ export const ShowLeagues = ({ league }) => {
       leagueId: league._id.toString(),
       code: league.code,
     };
-
     dispatch(setLeague(state));
-
-    router.push('tabs');
+    router.push('tabs/Home');
   };
   // delete the league
   const deleteLeague = (league: any) => {
