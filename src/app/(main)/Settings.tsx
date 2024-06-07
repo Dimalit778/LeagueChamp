@@ -5,6 +5,7 @@ import { ScaledSheet } from 'react-native-size-matters';
 import CustomKeyboardView from '../../components/custom/CustomKeyboardView';
 
 const Settings = () => {
+  console.log('Settings');
   return (
     <CustomKeyboardView>
       <View style={styles.box}>

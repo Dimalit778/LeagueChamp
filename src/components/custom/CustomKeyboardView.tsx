@@ -8,7 +8,6 @@ const ios = Platform.OS === 'ios';
 export default function CustomKeyboardView({ children }: PropsWithChildren) {
   const { theme } = useContext(ThemeContext);
   return (
-    // <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: theme.background }}
       keyboardVerticalOffset={ios ? 100 : 0}
@@ -22,6 +21,5 @@ export default function CustomKeyboardView({ children }: PropsWithChildren) {
         {children}
       </ScrollView>
     </KeyboardAvoidingView>
-    // </SafeAreaView>
   );
 }

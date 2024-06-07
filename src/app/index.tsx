@@ -6,5 +6,6 @@ import { Redirect, Stack, useRouter } from 'expo-router';
 I18nManager.allowRTL(false);
 
 export default function App() {
+  console.log('App');
   return <Redirect href="(main)/MyLeagues" />;
 }

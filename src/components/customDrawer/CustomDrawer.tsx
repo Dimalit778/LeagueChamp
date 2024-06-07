@@ -6,24 +6,22 @@ import { usePathname, useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { ThemeContext } from '../../themeProvider/themeContext';
 import { Feather, AntDesign, Ionicons } from '@expo/vector-icons';
-import {
-  DrawerContentComponentProps,
-  DrawerContentScrollView,
-  DrawerItem,
-} from '@react-navigation/drawer';
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { Button } from 'react-native-elements';
 
 const CustomDrawer = (props: any) => {
   const user = useUser();
   const { name, image } = user.customData;
+
   const { logOut } = useAuth();
   const pathname = usePathname();
   const { theme } = useContext(ThemeContext);
   const router = useRouter();
-
-  useEffect(() => {
-    console.log(pathname);
-  }, [pathname, name]);
+  console.log('CustomDrawer', name, image);
+  console.log('--->', name);
+  // useEffect(() => {
+  //   console.log(pathname);
+  // }, [pathname, name]);
 
   const performLogout = () => {
     logOut();
@@ -57,7 +55,7 @@ const CustomDrawer = (props: any) => {
             color={pathname == '/feed' ? '#fff' : '#000'}
           />
         )}
-        label={'My Leagues'}
+        label="My Leagues"
         labelStyle={[
           styles.navItemLabel,
           { color: pathname == '/feed' ? '#fff' : '#000' },
@@ -76,7 +74,7 @@ const CustomDrawer = (props: any) => {
             color={pathname == '/profile' ? '#fff' : '#000'}
           />
         )}
-        label={'Profile'}
+        label="Profile"
         labelStyle={[
           styles.navItemLabel,
           { color: pathname == '/profile' ? '#fff' : '#000' },

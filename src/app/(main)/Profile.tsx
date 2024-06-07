@@ -19,6 +19,7 @@ import { useRouter } from 'expo-router';
 import { User } from '../../models/User';
 
 const Profile = () => {
+  console.log('Profile');
   const [modalVisible, setModalVisible] = useState(false);
   const router = useRouter();
 

@@ -1,5 +1,14 @@
 {
   "java.compile.nullAnalysis.mode": "disabled",
   "cSpell.words": ["tamagui"],
-  "cSpell.ignoreWords": ["BSON", "Ionicons", "Pressable", "constans"]
+  "cSpell.ignoreWords": [
+    "BSON",
+    "Bundesliga",
+    "Ionicons",
+    "Ligue",
+    "Pressable",
+    "Primera",
+    "Serie",
+    "constans"
+  ]
 }

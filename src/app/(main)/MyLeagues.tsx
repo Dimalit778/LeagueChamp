@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  SafeAreaView,
   StyleSheet,
   TouchableOpacity,
   Pressable,
@@ -23,21 +22,20 @@ const MyLeagues = () => {
   const user = useUser();
   const realm = useRealm();
   const [myLeagues, setMyLeagues] = useState([]);
-
+  console.log('MyLeagues');
   const currentUser = useObject(User, new BSON.ObjectId(user.customData._id));
   useEffect(() => {
+    console.log('---> my league use Effect');
     realm.subscriptions.update((mutableSubs) => {
       mutableSubs.add(realm.objects(League));
     });
     currentUser.leagues.map((league) => {
       setMyLeagues((myLeagues) => [...myLeagues, league]);
     });
-  }, [realm, currentUser]);
-  const leagues = useQuery(League);
-  console.log('leagues =m--->', myLeagues);
+  }, [realm]);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* MyLeagues */}
       <MyLeaguesList />
       {/* BUTTONS */}
@@ -62,7 +60,7 @@ const MyLeagues = () => {
           </Pressable>
         </Link>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

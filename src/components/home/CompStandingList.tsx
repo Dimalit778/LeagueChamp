@@ -1,69 +1,105 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
-import React from 'react';
+import { View, Text, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import React, { memo, useEffect, useState } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
-import { CompCard } from './CompCard';
+import { CompetitionCard } from './CompetitonCard';
+import { useAppDispatch, useAppSelector } from '../../redux/constans/hooks';
+import { getLeagueStanding } from '../../api/footballApi';
+import { setLeagueNameAndEmblem } from '../../redux/reducers/leagueReducer';
 
-const renderListHeader = () => (
-  <View style={styles.listItem}>
-    <Image source={{ uri: leagueData.emblem }} style={styles.emblem} />
-    <View style={{}}>
-      <Text style={styles.headerText}>{leagueData.name}</Text>
+const CompStandingList = ({ value }) => {
+  const [leagueStandings, setLeagueStandings] = useState([]);
+  const dispatch = useAppDispatch();
+
+  const [loading, setLoading] = useState(true);
+  // console.log(' ========1 =============', leagueStandings);
+  useEffect(() => {
+    setLeagueStandings([]);
+    console.log('1');
+    const fetchLeagueStanding = async () => {
+      console.log('2');
+      const data = await getLeagueStanding(value.code);
+      dispatch(setLeagueNameAndEmblem(data.competition));
+      setLeagueStandings(data.standings[0].table);
+    };
+    console.log('3');
+    fetchLeagueStanding();
+    console.log('4');
+    setLoading(false);
+  }, [value, dispatch]);
+  const renderListHeader = React.memo(() => (
+    <View style={[styles.row, styles.headerRow]}>
+      <View style={styles.positionColumn}>
+        <Text style={styles.headerText}>#</Text>
+      </View>
+      <View style={styles.teamColumn}>
+        <Text style={styles.headerText}>TEAM</Text>
+      </View>
+      <View style={styles.statsColumn}>
+        <Text style={styles.headerText}>MP</Text>
+        <Text style={styles.headerText}>W</Text>
+        <Text style={styles.headerText}>D</Text>
+        <Text style={styles.headerText}>L</Text>
+        <Text style={styles.headerText}>PTS</Text>
+      </View>
     </View>
-  </View>
-);
-
-const CompStandingList = () => {
+  ));
   return (
     <View style={styles.list}>
-      <FlatList
-        data={leagueStandings}
-        renderItem={({ item }) => <CompCard league={item} />}
-        ListHeaderComponent={renderListHeader}
-      />
+      {leagueStandings.length === 0 ? (
+        <ActivityIndicator style={styles.activityIndicator} />
+      ) : (
+        <FlatList
+          data={leagueStandings}
+          renderItem={({ item }) => <CompetitionCard competition={item} />}
+          ListEmptyComponent={
+            <ActivityIndicator style={styles.activityIndicator} />
+          }
+          ListHeaderComponent={renderListHeader}
+          stickyHeaderIndices={[0]}
+          keyExtractor={(item) => item.team.id.toString()}
+        />
+      )}
     </View>
   );
 };
 
-export default CompStandingList;
-
+export default memo(CompStandingList);
 const styles = StyleSheet.create({
-  headerText: {
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: 20,
-  },
-  emblem: {
-    width: 50,
-    height: 50,
-    borderRadius: 5,
-  },
   list: {
-    borderWidth: 2,
-    borderColor: 'black',
+    flex: 1,
+
+    backgroundColor: '#fff',
+  },
+  headerText: {
+    fontSize: 12,
+    color: '#FFFFFF',
+  },
+  row: {
+    flexDirection: 'row',
+    paddingVertical: 2,
+    borderBottomWidth: 2,
+    borderBottomColor: '#ccc',
+  },
+  headerRow: {
+    backgroundColor: 'gray',
+  },
+  positionColumn: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 7,
+  },
+  teamColumn: {
+    flex: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  statsColumn: {
+    flex: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
   activityIndicator: {
-    alignSelf: 'center',
-    position: 'absolute',
-    top: 250,
-  },
-  horizontalScroll: {
-    alignItems: 'center',
-    marginTop: 30,
-    height: 260,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#F7F7F7',
-    marginTop: 60,
-  },
-  listItem: {
-    margin: 10,
-    padding: 10,
-    backgroundColor: '#FFF',
-    width: '80%',
-    flex: 1,
-    alignSelf: 'center',
-    flexDirection: 'row',
-    borderRadius: 5,
+    marginTop: 20,
   },
 });
