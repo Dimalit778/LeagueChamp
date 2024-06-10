@@ -3,14 +3,15 @@ import { FontAwesome } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Tabs, usePathname } from 'expo-router';
+import { Stack, Tabs, usePathname } from 'expo-router';
 import React, { useContext } from 'react';
-import { ThemeContext } from '../../../themeProvider/themeContext';
 
-import TabsHeader from '../../../components/header/TabsHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { StatusBar } from 'expo-status-bar';
+import { ThemeContext } from '../../themeProvider/themeContext';
+import TabsHeader from '../../components/header/TabsHeader';
+import { Tab } from 'react-native-elements';
 
 const TabsLayout = () => {
   const { theme } = useContext(ThemeContext);
@@ -36,9 +37,10 @@ const TabsLayout = () => {
           },
         }}
       >
+        {/* <Tabs.Screen name="Modal" options={{ href: null }} /> */}
         {/*//@ --> MATCHES SCREEN <-- */}
         <Tabs.Screen
-          name="matches"
+          name="Matches"
           options={{
             title: 'Matches',
             tabBarIcon: ({ focused, size }) =>
@@ -52,7 +54,7 @@ const TabsLayout = () => {
 
         {/*//@ --> STANDING SCREEN <-- */}
         <Tabs.Screen
-          name="standing"
+          name="Standing"
           options={{
             title: 'Standing',
             tabBarIcon: ({ focused, size }) =>
@@ -65,7 +67,7 @@ const TabsLayout = () => {
         />
         {/*//@ --> MY GAMES SCREEN <-- */}
         <Tabs.Screen
-          name="myGames"
+          name="MyGames"
           options={{
             title: 'My Games',
             tabBarIcon: ({ focused }) =>

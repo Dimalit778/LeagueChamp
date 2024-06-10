@@ -5,6 +5,8 @@ import { DrawerToggleButton } from '@react-navigation/drawer';
 import { ms, s, vs } from 'react-native-size-matters';
 import { ThemeContext } from '../../themeProvider/themeContext';
 import { useAppSelector } from '../../redux/constans/hooks';
+import { Feather } from '@expo/vector-icons';
+import { Link } from 'expo-router';
 
 const TabsHeader = () => {
   const { theme } = useContext(ThemeContext);
@@ -13,7 +15,9 @@ const TabsHeader = () => {
     <View style={[styles.headerContainer, { backgroundColor: theme.navbar }]}>
       {/* Drawer Button */}
       <View style={styles.drawerButton}>
-        <DrawerToggleButton tintColor={'#FFFFFF'} />
+        <Link href="modal">
+          <Feather name="settings" size={24} color="white" />
+        </Link>
       </View>
       {/* Title */}
       <View style={styles.title}>
@@ -58,5 +62,7 @@ const styles = StyleSheet.create({
     width: 37,
   },
   // Drawer Button Styles
-  drawerButton: {},
+  drawerButton: {
+    marginLeft: s(10),
+  },
 });

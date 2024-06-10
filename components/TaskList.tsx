@@ -9,7 +9,7 @@ import {
 
 import { useState } from 'react';
 import { useRealm, useQuery, useUser } from '@realm/react';
-import { Task } from '../models/Task';
+import { Task } from '../../models/Task';
 import { League } from '../models/League';
 
 export default function TaskList() {

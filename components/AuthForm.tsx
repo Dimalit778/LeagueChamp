@@ -45,10 +45,10 @@ const AuthForm = ({ login }: props) => {
         type: 'error',
         text1: 'Please enter All Fields',
       });
-
+      setLoading(false);
       return;
     }
-    setLoading(true);
+
     try {
       await signIn();
     } catch (error: any) {

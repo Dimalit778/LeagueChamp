@@ -1,11 +1,10 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import { ScaledSheet } from 'react-native-size-matters';
 import { useState } from 'react';
-import Colors from '../myAssets/colors/Colors';
-
 import CustomBackgroundImage from '../components/custom/CustomBackgroundImage';
 import CustomKeyboardView from '../components/custom/CustomKeyboardView';
 import AuthForm from '../components/AuthForm';
+import Colors from '../myAssets/colors/Colors';
 
 const Welcome = () => {
   const [login, setLogin] = useState(true);

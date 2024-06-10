@@ -11,14 +11,14 @@ const Matches = () => {
   return (
     <View>
       <Text>matches</Text>
-      <FlatList
+      {/* <FlatList
         data={list}
         renderItem={({ item }) => {
           roundNumber;
         }}
         stickyHeaderIndices={[0]}
         // keyExtractor={(item) => item.team.id.toString()}
-      />
+      /> */}
     </View>
   );
 };

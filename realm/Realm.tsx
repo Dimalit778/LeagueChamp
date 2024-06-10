@@ -2,7 +2,6 @@ import { PropsWithChildren } from 'react';
 import { AppProvider, RealmProvider, UserProvider } from '@realm/react';
 import 'react-native-get-random-values';
 
-import Welcome from '../app/Welcome';
 import Toast from 'react-native-toast-message';
 import toastAlert from '../myAssets/toastAlert';
 import { LoadingSplash } from '../components/LoadingBall';
@@ -10,6 +9,7 @@ import { LoadingSplash } from '../components/LoadingBall';
 import { User, League, Round, Match } from '../models/index';
 
 import { schemas } from './RealmContext';
+import Welcome from '../app/Welcome';
 
 const APP_ID: string = 'leaguechamp-xqhhequ';
 

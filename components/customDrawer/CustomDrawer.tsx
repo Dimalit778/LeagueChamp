@@ -11,17 +11,15 @@ import { Button } from 'react-native-elements';
 
 const CustomDrawer = (props: any) => {
   const user = useUser();
-  const { name, image } = user.customData;
-
+  // const { name, image } = user.customData;
+  const name = 'dima';
+  const image = null;
   const { logOut } = useAuth();
   const pathname = usePathname();
   const { theme } = useContext(ThemeContext);
   const router = useRouter();
-  console.log('CustomDrawer', name, image);
-  console.log('--->', name);
-  // useEffect(() => {
-  //   console.log(pathname);
-  // }, [pathname, name]);
+  console.log(' --------- >CustomDrawer');
+  // console.log('--->', name);
 
   const performLogout = () => {
     logOut();
