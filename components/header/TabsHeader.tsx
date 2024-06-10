@@ -1,23 +1,27 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import React, { useContext } from 'react';
+import React, { useContext, useMemo, useRef } from 'react';
 import { Image } from 'expo-image';
-import { DrawerToggleButton } from '@react-navigation/drawer';
+
 import { ms, s, vs } from 'react-native-size-matters';
 import { ThemeContext } from '../../themeProvider/themeContext';
 import { useAppSelector } from '../../redux/constans/hooks';
 import { Feather } from '@expo/vector-icons';
-import { Link } from 'expo-router';
 
-const TabsHeader = () => {
+type openModal = {
+  openModal: () => void;
+};
+
+const TabsHeader = ({ openModal: openModal }) => {
   const { theme } = useContext(ThemeContext);
   const { name, emblem } = useAppSelector((state) => state.league);
+
   return (
     <View style={[styles.headerContainer, { backgroundColor: theme.navbar }]}>
       {/* Drawer Button */}
       <View style={styles.drawerButton}>
-        <Link href="modal">
+        <Pressable onPress={openModal}>
           <Feather name="settings" size={24} color="white" />
-        </Link>
+        </Pressable>
       </View>
       {/* Title */}
       <View style={styles.title}>

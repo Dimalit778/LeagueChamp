@@ -4,25 +4,36 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Stack, Tabs, usePathname } from 'expo-router';
-import React, { useContext } from 'react';
+import React, {
+  forwardRef,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { StatusBar } from 'expo-status-bar';
 import { ThemeContext } from '../../themeProvider/themeContext';
 import TabsHeader from '../../components/header/TabsHeader';
-import { Tab } from 'react-native-elements';
+import CustomBottomSheetModal from '../../components/BottomSheetModal/CustomBottomSheetModal';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
-const TabsLayout = () => {
+const TabsLayout = (props: any) => {
   const { theme } = useContext(ThemeContext);
-
   const pathname = usePathname();
-  console.log('Layout tabs ----');
 
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const openModal = () => {
+    bottomSheetRef.current?.present();
+  };
+  console.log('Layout tabs ----');
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar style="light" backgroundColor="black" />
-      <TabsHeader />
+      <TabsHeader openModal={openModal} />
+      <CustomBottomSheetModal ref={bottomSheetRef} />
       <Tabs
         screenOptions={{
           headerShown: false,
@@ -37,7 +48,6 @@ const TabsLayout = () => {
           },
         }}
       >
-        {/* <Tabs.Screen name="Modal" options={{ href: null }} /> */}
         {/*//@ --> MATCHES SCREEN <-- */}
         <Tabs.Screen
           name="Matches"

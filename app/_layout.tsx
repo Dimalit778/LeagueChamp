@@ -10,18 +10,22 @@ import { store } from '../redux/store/store';
 import { ThemeProvider } from '../themeProvider/themeContext';
 import Realm from '../realm/Realm';
 import { Text, View } from 'react-native';
+import TabsHeader from '../components/header/TabsHeader';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 const RootLayout = () => {
   console.log('RootLayout');
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
-        <ThemeProvider>
-          <Realm>
-            <StatusBar style="auto" />
-            <Stack screenOptions={{ headerShown: false }}></Stack>
-          </Realm>
-        </ThemeProvider>
+        <BottomSheetModalProvider>
+          <ThemeProvider>
+            <Realm>
+              <StatusBar style="auto" />
+              <Stack screenOptions={{ headerShown: false }}></Stack>
+            </Realm>
+          </ThemeProvider>
+        </BottomSheetModalProvider>
       </Provider>
     </GestureHandlerRootView>
   );

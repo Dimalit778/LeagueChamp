@@ -1,5 +1,5 @@
-import { SafeAreaView, StyleSheet } from 'react-native';
-import React, { useContext } from 'react';
+import { SafeAreaView, StyleSheet, Text } from 'react-native';
+import React, { useContext, useMemo, useRef } from 'react';
 import { ThemeContext } from '../../themeProvider/themeContext';
 import { useAppSelector } from '../../redux/constans/hooks';
 import CompStandingList from '../../components/home/CompStandingList';
@@ -19,6 +19,7 @@ const Home = () => {
         backgroundColor: theme.background,
       }}
     >
+      <Text>Home</Text>
       {/* <CompStandingList value={{ name: league.name, code: league.code }} /> */}
     </SafeAreaView>
   );
