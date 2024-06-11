@@ -3,10 +3,11 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { ThemeContext } from '../../themeProvider/themeContext';
 import Toggle from 'react-native-toggle-element';
 import { ms } from 'react-native-size-matters';
-
-const CustomSwitchToggle = ({ onPress }: { onPress: () => void }) => {
-  const { isDarkMode, setIsDarkMode } = useContext(ThemeContext);
-
+type props = {
+  onPress: () => void;
+  isDarkMode: boolean;
+};
+const CustomSwitchToggle = ({ onPress, isDarkMode }: props) => {
   return (
     <Toggle
       value={!isDarkMode}

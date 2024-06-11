@@ -1,7 +1,7 @@
 import { View, Text, TextInput } from 'react-native';
 
 import React, { useState } from 'react';
-import { useQuery, useRealm, useUser } from '@realm/react';
+import { useObject, useQuery, useRealm, useUser } from '@realm/react';
 import { Button } from 'react-native-elements';
 
 import { ScaledSheet, s, vs, ms } from 'react-native-size-matters';
@@ -17,6 +17,7 @@ import Colors from '../../myAssets/colors/Colors';
 import { Stack, useRouter } from 'expo-router';
 
 import { User } from '../../models/User';
+import { BSON } from 'realm';
 
 const Profile = () => {
   console.log('Profile');
@@ -25,10 +26,12 @@ const Profile = () => {
 
   const realm = useRealm();
   const user = useUser();
-  const userInfo = useQuery(User);
+  const currentUser = useObject(User, new BSON.ObjectId(user.customData._id));
+  console.log(currentUser);
+  const { name, image } = user.customData;
 
-  const [userName, setUserName] = useState('');
-  const [userImage, setUserImage] = useState('');
+  const [userName, setUserName] = useState(name);
+  const [userImage, setUserImage] = useState(image);
 
   const pickImage = async () => {
     setModalVisible(false);
@@ -48,22 +51,19 @@ const Profile = () => {
   };
   const clearImage = () => {
     setModalVisible(false);
-    setUserImage(null);
+    setUserImage('');
   };
 
   const saveUser = () => {
-    const toUpdate = realm.objects(User).filtered('userId == $0', user.id);
-
     realm.write(() => {
-      toUpdate[0].name = userName;
-      toUpdate[0].image = userImage;
+      currentUser.name = userName;
+      currentUser.image = userImage;
     });
-    router.replace('(drawer)/leagues');
+    router.replace('/(main)/Home');
   };
 
   return (
     <CustomKeyboardView>
-      {/* <Stack.Screen options={{ title: 'Profile' }} /> */}
       <Text style={styles.header2}>Create new User</Text>
       {/*Profile  Image */}
       <View style={styles.box_image}>

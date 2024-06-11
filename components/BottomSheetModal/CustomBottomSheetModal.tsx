@@ -1,12 +1,5 @@
-import React, {
-  forwardRef,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { View, Text, StyleSheet, Button, Image } from 'react-native';
+import React, { forwardRef, useContext, useMemo } from 'react';
+import { View, Text, StyleSheet, Image, Button, Pressable } from 'react-native';
 import BottomSheet, {
   BottomSheetModal,
   useBottomSheetModal,
@@ -16,25 +9,26 @@ import { useAuth, useUser } from '@realm/react';
 import { ThemeContext } from '../../themeProvider/themeContext';
 import { FontAwesome, Feather, AntDesign, Ionicons } from '@expo/vector-icons';
 import CustomBackdrop from './CustomBackDrop';
-
 import CustomSwitchToggle from '../custom/CustomSwitchButton';
-import { Link, usePathname } from 'expo-router';
+import { Link, router, usePathname, useRouter } from 'expo-router';
 import CustomButton from '../custom/CustomButton';
+
 type Ref = BottomSheetModal;
-
-const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
-  const user = useUser();
-  const { name, image } = user.customData;
-  console.log('tob ', user.customData);
-
+type Theme = {
+  text: string;
+  background: string;
+  primary: string;
+  border: string;
+  navbar: string;
+};
+const CustomBottomSheetModal = forwardRef<Ref>(({}, ref) => {
+  const { name, image } = useUser().customData;
   const { logOut } = useAuth();
-  const pathname = usePathname();
-  console.log('pathname', pathname);
-  const { theme } = useContext(ThemeContext);
-  const { isDarkMode, setIsDarkMode } = useContext(ThemeContext);
-  // variables
+  const { theme, isDarkMode, setIsDarkMode } = useContext(ThemeContext);
   const { dismiss } = useBottomSheetModal();
+
   const snapPoints = useMemo(() => ['80%'], []);
+
   return (
     <BottomSheetModal
       ref={ref}
@@ -44,104 +38,123 @@ const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
       backgroundStyle={{ backgroundColor: theme.border }}
     >
       <View style={styles.container}>
-        <View style={styles.userInfoWrapper}>
-          {image ? (
-            <Image
-              source={{ uri: image }}
-              width={s(80)}
-              height={vs(80)}
-              style={styles.userImg}
-            />
-          ) : (
-            <FontAwesome
-              name="user-circle-o"
-              size={ms(80)}
-              color={theme.text}
-            />
-          )}
-          <View style={styles.userDetailsWrapper}>
-            <Text style={[styles.userName, { color: theme.text }]}>{name}</Text>
-          </View>
-        </View>
-
-        <Link
-          href={'/MyLeagues'}
-          style={styles.navItem}
-          onPress={() => dismiss()}
-        >
-          <AntDesign
-            name="menu-fold"
-            size={24}
-            color={pathname == '/profile' ? '#fff' : '#000'}
+        <UserInfo name={name} image={image} theme={theme} />
+        <NavigationItems dismiss={dismiss} theme={theme} />
+        <View style={styles.row}>
+          <LogoutButton logOut={logOut} theme={theme} />
+          <CustomSwitchToggle
+            isDarkMode={isDarkMode}
+            onPress={() => setIsDarkMode(!isDarkMode)}
           />
-
-          <Text style={styles.navText}>My Leagues</Text>
-        </Link>
-        <Link
-          href={'/Profile'}
-          style={styles.navItem}
-          onPress={() => dismiss()}
-        >
-          <AntDesign
-            name="user"
-            size={28}
-            color={pathname == '/profile' ? '#fff' : '#000'}
-          />
-          <Text style={styles.navText}>Profile</Text>
-        </Link>
-
-        <Link
-          href={'(modal)/Settings'}
-          style={styles.navItem}
-          onPress={() => dismiss()}
-        >
-          <Ionicons
-            name="settings-outline"
-            size={24}
-            color={pathname == '/settings' ? '#fff' : '#000'}
-          />
-          <Text style={styles.navText}>Settings</Text>
-        </Link>
-
-        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-          <View style={styles.downBtns}>
-            {/* <Button title="LOG out" onPress={() => logOut()} /> */}
-            <CustomButton
-              bgColor={theme.background}
-              textColor={theme.text}
-              boRadius={10}
-              textFont={18}
-              btnLabel="Log out"
-              onPress={() => logOut()}
-            />
-            {/* <SwitchTheme /> */}
-            <CustomSwitchToggle onPress={() => setIsDarkMode(!isDarkMode)} />
-          </View>
         </View>
       </View>
     </BottomSheetModal>
   );
 });
 
+interface UserInfoProps {
+  name: string;
+  image?: string;
+  theme: Theme;
+}
+
+const UserInfo = React.memo(({ name, image, theme }: UserInfoProps) => (
+  <View style={styles.userInfoWrapper}>
+    <Image
+      source={
+        image ? { uri: image } : require('../../myAssets/images/avatar.jpg')
+      }
+      style={styles.userImg}
+      resizeMode="cover"
+    />
+    <View style={styles.userDetailsWrapper}>
+      <Text style={[styles.userName, { color: theme.text }]}>{name}</Text>
+    </View>
+  </View>
+));
+type NavItemsProps = {
+  dismiss: () => void;
+  theme: Theme;
+};
+const NavigationItems = ({ dismiss, theme }: NavItemsProps) => (
+  <>
+    <Pressable
+      onPress={() => {
+        router.push('/MyLeagues');
+        dismiss();
+      }}
+    >
+      <View style={[styles.navItem, { backgroundColor: theme.background }]}>
+        <AntDesign name="menu-fold" size={24} color={theme.text} />
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.text }}>
+          My Leagues
+        </Text>
+      </View>
+    </Pressable>
+    <Pressable
+      onPress={() => {
+        router.push('/Profile');
+        dismiss();
+      }}
+    >
+      <View style={[styles.navItem, { backgroundColor: theme.background }]}>
+        <AntDesign name="user" size={28} color={theme.text} />
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.text }}>
+          Profile
+        </Text>
+      </View>
+    </Pressable>
+    <Pressable
+      onPress={() => {
+        router.push('/Settings');
+        dismiss();
+      }}
+    >
+      <View style={[styles.navItem, { backgroundColor: theme.background }]}>
+        <Ionicons name="settings-outline" size={24} color={theme.text} />
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: theme.text,
+          }}
+        >
+          Settings
+        </Text>
+      </View>
+    </Pressable>
+  </>
+);
+
+const LogoutButton = ({ logOut, theme }) => (
+  <CustomButton
+    bgColor={theme.background}
+    textColor={theme.text}
+    boRadius={10}
+    textFont={18}
+    btnLabel="Log out"
+    onPress={logOut}
+  />
+);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
   },
+
   navItem: {
-    backgroundColor: 'lightgrey',
+    flexDirection: 'row',
     padding: ms(10),
     marginHorizontal: ms(40),
     borderRadius: ms(5),
     marginBottom: ms(10),
-  },
-  navText: {
-    fontSize: 20,
+    alignItems: 'center',
+    gap: ms(15),
   },
 
   userInfoWrapper: {
     flexDirection: 'row',
-
     justifyContent: 'space-around',
     // paddingHorizontal: ms(10),
     paddingVertical: ms(10),
@@ -151,6 +164,8 @@ const styles = StyleSheet.create({
   },
   userImg: {
     borderRadius: ms(40),
+    width: s(80),
+    height: vs(80),
   },
   userDetailsWrapper: {
     marginTop: 25,
@@ -165,6 +180,11 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     textDecorationLine: 'underline',
   },
-  downBtns: { flexDirection: 'row', justifyContent: 'space-between' },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
 });
 export default CustomBottomSheetModal;
