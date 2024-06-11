@@ -47,6 +47,7 @@
     "react-native-size-matters": "^0.4.2",
     "react-native-svg": "14.1.0",
     "react-native-toast-message": "^2.2.0",
+    "react-native-toggle-element": "^2.0.1",
     "react-native-vector-icons": "^10.0.3",
     "react-native-web": "^0.19.10",
     "react-native-webview": "^13.8.4",

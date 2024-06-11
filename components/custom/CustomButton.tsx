@@ -5,6 +5,7 @@ type ButtonProps = {
   bgColor: string;
   btnLabel: string;
   textColor: string;
+  boRadius: number;
   textFont: number;
   onPress?: () => void;
 };
@@ -14,6 +15,7 @@ const CustomButton = ({
   btnLabel,
   textColor,
   onPress,
+  boRadius,
   textFont,
 }: ButtonProps) => {
   return (
@@ -21,10 +23,11 @@ const CustomButton = ({
       onPress={onPress}
       style={{
         backgroundColor: bgColor,
-        borderRadius: 100,
+        borderRadius: boRadius,
         alignItems: 'center',
         padding: 10,
         marginVertical: 10,
+        borderWidth: 2,
       }}
     >
       <Text

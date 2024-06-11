@@ -18,7 +18,7 @@ const lightTheme: Theme = {
 
 const darkTheme: Theme = {
   text: '#DEF2E8',
-  border: '#908d96',
+  border: '#808080',
   primary: '#D9B993',
   background: '#2F4F4F',
   navbar: '#000000',

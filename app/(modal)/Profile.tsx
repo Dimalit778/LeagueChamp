@@ -14,7 +14,7 @@ import CustomKeyboardView from '../../components/custom/CustomKeyboardView';
 import Avatar from '../../components/Avatar';
 import ModalPicker from '../../components/ModalPicker';
 import Colors from '../../myAssets/colors/Colors';
-import { useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 
 import { User } from '../../models/User';
 
@@ -63,6 +63,7 @@ const Profile = () => {
 
   return (
     <CustomKeyboardView>
+      {/* <Stack.Screen options={{ title: 'Profile' }} /> */}
       <Text style={styles.header2}>Create new User</Text>
       {/*Profile  Image */}
       <View style={styles.box_image}>

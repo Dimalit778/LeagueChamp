@@ -1,11 +1,19 @@
-import { View, Text, SafeAreaView, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  Button,
+  Pressable,
+} from 'react-native';
 import React from 'react';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { ScaledSheet } from 'react-native-size-matters';
 import CustomKeyboardView from '../../components/custom/CustomKeyboardView';
-
+import { Ionicons } from '@expo/vector-icons';
 const Settings = () => {
   console.log('Settings');
+  const router = useRouter();
   return (
     <CustomKeyboardView>
       <View style={styles.box}>

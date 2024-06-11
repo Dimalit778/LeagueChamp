@@ -13,14 +13,23 @@ type openModal = {
 
 const TabsHeader = ({ openModal: openModal }) => {
   const { theme } = useContext(ThemeContext);
+
   const { name, emblem } = useAppSelector((state) => state.league);
 
   return (
-    <View style={[styles.headerContainer, { backgroundColor: theme.navbar }]}>
-      {/* Drawer Button */}
+    <View
+      style={[
+        styles.headerContainer,
+        {
+          backgroundColor: theme.navbar,
+          borderWidth: 1,
+          borderBottomColor: theme.border,
+        },
+      ]}
+    >
       <View style={styles.drawerButton}>
         <Pressable onPress={openModal}>
-          <Feather name="settings" size={24} color="white" />
+          <Feather name="settings" size={24} color={theme.text} />
         </Pressable>
       </View>
       {/* Title */}
@@ -40,7 +49,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: vs(50),
+    height: vs(60),
   },
   //Title Styles
   title: {

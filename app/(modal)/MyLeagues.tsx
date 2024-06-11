@@ -29,7 +29,7 @@ const MyLeagues = () => {
     realm.subscriptions.update((mutableSubs) => {
       mutableSubs.add(realm.objects(League));
     });
-    currentUser.leagues.map((league) => {
+    currentUser?.leagues.map((league) => {
       setMyLeagues((myLeagues) => [...myLeagues, league]);
     });
   }, [realm]);
@@ -37,7 +37,8 @@ const MyLeagues = () => {
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* MyLeagues */}
-      <MyLeaguesList />
+      {myLeagues ? <MyLeaguesList /> : <Text>No Leagues</Text>}
+
       {/* BUTTONS */}
       <View
         style={{

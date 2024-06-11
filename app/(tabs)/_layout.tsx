@@ -22,12 +22,17 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 const TabsLayout = (props: any) => {
   const { theme } = useContext(ThemeContext);
+
   const pathname = usePathname();
 
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const openModal = () => {
     bottomSheetRef.current?.present();
   };
+  const closeModal = () => {
+    bottomSheetRef.current?.close();
+  };
+
   console.log('Layout tabs ----');
   return (
     <SafeAreaView style={{ flex: 1 }}>
