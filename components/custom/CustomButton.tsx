@@ -30,9 +30,7 @@ const CustomButton = ({
         borderWidth: 2,
       }}
     >
-      <Text
-        style={{ color: textColor, fontSize: textFont, fontWeight: 'bold' }}
-      >
+      <Text style={{ color: textColor, fontSize: textFont, fontWeight: '500' }}>
         {btnLabel}
       </Text>
     </TouchableOpacity>

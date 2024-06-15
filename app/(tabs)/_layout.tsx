@@ -7,6 +7,7 @@ import { Stack, Tabs, usePathname } from 'expo-router';
 import React, {
   forwardRef,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -22,15 +23,11 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 const TabsLayout = (props: any) => {
   const { theme } = useContext(ThemeContext);
-
   const pathname = usePathname();
-
   const bottomSheetRef = useRef<BottomSheetModal>(null);
+
   const openModal = () => {
     bottomSheetRef.current?.present();
-  };
-  const closeModal = () => {
-    bottomSheetRef.current?.close();
   };
 
   console.log('Layout tabs ----');

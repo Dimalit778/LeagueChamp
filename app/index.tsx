@@ -1,11 +1,25 @@
-import { I18nManager, Text, View } from 'react-native';
-import 'react-native-get-random-values';
+import React, { useEffect } from 'react';
+import { Redirect } from 'expo-router';
+import { useUser } from '@realm/react';
+import { useAppDispatch } from '@/redux/constans/hooks';
+import { setUser } from '@/redux/reducers/userReducer';
+import { Text, View } from 'react-native';
 
-import { Redirect, Slot, Stack, useRouter } from 'expo-router';
-import { LoadingBall } from '../components/LoadingBall';
+export default function App() {
+  // const user = useUser().customData;
+  // const dispatch = useAppDispatch();
 
-I18nManager.allowRTL(false);
+  // useEffect(() => {
+  //   console.log('user');
+  //   if (user) {
+  //     dispatch(setUser(user));
+  //   }
+  // }, [user, dispatch]);
 
-export default function HomeScreen() {
-  return <Redirect href="(tabs)/Home" />;
+  // return <Redirect href="/(tabs)/Home" />;
+  return (
+    <View>
+      <Text>sss</Text>
+    </View>
+  );
 }

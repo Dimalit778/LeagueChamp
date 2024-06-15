@@ -23,21 +23,21 @@ const MyLeagues = () => {
   const realm = useRealm();
   const [myLeagues, setMyLeagues] = useState([]);
   console.log('MyLeagues');
-  const currentUser = useObject(User, new BSON.ObjectId(user.customData._id));
-  useEffect(() => {
-    console.log('---> my league use Effect');
-    realm.subscriptions.update((mutableSubs) => {
-      mutableSubs.add(realm.objects(League));
-    });
-    currentUser?.leagues.map((league) => {
-      setMyLeagues((myLeagues) => [...myLeagues, league]);
-    });
-  }, [realm]);
+  // const currentUser = useObject(User, new BSON.ObjectId(user.customData._id));
+  // useEffect(() => {
+  //   console.log('---> my league use Effect');
+  //   realm.subscriptions.update((mutableSubs) => {
+  //     mutableSubs.add(realm.objects(League));
+  //   });
+  //   currentUser?.leagues.map((league) => {
+  //     setMyLeagues((myLeagues) => [...myLeagues, league]);
+  //   });
+  // }, [realm]);
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* MyLeagues */}
-      {myLeagues ? <MyLeaguesList /> : <Text>No Leagues</Text>}
+      {/* {myLeagues ? <MyLeaguesList /> : <Text>No Leagues</Text>} */}
 
       {/* BUTTONS */}
       <View

@@ -40,12 +40,12 @@ const CustomBottomSheetModal = forwardRef<Ref>(({}, ref) => {
       <View style={styles.container}>
         <UserInfo name={name} image={image} theme={theme} />
         <NavigationItems dismiss={dismiss} theme={theme} />
-        <View style={styles.row}>
-          <LogoutButton logOut={logOut} theme={theme} />
+        <View style={styles.bottom}>
           <CustomSwitchToggle
             isDarkMode={isDarkMode}
             onPress={() => setIsDarkMode(!isDarkMode)}
           />
+          <LogoutButton logOut={logOut} theme={theme} />
         </View>
       </View>
     </BottomSheetModal>
@@ -59,7 +59,7 @@ interface UserInfoProps {
 }
 
 const UserInfo = React.memo(({ name, image, theme }: UserInfoProps) => (
-  <View style={styles.userInfoWrapper}>
+  <View style={[styles.userInfoWrapper, { borderBottomColor: theme.text }]}>
     <Image
       source={
         image ? { uri: image } : require('../../myAssets/images/avatar.jpg')
@@ -67,9 +67,8 @@ const UserInfo = React.memo(({ name, image, theme }: UserInfoProps) => (
       style={styles.userImg}
       resizeMode="cover"
     />
-    <View style={styles.userDetailsWrapper}>
-      <Text style={[styles.userName, { color: theme.text }]}>{name}</Text>
-    </View>
+
+    <Text style={styles.userName}>{name}</Text>
   </View>
 ));
 type NavItemsProps = {
@@ -140,7 +139,7 @@ const LogoutButton = ({ logOut, theme }) => (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: ms(24),
   },
 
   navItem: {
@@ -154,35 +153,28 @@ const styles = StyleSheet.create({
   },
 
   userInfoWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    // paddingHorizontal: ms(10),
+    alignItems: 'center',
     paddingVertical: ms(10),
-    borderBottomColor: '#ccc',
     borderBottomWidth: 1,
     marginBottom: ms(10),
+    gap: ms(10),
   },
   userImg: {
-    borderRadius: ms(40),
-    width: s(80),
-    height: vs(80),
+    borderRadius: 100,
+    borderWidth: 2,
+    borderColor: 'black',
+    width: s(120),
+    height: vs(120),
   },
-  userDetailsWrapper: {
-    marginTop: 25,
-    marginLeft: 10,
-  },
+
   userName: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 24,
+    color: 'black',
   },
-  userEmail: {
-    fontSize: 16,
-    fontStyle: 'italic',
-    textDecorationLine: 'underline',
-  },
-  row: {
+
+  bottom: {
     flex: 1,
-    flexDirection: 'row',
+
     justifyContent: 'space-around',
     alignItems: 'center',
   },

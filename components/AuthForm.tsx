@@ -29,7 +29,7 @@ const AuthForm = ({ login }: props) => {
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-
+  console.log('auth from');
   const signIn = useCallback(async () => {
     let email = userEmail.toLowerCase();
     const creds = Realm.Credentials.emailPassword(email, password);

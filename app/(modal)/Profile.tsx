@@ -59,7 +59,7 @@ const Profile = () => {
       currentUser.name = userName;
       currentUser.image = userImage;
     });
-    router.replace('/(main)/Home');
+    router.replace('(tabs)/Home');
   };
 
   return (
