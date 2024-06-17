@@ -6,10 +6,19 @@ import { FlatList } from 'react-native-gesture-handler';
 import { League } from '../../models';
 import { vs } from 'react-native-size-matters';
 import { LeagueCard } from './LeagueCard';
+import { useLeaguesRealm } from '@/hooks/useLeaguesRealm';
+import { useUserRealm } from '@/hooks/useUserRealm';
 
 const MyLeaguesList = () => {
-  const user = useUser();
-  const leagues = useQuery(League).filtered(`owner_id == '${user.id}'`);
+  const user = useUser().customData;
+  const { leagues } = useUserRealm();
+
+  if (leagues.length == 0)
+    return (
+      <Text style={{ textAlign: 'center', fontSize: 24, paddingTop: vs(20) }}>
+        No Leagues
+      </Text>
+    );
   return (
     <View style={{ paddingTop: vs(20) }}>
       <FlatList

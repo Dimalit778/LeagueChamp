@@ -14,9 +14,9 @@ const _layout = () => {
         headerTitleAlign: 'center',
       }}
     >
-      <Stack.Screen name="MyLeagues" />
-      <Stack.Screen name="Settings" />
-      <Stack.Screen name="Profile" />
+      {/* <Stack.Screen name="leagues" /> */}
+      {/* <Stack.Screen name="Settings" /> */}
+      {/* <Stack.Screen name="Profile" /> */}
     </Stack>
   );
 };

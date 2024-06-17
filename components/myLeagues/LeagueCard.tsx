@@ -7,7 +7,9 @@ import { ScaledSheet } from 'react-native-size-matters';
 import { useRealm } from '@realm/react';
 import { useAppDispatch } from '../../redux/constans/hooks';
 import { setLeague } from '../../redux/reducers/leagueReducer';
+import { useLeaguesRealm } from '@/hooks/useLeaguesRealm';
 export const LeagueCard = ({ league }) => {
+  const { deleteLeague } = useLeaguesRealm();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const realm = useRealm();
@@ -21,14 +23,12 @@ export const LeagueCard = ({ league }) => {
     router.push('tabs/Home');
   };
   // delete the league
-  const deleteLeague = (league: any) => {
-    realm.write(() => {
-      realm.delete(league);
-    });
+  const deleteHandler = (league: any) => {
+    deleteLeague(league);
   };
   return (
     <View style={styles.box}>
-      <Pressable onPress={() => deleteLeague(league)}>
+      <Pressable onPress={() => deleteHandler(league)}>
         <MaterialIcons name="delete-forever" size={48} color="red" />
       </Pressable>
       <Pressable style={{}} onPress={() => clickOnLeague()}>

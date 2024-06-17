@@ -79,7 +79,7 @@ const NavigationItems = ({ dismiss, theme }: NavItemsProps) => (
   <>
     <Pressable
       onPress={() => {
-        router.push('/MyLeagues');
+        router.push('leagues/MyLeagues');
         dismiss();
       }}
     >

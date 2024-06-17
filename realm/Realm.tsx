@@ -18,6 +18,15 @@ export default function RealmCustomProvider({ children }: PropsWithChildren) {
           schema={[League, Match, Round, User]}
           sync={{
             flexible: true,
+            initialSubscriptions: {
+              update(subs, realm) {
+                subs.add(realm.objects(User));
+                subs.add(realm.objects(League));
+                subs.add(realm.objects(Round));
+                subs.add(realm.objects(Match));
+              },
+              rerunOnOpen: true,
+            },
             onError: (_session, error) => {
               console.log(error);
             },

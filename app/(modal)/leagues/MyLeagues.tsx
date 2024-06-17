@@ -5,40 +5,25 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 
-import { Link } from 'expo-router';
+import { Link, Stack } from 'expo-router';
 
 import { vs } from 'react-native-size-matters';
-import { ThemeContext } from '../../themeProvider/themeContext';
-import MyLeaguesList from '../../components/myLeagues/MyLeaguesList';
-import { useObject, useQuery, useRealm, useUser } from '@realm/react';
-import { League, User } from '../../models';
-import { BSON } from 'realm';
+import { ThemeContext } from '../../../themeProvider/themeContext';
+import MyLeaguesList from '../../../components/myLeagues/MyLeaguesList';
 
 //@ ---> Leagues Page
 const MyLeagues = () => {
   const { theme } = useContext(ThemeContext);
-  const user = useUser();
-  const realm = useRealm();
-  const [myLeagues, setMyLeagues] = useState([]);
-  console.log('MyLeagues');
-  // const currentUser = useObject(User, new BSON.ObjectId(user.customData._id));
-  // useEffect(() => {
-  //   console.log('---> my league use Effect');
-  //   realm.subscriptions.update((mutableSubs) => {
-  //     mutableSubs.add(realm.objects(League));
-  //   });
-  //   currentUser?.leagues.map((league) => {
-  //     setMyLeagues((myLeagues) => [...myLeagues, league]);
-  //   });
-  // }, [realm]);
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
+      <Stack.Screen options={{ title: 'My Leagues' }} />
       {/* MyLeagues */}
-      {/* {myLeagues ? <MyLeaguesList /> : <Text>No Leagues</Text>} */}
-
+      <View>
+        <MyLeaguesList />
+      </View>
       {/* BUTTONS */}
       <View
         style={{
@@ -48,14 +33,14 @@ const MyLeagues = () => {
         }}
       >
         {/* -- Link to Join League  -- */}
-        <Link href="league/JoinLeague" asChild>
+        <Link href="leagues/JoinLeague" asChild>
           <TouchableOpacity style={styles.linkBox}>
             <Text style={styles.linkText}>Join League</Text>
           </TouchableOpacity>
         </Link>
 
         {/* -- Link to Create League  -- */}
-        <Link href="league/AddLeague" asChild>
+        <Link href="leagues/CreateLeague" asChild>
           <Pressable style={styles.linkBox}>
             <Text style={styles.linkText}>Create League</Text>
           </Pressable>
