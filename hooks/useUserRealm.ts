@@ -1,16 +1,18 @@
-import { useCallback, useState } from 'react';
-import { useObject, useQuery, useRealm, useUser } from '@realm/react';
+import { useCallback, useEffect, useState } from 'react';
+import { useObject, useRealm, useUser } from '@realm/react';
 import { League, User } from '@/models';
 
 // GenerateMongoLikeObjectId
 import { ObjectId } from 'bson';
 
 export function useUserRealm() {
-  const { _id } = useUser().customData;
+  const user = useUser().customData;
   const realm = useRealm();
-  const user = useObject(User, new ObjectId(_id));
+  const [leagues, setLeagues] = useState([]);
+  // const user = useObject(User, new ObjectId(_id));
+  console.log('user ', user.leagues);
 
-  const leagues = user.leagues;
+  // console.log('leagues ', leagues);
 
   const deleteLeague = useCallback(
     (leagueId: string) => {
@@ -20,7 +22,7 @@ export function useUserRealm() {
         // realm.delete(realm.objectForPrimaryKey('Task', id));
       });
     },
-    [realm, _id]
+    [realm]
   );
 
   return {

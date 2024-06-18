@@ -8,8 +8,9 @@ import toastAlert from '../myAssets/toastAlert';
 import { LoadingSplash } from '../components/LoadingBall';
 import Welcome from '../app/Welcome';
 import { League, Match, Round, User } from '@/models';
+import { realmContext } from './RealmContext';
 const APP_ID: string = 'leaguechamp-xqhhequ';
-
+// const { RealmProvider } = realmContext;
 export default function RealmCustomProvider({ children }: PropsWithChildren) {
   return (
     <AppProvider id={APP_ID}>
@@ -21,9 +22,6 @@ export default function RealmCustomProvider({ children }: PropsWithChildren) {
             initialSubscriptions: {
               update(subs, realm) {
                 subs.add(realm.objects(User));
-                subs.add(realm.objects(League));
-                subs.add(realm.objects(Round));
-                subs.add(realm.objects(Match));
               },
               rerunOnOpen: true,
             },
@@ -40,12 +38,3 @@ export default function RealmCustomProvider({ children }: PropsWithChildren) {
     </AppProvider>
   );
 }
-// newRealmFileBehavior: {
-//   type: OpenRealmBehaviorType.DownloadBeforeOpen,
-// },
-// initialSubscriptions: {
-//   update(subs, realm) {
-//     subs.add(realm.objects(User));
-//   },
-//   rerunOnOpen: true,
-// },

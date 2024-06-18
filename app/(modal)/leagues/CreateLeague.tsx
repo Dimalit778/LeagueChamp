@@ -27,7 +27,6 @@ type ItemProps = {
   country: string;
 };
 const CreateLeague = () => {
-  const user = useUser();
   const { createLeague } = useLeaguesRealm();
   const router = useRouter();
   const { theme } = useContext(ThemeContext);

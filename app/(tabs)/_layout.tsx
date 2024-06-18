@@ -3,15 +3,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Stack, Tabs, usePathname } from 'expo-router';
-import React, {
-  forwardRef,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { Tabs, usePathname } from 'expo-router';
+import React, { useContext, useRef } from 'react';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 

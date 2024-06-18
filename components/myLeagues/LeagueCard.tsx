@@ -4,15 +4,16 @@ import { Text, View, Pressable } from 'react-native';
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { ScaledSheet } from 'react-native-size-matters';
-import { useRealm } from '@realm/react';
+
 import { useAppDispatch } from '../../redux/constans/hooks';
 import { setLeague } from '../../redux/reducers/leagueReducer';
 import { useLeaguesRealm } from '@/hooks/useLeaguesRealm';
+import Toast from 'react-native-toast-message';
+
 export const LeagueCard = ({ league }) => {
   const { deleteLeague } = useLeaguesRealm();
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const realm = useRealm();
 
   const clickOnLeague = async () => {
     let state = {
@@ -24,7 +25,18 @@ export const LeagueCard = ({ league }) => {
   };
   // delete the league
   const deleteHandler = (league: any) => {
-    deleteLeague(league);
+    const res = deleteLeague(league);
+    if (res) {
+      Toast.show({
+        type: 'actionComplete',
+        text1: 'League Deleted',
+      });
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: 'Not Your League',
+      });
+    }
   };
   return (
     <View style={styles.box}>

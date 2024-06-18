@@ -10,7 +10,6 @@ export default function App() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log('user');
     if (user) {
       dispatch(setUser(user));
     }

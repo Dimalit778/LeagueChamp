@@ -1,5 +1,5 @@
 import { View, TextInput, Pressable } from 'react-native';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 
 import { Fontisto } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
@@ -20,27 +20,31 @@ type props = {
 const AuthForm = ({ login }: props) => {
   const app = useApp();
 
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const userName = useRef(null);
+  const userEmail = useRef(null);
+  const userPassword = useRef(null);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-  console.log('auth from');
-  const signIn = useCallback(async () => {
-    let email = userEmail.toLowerCase();
-    const creds = Realm.Credentials.emailPassword(email, password);
 
-    await app.logIn(creds);
+  const signIn = useCallback(async () => {
+    let email = userEmail.current?.value.toLowerCase();
+    let password = userPassword.current?.value;
+
+    const res = Realm.Credentials.emailPassword(email, password);
+
+    await app.logIn(res);
     setLoading(false);
-  }, [app, userEmail, password]);
+  }, [app, userEmail]);
 
   const handleLogin = useCallback(async () => {
+    let email = userEmail.current?.value;
+    let password = userPassword.current?.value;
     setLoading(true);
-    if (userEmail == '' || password == '') {
+    if (!email || !password) {
       Toast.show({
         type: 'error',
         text1: 'Please enter All Fields',
@@ -48,7 +52,6 @@ const AuthForm = ({ login }: props) => {
       setLoading(false);
       return;
     }
-
     try {
       await signIn();
     } catch (error: any) {
@@ -58,15 +61,17 @@ const AuthForm = ({ login }: props) => {
         text1: `Failed Login: ${error?.message}`,
       });
     }
-  }, [signIn, app, userEmail, password]);
+  }, [signIn, app, userEmail]);
 
   const handleRegister = useCallback(async () => {
+    let email = userEmail.current?.value.toLowerCase();
+    let name = userName?.current?.value;
+    let password = userPassword.current?.value;
     setLoading(true);
-    let email = userEmail.toLowerCase();
     try {
       await app.emailPasswordAuth.registerUser({ email, password });
       await signIn();
-      await writeCustomUserData(app.currentUser, userName);
+      await writeCustomUserData(app.currentUser, name);
     } catch (error: any) {
       setLoading(false);
       Toast.show({
@@ -74,7 +79,7 @@ const AuthForm = ({ login }: props) => {
         text1: `Failed Sign Up : ${error?.message}`,
       });
     }
-  }, [app, userEmail, password]);
+  }, [app, userEmail]);
   return (
     <View style={styles.container}>
       {loading && <LoadingBall />}
@@ -83,11 +88,11 @@ const AuthForm = ({ login }: props) => {
           <Fontisto name="email" size={ms(26)} color="black" />
           <TextInput
             style={styles.textInput}
-            value={userName}
+            ref={userName}
             placeholder="Name"
             placeholderTextColor="grey"
             keyboardType={'email-address'}
-            onChangeText={(text) => setUserName(text)}
+            onChangeText={(text) => (userName.current.value = text)}
           />
         </View>
       )}
@@ -95,11 +100,11 @@ const AuthForm = ({ login }: props) => {
         <Fontisto name="email" size={ms(26)} color="black" />
         <TextInput
           style={styles.textInput}
-          value={userEmail}
+          ref={userEmail}
           placeholder="Email"
           placeholderTextColor="grey"
           keyboardType={'email-address'}
-          onChangeText={(text) => setUserEmail(text)}
+          onChangeText={(text) => (userEmail.current.value = text)}
         />
       </View>
       {/* PASSWORD Input */}
@@ -115,11 +120,11 @@ const AuthForm = ({ login }: props) => {
         )}
         <TextInput
           style={styles.textInput}
-          value={password}
+          ref={userPassword}
           placeholder="Password"
           placeholderTextColor="grey"
           secureTextEntry={!showPassword}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={(text) => (userPassword.current.value = text)}
         />
       </View>
 
