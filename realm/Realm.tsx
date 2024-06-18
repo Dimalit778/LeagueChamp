@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { AppProvider, RealmProvider, UserProvider } from '@realm/react';
+import { AppProvider, RealmProvider, UserProvider, useApp } from '@realm/react';
 import 'react-native-get-random-values';
 import { I18nManager } from 'react-native';
 I18nManager.allowRTL(false);
@@ -8,8 +8,9 @@ import toastAlert from '../myAssets/toastAlert';
 import { LoadingSplash } from '../components/LoadingBall';
 import Welcome from '../app/Welcome';
 import { League, Match, Round, User } from '@/models';
-import { realmContext } from './RealmContext';
+
 const APP_ID: string = 'leaguechamp-xqhhequ';
+
 // const { RealmProvider } = realmContext;
 export default function RealmCustomProvider({ children }: PropsWithChildren) {
   return (

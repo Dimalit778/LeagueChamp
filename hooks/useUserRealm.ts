@@ -12,7 +12,9 @@ export function useUserRealm() {
   // const user = useObject(User, new ObjectId(_id));
   console.log('user ', user.leagues);
 
-  // console.log('leagues ', leagues);
+  /**
+   * Create League and save it to User
+   */
 
   const deleteLeague = useCallback(
     (leagueId: string) => {

@@ -6,12 +6,15 @@ import { Feather } from '@expo/vector-icons';
 import { Button } from 'react-native-elements';
 import { ScaledSheet, s, vs, ms } from 'react-native-size-matters';
 
-import { useApp, Realm } from '@realm/react';
+import { useApp, Realm, useRealm } from '@realm/react';
 import Toast from 'react-native-toast-message';
 import { writeCustomUserData } from '../api/customUser';
 
 import Colors from '../myAssets/colors/Colors';
 import { LoadingBall } from './LoadingBall';
+import { useAppDispatch } from '@/redux/constans/hooks';
+import { setUser } from '@/redux/reducers/userReducer';
+import { useUserRealm } from '@/hooks/useUserRealm';
 
 type props = {
   login: boolean;
@@ -19,26 +22,28 @@ type props = {
 
 const AuthForm = ({ login }: props) => {
   const app = useApp();
-
+  const dispatch = useAppDispatch();
   const userName = useRef(null);
   const userEmail = useRef(null);
   const userPassword = useRef(null);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  // const { createNewUser } = useUserRealm();
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const signIn = useCallback(async () => {
-    let email = userEmail.current?.value.toLowerCase();
-    let password = userPassword.current?.value;
+  const signIn = useCallback(
+    async (email: string, password: string) => {
+      const res = Realm.Credentials.emailPassword(email, password);
 
-    const res = Realm.Credentials.emailPassword(email, password);
+      await app.logIn(res);
 
-    await app.logIn(res);
-    setLoading(false);
-  }, [app, userEmail]);
+      setLoading(false);
+    },
+    [app, userEmail]
+  );
 
   const handleLogin = useCallback(async () => {
     let email = userEmail.current?.value;
@@ -53,7 +58,7 @@ const AuthForm = ({ login }: props) => {
       return;
     }
     try {
-      await signIn();
+      await signIn(email, password);
     } catch (error: any) {
       setLoading(false);
       Toast.show({
@@ -65,13 +70,13 @@ const AuthForm = ({ login }: props) => {
 
   const handleRegister = useCallback(async () => {
     let email = userEmail.current?.value.toLowerCase();
-    let name = userName?.current?.value;
+    let name = userName.current?.value;
     let password = userPassword.current?.value;
     setLoading(true);
     try {
       await app.emailPasswordAuth.registerUser({ email, password });
-      await signIn();
-      await writeCustomUserData(app.currentUser, name);
+      await signIn(email, password);
+      await writeCustomUserData(app.currentUser, name, email);
     } catch (error: any) {
       setLoading(false);
       Toast.show({

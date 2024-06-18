@@ -6,6 +6,7 @@ export class User extends Realm.Object<User> {
   _id: BSON.ObjectId = new BSON.ObjectId();
   name!: string;
   image!: string;
+  email!: string;
   userId!: string;
   leagues!: League[];
 
@@ -15,6 +16,7 @@ export class User extends Realm.Object<User> {
       _id: 'objectId',
       name: 'string',
       image: 'string',
+      email: 'string',
       userId: 'string',
       leagues: { type: 'list', objectType: 'League' },
     },

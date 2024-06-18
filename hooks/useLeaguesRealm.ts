@@ -10,19 +10,6 @@ export function useLeaguesRealm() {
   const leagues = useQuery(League);
   const userObject = useObject(User, new ObjectId(user._id));
 
-  useEffect(() => {
-    const updateSubscriptions = async () => {
-      await realm.subscriptions.update((mutableSubs) => {
-        user.leagues.map((id: string) => {
-          mutableSubs.add(
-            realm.objects('League').filtered('_id == $0', new ObjectId(id))
-          );
-        });
-      });
-    };
-    updateSubscriptions();
-  }, [realm, user]);
-
   /**
    * Create League and save it to User
    */
@@ -53,17 +40,12 @@ export function useLeaguesRealm() {
    */
   const deleteLeague = useCallback(
     (league: League) => {
-      if (league.owner_id !== user._id) return false;
-      const leagueIndex = user.leagues.findIndex((l) =>
-        l._id.equals(league._id)
-      );
-      if (leagueIndex !== -1) {
-        realm.write(() => {
-          realm.delete(league);
-          user.leagues.splice(leagueIndex, 1);
-        });
-        return true;
-      }
+      console.log('league', league._id);
+      realm.write(() => {
+        user.leagues = user.leagues.filter((l) => !l._id?.equals(league._id));
+        console.log('user.leagues', user.leagues);
+        // realm.delete(league);
+      });
     },
     [realm]
   );

@@ -9,7 +9,7 @@ import { useLeaguesRealm } from '@/hooks/useLeaguesRealm';
 const MyLeaguesList = () => {
   const { leagues } = useLeaguesRealm();
 
-  if (!leagues)
+  if (leagues.length === 0)
     return (
       <Text style={{ textAlign: 'center', fontSize: 24, paddingTop: vs(20) }}>
         No Leagues

@@ -4,20 +4,16 @@ import { Stack, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { ScaledSheet, ms, mvs, s, vs } from 'react-native-size-matters';
 
-import { useObject, useRealm, useUser } from '@realm/react';
-
-import { BSON } from 'realm';
 import { useAppDispatch } from '@/redux/constans/hooks';
 import { ThemeContext } from '@/themeProvider/themeContext';
 import { countryFlags } from '@/utils/countryFlags';
-import { User } from '@/models';
-import generateCode from '@/hooks/generateLeagueCode';
-import { setLeague } from '@/redux/reducers/leagueReducer';
+
 import CustomKeyboardView from '../../../components/custom/CustomKeyboardView';
 import { FlatList } from 'react-native-gesture-handler';
 import { Button } from 'react-native-elements';
 import Colors from '@/myAssets/colors/Colors';
 import { useLeaguesRealm } from '@/hooks/useLeaguesRealm';
+import generateCode from '@/utils/generateLeagueCode';
 
 type ItemProps = {
   id: number;
@@ -37,7 +33,6 @@ const CreateLeague = () => {
   const click = () => {
     let name = leagueName.current?.value;
     createLeague(name, selectedItem.code, generateCode());
-
     router.back();
   };
   // Item Card
