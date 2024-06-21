@@ -5,35 +5,60 @@ import Colors from '@/myAssets/colors/Colors';
 import { Button } from 'react-native-elements';
 import { Fontisto, Feather, AntDesign } from '@expo/vector-icons';
 import { writeCustomUserData } from '@/api/customUser';
-import { useApp } from '@realm/react';
+import { useApp, useEmailPasswordAuth, useRealm } from '@realm/react';
+import Toast from 'react-native-toast-message';
+import { LoadingBall } from '../LoadingBall';
+import { Realm } from '@realm/react';
 
 const Register = () => {
   const app = useApp();
+  const { register, result } = useEmailPasswordAuth();
   const userName = useRef(null);
   const userEmail = useRef(null);
   const userPassword = useRef(null);
   const [showPassword, setShowPassword] = useState(false);
-  //   console.log('login =--- > ', result);
-  const signIn = useCallback(
-    async (email: string, password: string) => {
-      const res = Realm.Credentials.emailPassword(email, password);
 
+  // Check if all fields are filled
+  const validFiled = () => {
+    if (
+      !userName.current?.value ||
+      !userEmail.current?.value ||
+      !userPassword.current?.value
+    ) {
+      return Toast.show({
+        type: 'error',
+        text1: 'Please enter All Fields',
+      });
+    } else {
+      const res = {
+        email: userEmail.current?.value.toLowerCase(),
+        password: userPassword.current?.value,
+        name: userName.current?.value,
+      };
+      handleRegister(res);
+    }
+  };
+  // Register new user
+  const handleRegister = useCallback(
+    async (data: any) => {
+      const { email, password, name } = data;
+
+      register({ email, password });
+      console.log('1 ', result);
+      if (result.error) return;
+      console.log('2', result);
+      const res = Realm.Credentials.emailPassword(email, password);
+      console.log('3 ', result);
       await app.logIn(res);
+      console.log('4 ', result);
+      await writeCustomUserData(app.currentUser, name, email);
     },
     [app, userEmail]
   );
-  const handleRegister = useCallback(async () => {
-    let email = userEmail.current?.value.toLowerCase();
-    let name = userName.current?.value;
-    let password = userPassword.current?.value;
-
-    await app.emailPasswordAuth.registerUser({ email, password });
-    await signIn(email, password);
-    await writeCustomUserData(app.currentUser, name, email);
-  }, [app, userEmail]);
 
   return (
     <View style={styles.container}>
+      {result.operation === 'register' && result.pending && <LoadingBall />}
       <View style={styles.inputBox}>
         <AntDesign name="user" size={24} color="black" />
         <TextInput
@@ -56,7 +81,6 @@ const Register = () => {
           onChangeText={(text) => (userEmail.current.value = text)}
         />
       </View>
-      {/* PASSWORD Input */}
       <View style={styles.inputBox}>
         {!showPassword ? (
           <Pressable onPress={() => setShowPassword(!showPassword)}>
@@ -76,7 +100,11 @@ const Register = () => {
           onChangeText={(text) => (userPassword.current.value = text)}
         />
       </View>
-      {/* {result.error && <AuthError />} */}
+      {result.error && (
+        <Text style={styles.errorText}>
+          {result.error.message.split(':')[1]}
+        </Text>
+      )}
       <Button
         title="Sign Up"
         buttonStyle={{
@@ -86,7 +114,7 @@ const Register = () => {
           borderRadius: 30,
         }}
         titleStyle={{ fontWeight: 'bold', fontSize: ms(22) }}
-        onPress={() => handleRegister()}
+        onPress={() => validFiled()}
       />
     </View>
   );

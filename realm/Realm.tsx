@@ -4,7 +4,7 @@ import 'react-native-get-random-values';
 import { I18nManager } from 'react-native';
 I18nManager.allowRTL(false);
 import Toast from 'react-native-toast-message';
-import toastAlert from '../myAssets/toastAlert';
+import toastAlert from '../utils/toastAlert';
 import { LoadingSplash } from '../components/LoadingBall';
 import Welcome from '../app/Welcome';
 import { League, Match, Round, User } from '@/models';

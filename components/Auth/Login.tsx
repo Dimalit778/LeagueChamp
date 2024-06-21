@@ -1,32 +1,20 @@
 import { View, Text, Pressable, TextInput } from 'react-native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { ScaledSheet, ms } from 'react-native-size-matters';
 import Colors from '@/myAssets/colors/Colors';
 import { Button } from 'react-native-elements';
 import { Feather, Fontisto } from '@expo/vector-icons';
-import { useApp, useAuth, useEmailPasswordAuth } from '@realm/react';
+import { useEmailPasswordAuth } from '@realm/react';
 import Toast from 'react-native-toast-message';
 import { LoadingBall } from '../LoadingBall';
 
 const Login = () => {
-  const app = useApp();
   const userEmail = useRef(null);
   const userPassword = useRef(null);
   const [showPassword, setShowPassword] = useState(false);
-  // const { logInWithEmailPassword, result } = useAuth();
   const { logIn, result } = useEmailPasswordAuth();
-  // const signIn = useCallback(
-  //   async (email: string, password: string) => {
-  //     const res = Realm.Credentials.emailPassword(email, password);
 
-  //     await app.logIn(res);
-
-  //     setLoading(false);
-  //   },
-  //   [app, userEmail]
-  // );
-
-  const checkFields = () => {
+  const handleLogin = () => {
     if (!userEmail.current?.value || !userPassword.current?.value) {
       return Toast.show({
         type: 'error',
@@ -35,20 +23,9 @@ const Login = () => {
     }
     let email = userEmail.current?.value.toLowerCase();
     let password = userPassword.current?.value;
-    handleLogin(email, password);
-  };
-  const handleLogin = (email: string, password: string) => {
     logIn({ email, password });
   };
-
-  // const handleLogin = useCallback(
-  //   async (email: string, password: string) => {
-  //     // logInWithEmailPassword({ email, password });
-  //     logIn({ email, password });
-  //   },
-  //   [app, userEmail]
-  // );
-
+  console.log('result', result);
   return (
     <View style={styles.container}>
       {result.pending && <LoadingBall />}
@@ -94,7 +71,7 @@ const Login = () => {
           borderRadius: 30,
         }}
         titleStyle={{ fontWeight: 'bold', fontSize: ms(22) }}
-        onPress={() => checkFields()}
+        onPress={() => handleLogin()}
       />
     </View>
   );
