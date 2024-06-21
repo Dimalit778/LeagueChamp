@@ -1,22 +1,20 @@
-import { useCallback } from 'react';
-import { useApp, useObject, useQuery, useRealm, useUser } from '@realm/react';
+import { useCallback, useState } from 'react';
+import { useObject, useQuery, useRealm, useUser } from '@realm/react';
 import { League, User } from '@/models';
 import { ObjectId } from 'bson';
 
 export function useLeaguesRealm() {
   const realm = useRealm();
   const user = useUser().customData;
-  const app = useApp();
-  console.log('user   ------- >', user);
+  const [leagues, setLeagues] = useState([]);
+  const [currentUser, setCurrentUser] = useState([]);
+
   const userObject = useObject(User, new ObjectId(user._id));
-  // const userInfo = useQuery(User).filtered(`_id == '${user._id}'`);
-  // console.log('userObject', userObject);
-  console.log('userInfo', app.currentUser?.customData);
+
   const userLeagues = userObject?.leagues;
-  // console.log('ream  userLeagues ---- >', userLeagues);
 
   const favoriteLeague = userObject?.leagues.find((l) => l.isSelected);
-  // console.log('ream favoriteLeague ', favoriteLeague);
+
   /**
    * Create League and save it to User
    */
