@@ -6,7 +6,9 @@ import { Round } from './Round';
 
 export class League extends Realm.Object<League> {
   _id: BSON.ObjectId = new BSON.ObjectId();
-  leagueName!: string;
+  name!: string;
+  league!: string;
+  emblem!: string;
   code!: string;
   joinCode!: string;
   isSelected: boolean = false;
@@ -17,7 +19,9 @@ export class League extends Realm.Object<League> {
     name: 'League',
     properties: {
       _id: 'objectId',
-      leagueName: 'string',
+      name: 'string',
+      league: 'string',
+      emblem: 'string',
       code: 'string',
       joinCode: 'string',
       isSelected: 'bool',

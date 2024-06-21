@@ -1,31 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Redirect } from 'expo-router';
-import { useRealm, useUser } from '@realm/react';
-import { useAppDispatch } from '@/redux/constans/hooks';
-import { setUser } from '@/redux/reducers/userReducer';
-import { ObjectId } from 'bson';
+import { I18nManager } from 'react-native';
+I18nManager.allowRTL(false);
 import 'react-native-get-random-values';
+import { useLeaguesRealm } from '@/hooks/useLeaguesRealm';
+
 export default function App() {
-  const user = useUser().customData;
-  const realm = useRealm();
-  const dispatch = useAppDispatch();
+  const { userLeagues } = useLeaguesRealm();
 
-  // useEffect(() => {
-  //   console.log('app useEffect');
-  //   if (user) {
-  //     dispatch(setUser(user));
-  //   }
-  //   const updateSubscriptions = async () => {
-  //     await realm.subscriptions.update((mutableSubs) => {
-  //       user.leagues.map((id: string) => {
-  //         mutableSubs.add(
-  //           realm.objects('League').filtered('_id == $0', new ObjectId(id))
-  //         );
-  //       });
-  //     });
-  //   };
-  //   updateSubscriptions();
-  // }, [user, dispatch, realm]);
-
+  if (userLeagues.length === 0)
+    return <Redirect href="/(modal)/leagues/MyLeagues" />;
   return <Redirect href="/(tabs)/Home" />;
 }
+// 192.168.87.39:19000 sitemap

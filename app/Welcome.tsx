@@ -3,8 +3,10 @@ import { ScaledSheet } from 'react-native-size-matters';
 import { useState } from 'react';
 import CustomBackgroundImage from '../components/custom/CustomBackgroundImage';
 import CustomKeyboardView from '../components/custom/CustomKeyboardView';
-import AuthForm from '../components/AuthForm';
 import Colors from '../myAssets/colors/Colors';
+import { StatusBar } from 'expo-status-bar';
+import Login from '@/components/Auth/Login';
+import Register from '@/components/Auth/Register';
 
 const Welcome = () => {
   const [login, setLogin] = useState(true);
@@ -15,50 +17,59 @@ const Welcome = () => {
 
   return (
     <>
+      <StatusBar style="auto" />
       <CustomBackgroundImage>
         <CustomKeyboardView>
-          {/* Header */}
           <View style={styles.container}>
-            <View style={styles.box_header}>
-              <Text style={styles.textHeader}>League </Text>
-              <Text style={styles.textHeader}> Champion</Text>
-            </View>
-            {/* switch Button */}
-            <View style={styles.box_switch}>
-              {/* Login BTN */}
-              <TouchableOpacity onPress={handleFlipCard}>
-                <Text
-                  style={[
-                    styles.switchText,
-                    {
-                      backgroundColor: login ? 'gold' : null,
-                    },
-                  ]}
-                >
-                  Login
-                </Text>
-              </TouchableOpacity>
-              {/* Register BTN */}
-              <TouchableOpacity onPress={handleFlipCard}>
-                <Text
-                  style={[
-                    styles.switchText,
-                    {
-                      backgroundColor: login ? null : 'gold',
-                    },
-                  ]}
-                >
-                  Sign Up
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.box_authForm}>
-              <AuthForm login={login} />
-            </View>
+            <Header />
+            <Buttons handleFlipCard={handleFlipCard} login={login} />
+            {login ? <Login /> : <Register />}
           </View>
         </CustomKeyboardView>
       </CustomBackgroundImage>
     </>
+  );
+};
+//  -- Header
+const Header = () => {
+  return (
+    <View style={styles.box_header}>
+      <Text style={styles.textHeader}>League </Text>
+      <Text style={styles.textHeader}> Champion</Text>
+    </View>
+  );
+};
+// -- Buttons
+const Buttons = ({ handleFlipCard, login }) => {
+  return (
+    <View style={styles.box_switch}>
+      {/* Login BTN */}
+      <TouchableOpacity onPress={handleFlipCard}>
+        <Text
+          style={[
+            styles.switchText,
+            {
+              backgroundColor: login ? 'gold' : null,
+            },
+          ]}
+        >
+          Login
+        </Text>
+      </TouchableOpacity>
+      {/* Register BTN */}
+      <TouchableOpacity onPress={handleFlipCard}>
+        <Text
+          style={[
+            styles.switchText,
+            {
+              backgroundColor: login ? null : 'gold',
+            },
+          ]}
+        >
+          Sign Up
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -69,17 +80,21 @@ const styles = ScaledSheet.create({
   },
   box_header: {
     height: '220@s',
+    paddingTop: '30@s',
+  },
+  textHeader: {
+    alignSelf: 'center',
+
+    fontSize: '50@s',
+    fontWeight: 'bold',
+    color: 'white',
   },
   box_switch: {
     height: '70@s',
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  box_authForm: {
-    height: '300@s',
-    marginHorizontal: 30,
-    position: 'relative',
-  },
+
   switchText: {
     fontSize: '20@s',
     textAlign: 'center',
@@ -90,16 +105,6 @@ const styles = ScaledSheet.create({
     padding: '4@s',
   },
 
-  textHeader: {
-    alignSelf: 'center',
-    paddingTop: '20@s',
-    fontSize: '50@s',
-    fontWeight: 'bold',
-    color: 'black',
-    textShadowColor: 'white',
-    textShadowOffset: { width: 2, height: 5 },
-    textShadowRadius: 5,
-  },
   linkText: {
     fontSize: 18,
     fontWeight: 'bold',

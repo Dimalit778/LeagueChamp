@@ -21,6 +21,7 @@ type ItemProps = {
   code: string;
   flagImage: any;
   country: string;
+  emblem: string;
 };
 const CreateLeague = () => {
   const { createLeague } = useLeaguesRealm();
@@ -30,9 +31,9 @@ const CreateLeague = () => {
   const firstItem = countryFlags[0];
   const [selectedItem, setSelectedItem] = useState(firstItem);
 
-  const click = () => {
+  const handleCreateLeague = () => {
     let name = leagueName.current?.value;
-    createLeague(name, selectedItem.code, generateCode());
+    createLeague(name, selectedItem, generateCode());
     router.back();
   };
   // Item Card
@@ -132,7 +133,7 @@ const CreateLeague = () => {
           }}
           iconRight
           iconContainerStyle={{ marginLeft: 10, marginRight: -10 }}
-          onPress={() => click()}
+          onPress={() => handleCreateLeague()}
         />
       </View>
     </CustomKeyboardView>

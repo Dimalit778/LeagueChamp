@@ -1,25 +1,35 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useObject, useQuery, useRealm, useUser } from '@realm/react';
+import { useCallback } from 'react';
+import { useApp, useObject, useQuery, useRealm, useUser } from '@realm/react';
 import { League, User } from '@/models';
 import { ObjectId } from 'bson';
 
 export function useLeaguesRealm() {
   const realm = useRealm();
   const user = useUser().customData;
-
-  const leagues = useQuery(League);
+  const app = useApp();
+  console.log('user   ------- >', user);
   const userObject = useObject(User, new ObjectId(user._id));
+  // const userInfo = useQuery(User).filtered(`_id == '${user._id}'`);
+  // console.log('userObject', userObject);
+  console.log('userInfo', app.currentUser?.customData);
+  const userLeagues = userObject?.leagues;
+  // console.log('ream  userLeagues ---- >', userLeagues);
 
+  const favoriteLeague = userObject?.leagues.find((l) => l.isSelected);
+  // console.log('ream favoriteLeague ', favoriteLeague);
   /**
    * Create League and save it to User
    */
   const createLeague = useCallback(
-    (leagueName: string, code: string, joinCode: string) => {
+    (leagueName: string, selectedItem: any, joinCode: string) => {
+      console.log(selectedItem);
       const newLeague = realm.write(() => {
         return realm.create('League', {
           _id: new ObjectId(),
-          leagueName,
-          code,
+          league: selectedItem.name,
+          name: leagueName,
+          emblem: selectedItem.emblem,
+          code: selectedItem.code,
           joinCode,
           isSelected: false,
           owner_id: user._id,
@@ -34,25 +44,54 @@ export function useLeaguesRealm() {
     },
     [realm]
   );
+  /**
+   * -- > Set Favorite League
+   * set isSelected to true for the selected league
+   * set isSelected to false for the rest
+   */
+  const setFavoriteLeague = useCallback(
+    (league: League) => {
+      realm.write(() => {
+        userLeagues.forEach((l) => {
+          if (l._id?.equals(league._id)) {
+            l.isSelected = true;
+          } else {
+            l.isSelected = false;
+          }
+        });
+      });
+    },
+    [realm]
+  );
 
   /**
    * Deletes a League from the database and from User leagues
-   */
+   */ //  -- WORKS
   const deleteLeague = useCallback(
     (league: League) => {
-      console.log('league', league._id);
-      realm.write(() => {
+      return realm.write(() => {
         user.leagues = user.leagues.filter((l) => !l._id?.equals(league._id));
-        console.log('user.leagues', user.leagues);
-        // realm.delete(league);
+        realm.delete(league);
       });
     },
     [realm]
   );
 
   return {
-    leagues,
+    userLeagues,
+    favoriteLeague,
+    setFavoriteLeague,
     createLeague,
     deleteLeague,
   };
 }
+//  ---> Subscribe to league changes manually
+// useEffect(() => {
+//   console.log('subscriptions', user.leagues);
+//   const updateSubscriptions = async () => {
+//     await realm.subscriptions.update((mutableSubs) => {
+//       mutableSubs.add(userLeagues);
+//     });
+//   };
+//   updateSubscriptions();
+// }, [realm, user, leagues]);

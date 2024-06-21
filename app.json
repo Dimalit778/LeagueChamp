@@ -10,19 +10,26 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#332424"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/AppIcon.png",
-        "backgroundColor": "#ffffff"
+      "icon": "./assets/icon.png",
+      "splash": {
+        "image": "./assets/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#332424"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "package": "com.dimalit778.LeagueChamp"
+      "package": "com.dimalit778.LeagueChamp",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -37,6 +44,14 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to open the camera"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "5d3d55eb-11b9-47a9-b561-57e6ea9db8be"
+      }
+    }
   }
 }

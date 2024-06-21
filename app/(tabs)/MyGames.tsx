@@ -9,6 +9,9 @@ const MyGames = () => {
   return (
     <View>
       <Text>MyGames</Text>
+      <Text>MyGames</Text>
+      <Text>MyGames</Text>
+      <Text>MyGames</Text>
     </View>
   );
 };

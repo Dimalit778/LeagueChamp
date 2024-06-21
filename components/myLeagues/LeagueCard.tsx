@@ -11,40 +11,30 @@ import { useLeaguesRealm } from '@/hooks/useLeaguesRealm';
 import Toast from 'react-native-toast-message';
 
 export const LeagueCard = ({ league }) => {
-  const { deleteLeague } = useLeaguesRealm();
+  const { deleteLeague, setFavoriteLeague } = useLeaguesRealm();
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const clickOnLeague = async () => {
-    let state = {
-      leagueId: league._id.toString(),
-      code: league.code,
-    };
-    dispatch(setLeague(state));
-    router.push('tabs/Home');
+  const clickOnLeague = (league: any) => {
+    setFavoriteLeague(league);
+
+    router.push('(tabs)/Home');
   };
   // delete the league
   const deleteHandler = (league: any) => {
-    const res = deleteLeague(league);
-    if (res) {
-      Toast.show({
-        type: 'actionComplete',
-        text1: 'League Deleted',
-      });
-    } else {
-      Toast.show({
-        type: 'error',
-        text1: 'Not Your League',
-      });
-    }
+    deleteLeague(league);
+    Toast.show({
+      type: 'actionComplete',
+      text1: 'League Deleted',
+    });
   };
   return (
     <View style={styles.box}>
       <Pressable onPress={() => deleteHandler(league)}>
         <MaterialIcons name="delete-forever" size={48} color="red" />
       </Pressable>
-      <Pressable style={{}} onPress={() => clickOnLeague()}>
-        <Text style={styles.listText}>{league.leagueName}</Text>
+      <Pressable style={{}} onPress={() => clickOnLeague(league)}>
+        <Text style={styles.listText}>{league.name}</Text>
       </Pressable>
     </View>
   );

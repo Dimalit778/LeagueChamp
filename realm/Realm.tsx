@@ -23,6 +23,9 @@ export default function RealmCustomProvider({ children }: PropsWithChildren) {
             initialSubscriptions: {
               update(subs, realm) {
                 subs.add(realm.objects(User));
+                subs.add(realm.objects(League));
+                subs.add(realm.objects(Round));
+                subs.add(realm.objects(Match));
               },
               rerunOnOpen: true,
             },

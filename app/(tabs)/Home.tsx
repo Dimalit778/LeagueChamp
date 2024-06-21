@@ -14,8 +14,8 @@ import { useSelector } from 'react-redux';
 
 const Home = () => {
   const { theme } = useContext(ThemeContext);
-  const { leagues } = useLeaguesRealm();
-
+  const { favoriteLeague } = useLeaguesRealm();
+  console.log('favoriteLeague ', favoriteLeague);
   return (
     <SafeAreaView
       style={{

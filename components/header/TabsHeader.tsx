@@ -6,6 +6,7 @@ import { ms, s, vs } from 'react-native-size-matters';
 import { ThemeContext } from '../../themeProvider/themeContext';
 import { useAppSelector } from '../../redux/constans/hooks';
 import { Feather } from '@expo/vector-icons';
+import { useLeaguesRealm } from '@/hooks/useLeaguesRealm';
 
 type openModal = {
   openModal: () => void;
@@ -14,8 +15,8 @@ type openModal = {
 const TabsHeader = ({ openModal: openModal }) => {
   const { theme } = useContext(ThemeContext);
 
-  const { name, emblem } = useAppSelector((state) => state.league);
-
+  const { favoriteLeague } = useLeaguesRealm();
+  const { league, emblem } = favoriteLeague;
   return (
     <View
       style={[
@@ -34,7 +35,7 @@ const TabsHeader = ({ openModal: openModal }) => {
       </View>
       {/* Title */}
       <View style={styles.title}>
-        <Text style={styles.headerText}>{name}</Text>
+        <Text style={styles.headerText}>{league}</Text>
       </View>
       {/* Image */}
       <View style={styles.logo}>

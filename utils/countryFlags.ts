@@ -6,10 +6,11 @@ const england = require('../myAssets/flags/england_flag.png');
 export const countryFlags = [
   {
     id: 1,
-    code: 'PL ',
+    code: 'PL',
     name: 'Premier League',
     flagImage: england,
     country: 'England',
+    emblem: 'https://crests.football-data.org/PL.png',
   },
   {
     id: 2,
@@ -17,6 +18,7 @@ export const countryFlags = [
     name: 'La Liga',
     flagImage: spain,
     country: 'Spain',
+    emblem: 'https://crests.football-data.org/PD.png',
   },
   {
     id: 3,
@@ -24,6 +26,7 @@ export const countryFlags = [
     name: 'Ligue 1',
     flagImage: france,
     country: 'France',
+    emblem: 'https://crests.football-data.org/FL1.png',
   },
   {
     id: 4,
@@ -31,6 +34,7 @@ export const countryFlags = [
     name: 'Serie A',
     flagImage: italy,
     country: 'Italy',
+    emblem: 'https://crests.football-data.org/SA.png',
   },
   {
     id: 5,
@@ -38,5 +42,6 @@ export const countryFlags = [
     name: 'Bundesliga',
     flagImage: germany,
     country: 'Germany',
+    emblem: 'https://crests.football-data.org/BL1.png',
   },
 ];

@@ -7,9 +7,9 @@ import { LeagueCard } from './LeagueCard';
 import { useLeaguesRealm } from '@/hooks/useLeaguesRealm';
 
 const MyLeaguesList = () => {
-  const { leagues } = useLeaguesRealm();
+  const { userLeagues } = useLeaguesRealm();
 
-  if (leagues.length === 0)
+  if (userLeagues.length === 0)
     return (
       <Text style={{ textAlign: 'center', fontSize: 24, paddingTop: vs(20) }}>
         No Leagues
@@ -18,7 +18,7 @@ const MyLeaguesList = () => {
   return (
     <View style={{ paddingTop: vs(20) }}>
       <FlatList
-        data={leagues}
+        data={userLeagues}
         renderItem={({ item }) => <LeagueCard league={item} />}
       />
     </View>
