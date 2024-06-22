@@ -1,43 +1,48 @@
 import { View, Text, Pressable, TextInput } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { ScaledSheet, ms } from 'react-native-size-matters';
 import Colors from '@/myAssets/colors/Colors';
 import { Button } from 'react-native-elements';
 import { Feather, Fontisto } from '@expo/vector-icons';
-import { useEmailPasswordAuth } from '@realm/react';
-import Toast from 'react-native-toast-message';
+import { useApp } from '@realm/react';
 import { LoadingBall } from '../LoadingBall';
+import { checkFormFields } from './checkFormFields';
+import { Realm } from '@realm/react';
 
 const Login = () => {
-  const userEmail = useRef(null);
-  const userPassword = useRef(null);
+  const app = useApp();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { logIn, result } = useEmailPasswordAuth();
+  const [loading, setLoading] = useState(false);
+  const [errMsg, setErrMsg] = useState(null);
 
-  const handleLogin = () => {
-    if (!userEmail.current?.value || !userPassword.current?.value) {
-      return Toast.show({
-        type: 'error',
-        text1: 'Please enter All Fields',
-      });
+  const handleLogin = async () => {
+    const valid = checkFormFields(email, password);
+    if (typeof valid === 'string') {
+      setErrMsg(valid);
+      return;
     }
-    let email = userEmail.current?.value.toLowerCase();
-    let password = userPassword.current?.value;
-    logIn({ email, password });
+    setLoading(true);
+    try {
+      await app.logIn(Realm.Credentials.emailPassword(email, password));
+    } catch (error) {
+      setErrMsg('Wrong Email or Password');
+    }
+    setLoading(false);
   };
-  console.log('result', result);
   return (
     <View style={styles.container}>
-      {result.pending && <LoadingBall />}
+      {loading && <LoadingBall />}
       <View style={styles.inputBox}>
         <Fontisto name="email" size={ms(26)} color="black" />
         <TextInput
           style={styles.textInput}
-          ref={userEmail}
+          value={email}
           placeholder="Email"
           placeholderTextColor="grey"
           keyboardType={'email-address'}
-          onChangeText={(text) => (userEmail.current.value = text)}
+          onChangeText={(text) => setEmail(text)}
         />
       </View>
       <View style={styles.inputBox}>
@@ -52,16 +57,14 @@ const Login = () => {
         )}
         <TextInput
           style={styles.textInput}
-          ref={userPassword}
+          value={password}
           placeholder="Password"
           placeholderTextColor="grey"
           secureTextEntry={!showPassword}
-          onChangeText={(text) => (userPassword.current.value = text)}
+          onChangeText={(text) => setPassword(text)}
         />
       </View>
-      {result.error && (
-        <Text style={styles.errorText}>Wrong Email or Password</Text>
-      )}
+      {errMsg && <Text style={styles.errorText}>{errMsg}</Text>}
       <Button
         title="Login"
         buttonStyle={{
@@ -107,8 +110,12 @@ const styles = ScaledSheet.create({
     margin: '5@ms',
   },
   errorText: {
-    color: 'red',
+    backgroundColor: 'red',
+    marginHorizontal: '35@ms',
+    color: 'white',
+    fontSize: '14@ms',
     textAlign: 'center',
     fontWeight: 'bold',
+    borderRadius: '5@ms',
   },
 });

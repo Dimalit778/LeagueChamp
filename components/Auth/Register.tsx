@@ -1,84 +1,69 @@
 import { View, Text, Pressable, TextInput } from 'react-native';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { ScaledSheet, ms } from 'react-native-size-matters';
 import Colors from '@/myAssets/colors/Colors';
 import { Button } from 'react-native-elements';
 import { Fontisto, Feather, AntDesign } from '@expo/vector-icons';
 import { writeCustomUserData } from '@/api/customUser';
-import { useApp, useEmailPasswordAuth, useRealm } from '@realm/react';
-import Toast from 'react-native-toast-message';
+import { useApp } from '@realm/react';
+
 import { LoadingBall } from '../LoadingBall';
 import { Realm } from '@realm/react';
+import { checkFormFields } from './checkFormFields';
 
 const Register = () => {
   const app = useApp();
-  const { register, result } = useEmailPasswordAuth();
-  const userName = useRef(null);
-  const userEmail = useRef(null);
-  const userPassword = useRef(null);
+
+  const [name, setName] = useState('');
+  const [email, seEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errMsg, setErrMsg] = useState(null);
 
-  // Check if all fields are filled
-  const validFiled = () => {
-    if (
-      !userName.current?.value ||
-      !userEmail.current?.value ||
-      !userPassword.current?.value
-    ) {
-      return Toast.show({
-        type: 'error',
-        text1: 'Please enter All Fields',
+  const handleRegister = async () => {
+    if (!name) return setErrMsg('Please enter All Fields');
+    const valid = checkFormFields(email, password);
+    if (typeof valid === 'string') return setErrMsg(valid);
+    setLoading(true);
+    try {
+      await app.emailPasswordAuth.registerUser({
+        email,
+        password,
       });
-    } else {
-      const res = {
-        email: userEmail.current?.value.toLowerCase(),
-        password: userPassword.current?.value,
-        name: userName.current?.value,
-      };
-      handleRegister(res);
-    }
-  };
-  // Register new user
-  const handleRegister = useCallback(
-    async (data: any) => {
-      const { email, password, name } = data;
-
-      register({ email, password });
-      console.log('1 ', result);
-      if (result.error) return;
-      console.log('2', result);
-      const res = Realm.Credentials.emailPassword(email, password);
-      console.log('3 ', result);
-      await app.logIn(res);
-      console.log('4 ', result);
+      const credentials = Realm.Credentials.emailPassword(email, password);
+      await app.logIn(credentials);
       await writeCustomUserData(app.currentUser, name, email);
-    },
-    [app, userEmail]
-  );
+    } catch (error) {
+      setErrMsg('Email already in use');
+    }
+    setLoading(false);
+  };
 
   return (
     <View style={styles.container}>
-      {result.operation === 'register' && result.pending && <LoadingBall />}
+      {loading && <LoadingBall />}
       <View style={styles.inputBox}>
         <AntDesign name="user" size={24} color="black" />
         <TextInput
           style={styles.textInput}
-          ref={userName}
+          value={name}
           placeholder="Name"
           placeholderTextColor="grey"
           keyboardType={'email-address'}
-          onChangeText={(text) => (userName.current.value = text)}
+          onChangeText={(text) => (setName(text), setErrMsg(null))}
         />
       </View>
       <View style={styles.inputBox}>
         <Fontisto name="email" size={ms(26)} color="black" />
         <TextInput
           style={styles.textInput}
-          ref={userEmail}
+          value={email}
           placeholder="Email"
           placeholderTextColor="grey"
           keyboardType={'email-address'}
-          onChangeText={(text) => (userEmail.current.value = text)}
+          onChangeText={(text) => seEmail(text)}
         />
       </View>
       <View style={styles.inputBox}>
@@ -93,18 +78,14 @@ const Register = () => {
         )}
         <TextInput
           style={styles.textInput}
-          ref={userPassword}
+          value={password}
           placeholder="Password"
           placeholderTextColor="grey"
           secureTextEntry={!showPassword}
-          onChangeText={(text) => (userPassword.current.value = text)}
+          onChangeText={(text) => setPassword(text)}
         />
       </View>
-      {result.error && (
-        <Text style={styles.errorText}>
-          {result.error.message.split(':')[1]}
-        </Text>
-      )}
+      {errMsg && <Text style={styles.errorText}>{errMsg}</Text>}
       <Button
         title="Sign Up"
         buttonStyle={{
@@ -114,7 +95,7 @@ const Register = () => {
           borderRadius: 30,
         }}
         titleStyle={{ fontWeight: 'bold', fontSize: ms(22) }}
-        onPress={() => validFiled()}
+        onPress={() => handleRegister()}
       />
     </View>
   );
@@ -150,7 +131,12 @@ const styles = ScaledSheet.create({
     margin: '5@ms',
   },
   errorText: {
-    color: 'red',
+    backgroundColor: 'red',
+    marginHorizontal: '35@ms',
+    color: 'white',
+    fontSize: '14@ms',
     textAlign: 'center',
+    fontWeight: 'bold',
+    borderRadius: '5@ms',
   },
 });

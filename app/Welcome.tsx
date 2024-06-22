@@ -1,12 +1,14 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import { ScaledSheet } from 'react-native-size-matters';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CustomBackgroundImage from '../components/custom/CustomBackgroundImage';
 import CustomKeyboardView from '../components/custom/CustomKeyboardView';
 import Colors from '../myAssets/colors/Colors';
 import { StatusBar } from 'expo-status-bar';
 import Login from '@/components/Auth/Login';
 import Register from '@/components/Auth/Register';
+import GoogleAuth from '@/components/Auth/GoogleAuth';
+import { googleConfig } from '@/components/Auth/GoogleConfig';
 
 const Welcome = () => {
   const [login, setLogin] = useState(true);
@@ -14,6 +16,10 @@ const Welcome = () => {
   function handleFlipCard() {
     setLogin(!login);
   }
+
+  useEffect(() => {
+    googleConfig();
+  }, []);
 
   return (
     <>
@@ -24,6 +30,7 @@ const Welcome = () => {
             <Header />
             <Buttons handleFlipCard={handleFlipCard} login={login} />
             {login ? <Login /> : <Register />}
+            <GoogleAuth />
           </View>
         </CustomKeyboardView>
       </CustomBackgroundImage>

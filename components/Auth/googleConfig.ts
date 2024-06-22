@@ -1,0 +1,9 @@
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+export const googleConfig = () => {
+  GoogleSignin.configure({
+    webClientId:
+      '198269186110-m66bl6vc3d2ena8rmnv405stb9gvb9gf.apps.googleusercontent.com',
+    forceCodeForRefreshToken: true,
+    profileImageSize: 120,
+  });
+};
