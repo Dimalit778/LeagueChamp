@@ -8,7 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import Login from '@/components/Auth/Login';
 import Register from '@/components/Auth/Register';
 import GoogleAuth from '@/components/Auth/GoogleAuth';
-import { googleConfig } from '@/components/Auth/GoogleConfig';
+import { googleConfig } from '@/components/Auth/googleConfig';
 
 const Welcome = () => {
   const [login, setLogin] = useState(true);
@@ -16,10 +16,6 @@ const Welcome = () => {
   function handleFlipCard() {
     setLogin(!login);
   }
-
-  useEffect(() => {
-    googleConfig();
-  }, []);
 
   return (
     <>
