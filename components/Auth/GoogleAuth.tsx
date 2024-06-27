@@ -9,30 +9,39 @@ import {
   isErrorWithCode,
 } from '@react-native-google-signin/google-signin';
 import { Button } from 'react-native-elements/dist/buttons/Button';
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
+// import { useAuth } from '@realm/react';
+
+// WebBrowser.maybeCompleteAuthSession();
 
 const GoogleAuth = () => {
-  const [user, setUser] = useState(null);
-  const [state, setState] = useState({ hasPreviousSignIn: false });
+  // const { logInWithGoogle, result } = useAuth();
+  // console.log('result   ->', result);
+  const [user, setUser] = useState({
+    user: null,
+    token: null,
+  });
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    webClientId:
+      '198269186110-0t4j7h3t8q6o2femlel68hp2auuvmna5.apps.googleusercontent.com',
+    androidClientId:
+      '198269186110-0cu52inq22e5q1lukqlha50l8n0gqb9n.apps.googleusercontent.com',
+  });
 
-  useEffect(() => {
-    console.log('GoogleAuth useEffect');
-    GoogleSignin.configure({
-      webClientId:
-        '198269186110-9ikvkgjtavcin08e74gcrm70sj3jdh55.apps.googleusercontent.com',
-    });
-  }, []);
-  const hasPreviousSignIn = async () => {
-    console.log('hasPreviousSignIn');
-    const hasPreviousSignIn = GoogleSignin.hasPreviousSignIn();
-    console.log('hasPreviousSignIn ->', hasPreviousSignIn);
-    setState({ hasPreviousSignIn });
+  const getCurrentUser = async () => {
+    const currentUser = GoogleSignin.getCurrentUser();
   };
-  const createUser = async () => {
-    console.log('createUser');
+
+  const handleGoogleSignIn = async () => {
     try {
+      await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log('userInfo ->', userInfo);
-      // do something with userInfo
+      // const token = await GoogleSignin.getTokens();
+      // console.log('token ->', token);
+      // logInWithGoogle({ idToken: token.accessToken });
+      // setUser({ user: userInfo.user, token: token.accessToken });
     } catch (error) {
       if (isErrorWithCode(error)) {
         console.log(' error code ', error.code, 'error', error.message);
@@ -43,32 +52,15 @@ const GoogleAuth = () => {
       }
     }
   };
-  const getCurrentUser = async () => {
-    console.log('GoogleLogin');
-    const currentUser = GoogleSignin.getCurrentUser();
-    console.log('currentUser ->', currentUser);
-    setUser({ currentUser });
-  };
-  const GoogleLogin = async () => {
-    console.log('GoogleLogin');
-    await GoogleSignin.hasPlayServices();
-    const userInfo = await GoogleSignin.signIn();
-    console.log('userInfo ->', userInfo);
-    return userInfo;
-  };
-
-  const handleGoogleLogin = async () => {
-    console.log('login');
+  const signOut = async () => {
     try {
-      const response = await GoogleLogin();
-      const { idToken, user } = response;
-      console.log('response', response);
-      console.log('user', user);
-      console.log('idToken', idToken);
-    } catch (apiError) {
-      console.log('error ', apiError);
+      await GoogleSignin.signOut();
+      setUser(null);
+    } catch (error) {
+      console.error(error);
     }
   };
+
   return (
     <View
       style={{
@@ -79,34 +71,15 @@ const GoogleAuth = () => {
         gap: vs(10),
       }}
     >
-      {/* <Button title="getCurrentUser" onPress={getCurrentUser} /> */}
-      <Button title="GoogleLogin" onPress={GoogleLogin} />
-      <Button title="hasPreviousSignIn" onPress={hasPreviousSignIn} />
-      <Button title="createUser" onPress={createUser} />
-      {/* <GoogleSigninButton
+      <GoogleSigninButton
         size={GoogleSigninButton.Size.Wide}
         color={GoogleSigninButton.Color.Dark}
-        onPress={() => {
-          handleGoogleLogin();
-        }}
+        onPress={() => promptAsync()}
         style={{ width: ms(200), height: ms(50) }}
-        // disabled={false}
-      /> */}
+      />
+      <Button title="Sign Out" onPress={() => signOut()} />
     </View>
   );
 };
 
 export default GoogleAuth;
-// const signIn = async () => {
-//   console.log('Pressed sign in');
-
-//   try {
-//     await GoogleSignin.hasPlayServices();
-//     const userInfo = GoogleSignin.getTokens();
-//     console.log('userInfo ->', userInfo);
-//     setUserInfo(userInfo);
-//     setError(null);
-//   } catch (e) {
-//     setError(e);
-//   }
-// };

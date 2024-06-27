@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "LeagueChamp",
+    "name": "League App",
     "slug": "LeagueChamp",
     "version": "1.0.0",
-    "scheme": "LeagueApp",
+    "scheme": "LeagueChamp",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -14,7 +14,8 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dimalit778.LeagueChamp"
     },
     "android": {
       "icon": "./assets/icon.png",
@@ -28,14 +29,14 @@
       "permissions": ["android.permission.RECORD_AUDIO"]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
     },
     "plugins": [
       "expo-router",
       "expo-font",
       [
         "expo-image-picker",
-
         {
           "photosPermission": "custom photos permission",
           "cameraPermission": "Allow $(PRODUCT_NAME) to open the camera"
