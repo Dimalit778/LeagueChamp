@@ -9,7 +9,6 @@ import { I18nManager } from 'react-native';
 I18nManager.allowRTL(false);
 
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { googleConfig } from '@/components/Auth/googleConfig';
 
 const RootLayout = () => {
   return (

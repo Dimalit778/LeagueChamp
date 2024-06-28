@@ -12,5 +12,6 @@
     "Signin",
     "constans",
     "gorhom"
-  ]
+  ],
+  "java.configuration.updateBuildConfiguration": "automatic"
 }

@@ -37,9 +37,16 @@
       "expo-font",
       [
         "expo-image-picker",
+
         {
           "photosPermission": "custom photos permission",
           "cameraPermission": "Allow $(PRODUCT_NAME) to open the camera"
+        }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.827466256996-ud3r1aoucq0rp61rjpe1tj2glvn520v5"
         }
       ]
     ],

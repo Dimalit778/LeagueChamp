@@ -2,65 +2,72 @@ import { View, Text } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
 import { ms, vs } from 'react-native-size-matters';
-
 import {
   GoogleSignin,
   GoogleSigninButton,
   isErrorWithCode,
+  statusCodes,
 } from '@react-native-google-signin/google-signin';
-import { Button } from 'react-native-elements/dist/buttons/Button';
 import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google';
-// import { useAuth } from '@realm/react';
 
-// WebBrowser.maybeCompleteAuthSession();
+import { Button } from 'react-native-elements';
+import { useAuth } from '@realm/react';
 
 const GoogleAuth = () => {
-  // const { logInWithGoogle, result } = useAuth();
-  // console.log('result   ->', result);
-  const [user, setUser] = useState({
-    user: null,
-    token: null,
-  });
-  const [request, response, promptAsync] = Google.useAuthRequest({
+  const { logInWithGoogle, result } = useAuth();
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+  console.log('result');
+  console.log(result);
+  GoogleSignin.configure({
     webClientId:
-      '198269186110-0t4j7h3t8q6o2femlel68hp2auuvmna5.apps.googleusercontent.com',
-    androidClientId:
-      '198269186110-0cu52inq22e5q1lukqlha50l8n0gqb9n.apps.googleusercontent.com',
+      '827466256996-26crehcu7hdmp6kclit69db9daokff9c.apps.googleusercontent.com',
   });
-
-  const getCurrentUser = async () => {
-    const currentUser = GoogleSignin.getCurrentUser();
-  };
-
-  const handleGoogleSignIn = async () => {
+  const login = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      console.log('userInfo ->', userInfo);
-      // const token = await GoogleSignin.getTokens();
-      // console.log('token ->', token);
-      // logInWithGoogle({ idToken: token.accessToken });
-      // setUser({ user: userInfo.user, token: token.accessToken });
+      const { idToken } = await GoogleSignin.signIn();
+      // console.log('user', user);
+      logInWithGoogle({ idToken });
     } catch (error) {
       if (isErrorWithCode(error)) {
-        console.log(' error code ', error.code, 'error', error.message);
-        // here you can safely read `error.code` and TypeScript will know that it has a value
+        switch (error.code) {
+          case statusCodes.SIGN_IN_CANCELLED:
+            // user cancelled the login flow
+            break;
+          case statusCodes.IN_PROGRESS:
+            // operation (eg. sign in) already in progress
+            break;
+          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+            // play services not available or outdated
+            break;
+          default:
+          // some other error happened
+        }
       } else {
-        console.log(' error  ', error);
-        // this error does not have a `code`, and does not come from the Google Sign in module
+        // an error that's not related to google sign in occurred
       }
     }
   };
   const signOut = async () => {
     try {
       await GoogleSignin.signOut();
-      setUser(null);
+
+      setUser({ user: null }); // Remember to remove the user from your app's state as well
     } catch (error) {
       console.error(error);
     }
   };
-
+  const getTokens = async () => {
+    try {
+      const token = await GoogleSignin.getTokens();
+      console.log('token');
+      console.log(token);
+      setToken({ user: null }); // Remember to remove the user from your app's state as well
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <View
       style={{
@@ -74,10 +81,11 @@ const GoogleAuth = () => {
       <GoogleSigninButton
         size={GoogleSigninButton.Size.Wide}
         color={GoogleSigninButton.Color.Dark}
-        onPress={() => promptAsync()}
+        onPress={() => login()}
         style={{ width: ms(200), height: ms(50) }}
       />
-      <Button title="Sign Out" onPress={() => signOut()} />
+      <Button title="sign out" onPress={() => signOut()} />
+      <Button title="gettokens" onPress={() => getTokens()} />
     </View>
   );
 };
