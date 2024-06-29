@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useObject, useQuery, useRealm, useUser } from '@realm/react';
-import { League, User } from '@/models';
+import { League, User } from '@/realm/models';
 import { ObjectId } from 'bson';
 
 export function useLeaguesRealm() {

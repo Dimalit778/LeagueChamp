@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useObject, useRealm, useUser } from '@realm/react';
-import { League, User } from '@/models';
+import { League, User } from '@/realm/models';
 
 // GenerateMongoLikeObjectId
 import { ObjectId } from 'bson';

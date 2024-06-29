@@ -7,14 +7,14 @@ import Toast from 'react-native-toast-message';
 import toastAlert from '../utils/toastAlert';
 import { LoadingSplash } from '../components/LoadingBall';
 import Welcome from '../app/Welcome';
-import { League, Match, Round, User } from '@/models';
+import { League, Match, Round, User } from '@/realm/models';
 
 const APP_ID: string = 'leaguechamp-xqhhequ';
 
 // const { RealmProvider } = realmContext;
 export default function RealmCustomProvider({ children }: PropsWithChildren) {
   return (
-    <AppProvider id={APP_ID}>
+    <AppProvider id={APP_ID} baseUrl="https://services.cloud.mongodb.com">
       <UserProvider fallback={Welcome}>
         <RealmProvider
           schema={[League, Match, Round, User]}

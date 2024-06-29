@@ -16,7 +16,7 @@ import ModalPicker from '../../components/ModalPicker';
 import Colors from '../../myAssets/colors/Colors';
 import { Stack, useRouter } from 'expo-router';
 
-import { User } from '../../models/User';
+import { User } from '../../realm/models/User';
 import { BSON } from 'realm';
 
 const Profile = () => {

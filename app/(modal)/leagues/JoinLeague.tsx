@@ -5,7 +5,7 @@ import { ScaledSheet, ms, mvs, s, vs } from 'react-native-size-matters';
 import { Button } from 'react-native-elements';
 import { useObject, useQuery, useRealm, useUser } from '@realm/react';
 import { BSON } from 'realm';
-import { League, User } from '../../../models';
+import { League, User } from '../../../realm/models';
 import { ThemeContext } from '../../../themeProvider/themeContext';
 import CustomKeyboardView from '../../../components/custom/CustomKeyboardView';
 import Colors from '../../../myAssets/colors/Colors';

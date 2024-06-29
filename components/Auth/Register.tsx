@@ -4,16 +4,17 @@ import { ScaledSheet, ms } from 'react-native-size-matters';
 import Colors from '@/myAssets/colors/Colors';
 import { Button } from 'react-native-elements';
 import { Fontisto, Feather, AntDesign } from '@expo/vector-icons';
-import { writeCustomUserData } from '@/api/customUser';
+
 import { useApp } from '@realm/react';
 
 import { LoadingBall } from '../LoadingBall';
 import { Realm } from '@realm/react';
 import { checkFormFields } from './checkFormFields';
+import { useCustomUser } from '@/realmFunctions/useCustomUser';
 
 const Register = () => {
   const app = useApp();
-
+  const { saveCustomUser } = useCustomUser();
   const [name, setName] = useState('');
   const [email, seEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,7 +35,11 @@ const Register = () => {
       });
       const credentials = Realm.Credentials.emailPassword(email, password);
       await app.logIn(credentials);
-      await writeCustomUserData(app.currentUser, name, email);
+      const user = {
+        name,
+        email,
+      };
+      await saveCustomUser(user);
     } catch (error) {
       setErrMsg('Email already in use');
     }

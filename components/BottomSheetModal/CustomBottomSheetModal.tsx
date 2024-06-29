@@ -85,7 +85,7 @@ const NavigationItems = ({ dismiss, theme }: NavItemsProps) => (
     >
       <View style={[styles.navItem, { backgroundColor: theme.background }]}>
         <AntDesign name="menu-fold" size={24} color={theme.text} />
-        <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.text }}>
+        <Text style={{ fontSize: 18, fontWeight: '400', color: theme.text }}>
           My Leagues
         </Text>
       </View>
@@ -98,7 +98,7 @@ const NavigationItems = ({ dismiss, theme }: NavItemsProps) => (
     >
       <View style={[styles.navItem, { backgroundColor: theme.background }]}>
         <AntDesign name="user" size={28} color={theme.text} />
-        <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.text }}>
+        <Text style={{ fontSize: 18, fontWeight: '400', color: theme.text }}>
           Profile
         </Text>
       </View>
@@ -113,8 +113,8 @@ const NavigationItems = ({ dismiss, theme }: NavItemsProps) => (
         <Ionicons name="settings-outline" size={24} color={theme.text} />
         <Text
           style={{
-            fontSize: 20,
-            fontWeight: 'bold',
+            fontSize: 18,
+            fontWeight: '400',
             color: theme.text,
           }}
         >
@@ -130,7 +130,7 @@ const LogoutButton = ({ logOut, theme }) => (
     bgColor={theme.background}
     textColor={theme.text}
     boRadius={10}
-    textFont={18}
+    textFont={16}
     btnLabel="Log out"
     onPress={logOut}
   />

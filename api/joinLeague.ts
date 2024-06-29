@@ -1,5 +1,5 @@
 import { useQuery, useRealm } from '@realm/react';
-import { League } from '../models/League';
+import { League } from '../realm/models/League';
 
 const realm = useRealm();
 const joinLeague = async (code: string) => {

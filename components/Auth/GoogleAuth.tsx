@@ -1,73 +1,31 @@
-import { View, Text } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
+import React from 'react';
 
 import { ms, vs } from 'react-native-size-matters';
 import {
   GoogleSignin,
   GoogleSigninButton,
-  isErrorWithCode,
-  statusCodes,
 } from '@react-native-google-signin/google-signin';
-import * as WebBrowser from 'expo-web-browser';
 
-import { Button } from 'react-native-elements';
-import { useAuth } from '@realm/react';
+import { useCustomUser } from '@/realmFunctions/useCustomUser';
+import { useGoogleAuth } from '@/realmFunctions/useGoogleAuth';
 
 const GoogleAuth = () => {
-  const { logInWithGoogle, result } = useAuth();
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
-  console.log('result');
-  console.log(result);
-  GoogleSignin.configure({
-    webClientId:
-      '827466256996-26crehcu7hdmp6kclit69db9daokff9c.apps.googleusercontent.com',
-  });
-  const login = async () => {
+  const { saveCustomUser } = useCustomUser();
+  const { logInWithGoogle, getGoogleUser, googleConfig } = useGoogleAuth();
+  googleConfig();
+  const handleLogin = async () => {
+    const { code, user, error } = await getGoogleUser();
+    if (error) return console.log('error ', error);
     try {
-      await GoogleSignin.hasPlayServices();
-      const { idToken } = await GoogleSignin.signIn();
-      // console.log('user', user);
-      logInWithGoogle({ idToken });
-    } catch (error) {
-      if (isErrorWithCode(error)) {
-        switch (error.code) {
-          case statusCodes.SIGN_IN_CANCELLED:
-            // user cancelled the login flow
-            break;
-          case statusCodes.IN_PROGRESS:
-            // operation (eg. sign in) already in progress
-            break;
-          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-            // play services not available or outdated
-            break;
-          default:
-          // some other error happened
-        }
-      } else {
-        // an error that's not related to google sign in occurred
-      }
-    }
-  };
-  const signOut = async () => {
-    try {
+      await logInWithGoogle(code);
+      await saveCustomUser(user);
       await GoogleSignin.signOut();
+    } catch (error) {
+      console.log('error ', error);
+    }
+  };
 
-      setUser({ user: null }); // Remember to remove the user from your app's state as well
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const getTokens = async () => {
-    try {
-      const token = await GoogleSignin.getTokens();
-      console.log('token');
-      console.log(token);
-      setToken({ user: null }); // Remember to remove the user from your app's state as well
-    } catch (error) {
-      console.error(error);
-    }
-  };
   return (
     <View
       style={{
@@ -80,12 +38,10 @@ const GoogleAuth = () => {
     >
       <GoogleSigninButton
         size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Dark}
-        onPress={() => login()}
+        color={GoogleSigninButton.Color.Light}
+        onPress={() => handleLogin()}
         style={{ width: ms(200), height: ms(50) }}
       />
-      <Button title="sign out" onPress={() => signOut()} />
-      <Button title="gettokens" onPress={() => getTokens()} />
     </View>
   );
 };

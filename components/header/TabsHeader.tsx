@@ -35,7 +35,7 @@ const TabsHeader = ({ openModal: openModal }) => {
       </View>
       {/* Title */}
       <View style={styles.title}>
-        <Text style={styles.headerText}>{league}</Text>
+        <Text style={[styles.headerText, { color: theme.text }]}>{league}</Text>
       </View>
       {/* Image */}
       <View style={styles.logo}>
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 18,
-    // fontWeight: 'bold',
+    fontWeight: '500',
     color: '#FFFFFF',
   },
   // Image Styles
