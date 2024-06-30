@@ -15,12 +15,12 @@ export function useLeaguesRealm() {
 
   const favoriteLeague = userObject?.leagues.find((l) => l.isSelected);
 
+  const getAllLeagues = useQuery(League);
   /**
    * Create League and save it to User
    */
   const createLeague = useCallback(
     (leagueName: string, selectedItem: any, joinCode: string) => {
-      console.log(selectedItem);
       const newLeague = realm.write(() => {
         return realm.create('League', {
           _id: new ObjectId(),
@@ -61,6 +61,36 @@ export function useLeaguesRealm() {
     },
     [realm]
   );
+  const joinNewLeague = useCallback(
+    (code: string) => {
+      let selectedLeague = getAllLeagues.filtered(`joinCode == '${code}'`);
+      if (selectedLeague.length == 0)
+        return { status: false, message: 'League not found' };
+      let checkUserInLeague = selectedLeague[0].users.find(
+        (u) => u._id == user._id
+      );
+      if (checkUserInLeague)
+        return { status: false, message: 'You are already in this League' };
+
+      realm.write(() => {
+        userObject.leagues.push(selectedLeague[0]);
+        selectedLeague[0].users.push(userObject);
+      });
+
+      return { status: true, message: 'League joined' };
+    },
+    [realm]
+  );
+  const leaveLeague = useCallback(
+    (league: League) => {
+      realm.write(() => {
+        userObject.leagues = userObject.leagues.filter(
+          (l) => !l._id?.equals(league._id)
+        );
+      });
+    },
+    [realm]
+  );
 
   /**
    * Deletes a League from the database and from User leagues
@@ -80,6 +110,8 @@ export function useLeaguesRealm() {
     favoriteLeague,
     setFavoriteLeague,
     createLeague,
+    joinNewLeague,
+    leaveLeague,
     deleteLeague,
   };
 }

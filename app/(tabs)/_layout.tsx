@@ -62,7 +62,7 @@ const TabButton = (props) => {
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={1}
-      style={[styles.container, { flex: focused ? 1 : 0.65 }]}
+      style={[styles.container, { flex: focused ? 1 : 0.6 }]}
     >
       <View>
         <Animatable.View
@@ -70,7 +70,7 @@ const TabButton = (props) => {
           style={[
             StyleSheet.absoluteFillObject,
             {
-              backgroundColor: focused ? 'gold' : theme.navbar,
+              backgroundColor: focused ? theme.primary : theme.navbar,
               borderRadius: 16,
             },
           ]}
@@ -81,13 +81,14 @@ const TabButton = (props) => {
             { backgroundColor: focused ? null : theme.navbar },
           ]}
         >
-          {item.icon({ size: 36, color: focused ? theme.navbar : theme.text })}
+          {item.icon({ size: 30, color: focused ? theme.navbar : theme.text })}
           <Animatable.View ref={textViewRef}>
             {focused && (
               <Text
                 style={{
                   color: theme.navbar,
-                  paddingHorizontal: 8,
+                  fontSize: 12,
+                  paddingHorizontal: 5,
                 }}
               >
                 {item.label}
@@ -121,8 +122,6 @@ const TabsLayout = (props) => {
             backgroundColor: theme.navbar,
             height: ms(60),
             position: 'absolute',
-            margin: 16,
-            borderRadius: 16,
           },
         }}
       >
